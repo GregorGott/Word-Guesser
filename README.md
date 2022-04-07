@@ -1,5 +1,5 @@
 # Word Guesser
-![imagename](README_IMGS/previewImage1.png)
+![Preview](README_IMGS/previewImage1.png)
 
 <h2 align="center">
     A simple two-player word-guessing game.
@@ -19,7 +19,7 @@ If you want to play this game on a desktop device just download the correct vers
 
 Right after the download you can start the game and have fun.
 
->**Information for developers:** Word Guesser is developed on IntelliJ IDEA CE. I did not tried to open and run this project on Eclipse.
+>**Information for developers:** Word Guesser is developed on IntelliJ IDEA CE. I did not try to open and run this project on Eclipse.
 
 ## The Points System
 For every guessed word the player gets a point. If the player can not guess the word, he loses the points. Example:
@@ -30,11 +30,11 @@ Player 1 gives the word "Caretaker". Player 2 enters "C" and "A" and receives tw
 |1|2|3|4|5|2|<b>6</b>|4|3|
 
 ## Images
-<p align="center">
-  <img src="README_IMGS/previewImage2.png" width="49.5%" />
-  <img src="README_IMGS/previewImage3.png" width="49.5%" /> 
-  <img src="README_IMGS/previewImage3.png" width="49.5%" />
-  <img src="README_IMGS/previewImage5.png" width="49.5%" />
+<p>
+  <img src="README_IMGS/previewImage2.png" width="49.5%" alt="Main menu"/>
+  <img src="README_IMGS/previewImage3.png" width="49.5%" alt="Set question"/> 
+  <img src="README_IMGS/previewImage4.png" width="49.5%" alt="Ask question"/>
+  <img src="README_IMGS/previewImage5.png" width="49.5%" alt="Player 2 won"/>
 </p>
 
 ## License

@@ -22,8 +22,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * <h1>GuesserGameController</h1>
+ * The Game Controller controls the game (ask questions and set questions). Player 1 enters a word and Player 2
+ * tries to guess it and so on. FXML Scene: guesser-game-scene.fxml
+ *
+ * @author GregorGott
+ * @version 1.0.1
+ * @since 2022-04-09
+ */
 public class GuesserGameController {
 
+    // Declare FXML basic UI
     @FXML
     public BorderPane borderPane;
 
@@ -46,18 +56,18 @@ public class GuesserGameController {
     private final Label outputLabel = new Label();
     private final Label usedCharsLabel = new Label();
 
-    int currentPlayer = 1;
-    int currentRound = 1;
-    int pointsPlayer1, pointsPlayer2, tempPointsPlayer1, tempPointsPLayer2;
-    int numberOfQuestions;
-    int maxMistakes;
-    int mistakesCounter;
-    boolean createQuestion = true;
+    private int currentPlayer = 1;
+    private int currentRound = 1;
+    private int pointsPlayer1, pointsPlayer2, tempPointsPlayer1, tempPointsPLayer2;
+    private int numberOfQuestions;
+    private int maxMistakes;
+    private int mistakesCounter;
+    private boolean createQuestion = true;
 
-    char[] wordToBeGuessedSolution;
-    char[] outputLabelArray;
+    private char[] wordToBeGuessedSolution;
+    private char[] outputLabelArray;
 
-    List<Character> usedCharsList = new ArrayList<>();
+    private List<Character> usedCharsList = new ArrayList<>();
 
     public void setBasics(int i1, int i2) {
         numberOfQuestions = i1;

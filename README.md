@@ -27,7 +27,7 @@ Player 1 gives the word "Caretaker". Player 2 enters "C" and "A" and receives tw
 
 |C|A|R|E|T|A|    K   |E|R|
 |-|-|-|-|-|-|--------|-|-|
-|1|2|3|4|5|2|<b>6</b>|4|3|
+|1|2|3|4|5|<b>2</b>|6|<b>4</b>|<b>3</b>|
 
 ## Images
 <p>

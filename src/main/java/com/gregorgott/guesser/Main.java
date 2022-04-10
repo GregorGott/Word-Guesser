@@ -8,7 +8,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 /**
- * <h1>Main</h1>
  * Loads the main menu FXML in the Stage and shows it.
  *
  * @author GregorGott

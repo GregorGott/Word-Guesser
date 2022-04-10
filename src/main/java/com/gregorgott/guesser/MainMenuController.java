@@ -16,7 +16,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
- * <h1>MainMenuController</h1>
  * The first Scene to be shown when the application starts. Here the user can set the max amount of mistakes
  * and number of questions.
  *
@@ -34,7 +33,6 @@ public class MainMenuController implements Initializable {
     private Spinner<Integer> maxMistakesSpinner;
 
     /**
-     * <h2>getNumberOfQuestionsSpinnerValue</h2>
      * @return Number of questions from the Spinner.
      */
     public int getNumberOfQuestionsSpinnerValue() {
@@ -42,7 +40,6 @@ public class MainMenuController implements Initializable {
     }
 
     /**
-     * <h2>getMaxMistakesSpinnerValue</h2>
      * @return Number of max mistakes from the Spinner.
      */
     public int getMaxMistakesSpinnerValue() {
@@ -50,7 +47,6 @@ public class MainMenuController implements Initializable {
     }
 
     /**
-     * <h2>startGame</h2>
      * Starts the game by loading the game fxml file and pass over attributes to the <code>gameController</code>.
      * @param   event           Get Source as Node of button to load <code>GuesserGameController</code> on the Stage.
      * @throws  IOException     Load FXML file.
@@ -62,8 +58,8 @@ public class MainMenuController implements Initializable {
         Scene scene = new Scene(root);
 
         // Implement GuesserGameController and set number of questions and max mistakes
-        GuesserGameController gameController = loader.getController();
-        gameController.setBasics(getNumberOfQuestionsSpinnerValue(), getMaxMistakesSpinnerValue());
+        GuesserGameController guesserGameController = loader.getController();
+        guesserGameController.startGame(getNumberOfQuestionsSpinnerValue(), getMaxMistakesSpinnerValue());
 
         // Get current Stage and switch Scene
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();

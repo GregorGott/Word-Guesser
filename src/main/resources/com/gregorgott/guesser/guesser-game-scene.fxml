@@ -11,30 +11,27 @@
 <BorderPane id="game-background" fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gregorgott.guesser.GuesserGameController">
    <top>
       <HBox id="top-bar" alignment="CENTER_LEFT" spacing="20.0" BorderPane.alignment="CENTER">
-         <children>
-            <Button id="cancel-button" focusTraversable="false" mnemonicParsing="false" onAction="#cancelRoundButtonPushed" text="Cancel" />
-            <Label fx:id="currentPlayerLabel">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </Label>
-            <Label fx:id="questionsCounterLabel" />
-         </children>
          <BorderPane.margin>
-            <Insets />
+            <Insets/>
          </BorderPane.margin>
          <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
          </padding>
+         <Button id="cancel-button" focusTraversable="false" mnemonicParsing="false" onAction="#cancelRoundButton"
+                 text="Cancel"/>
+         <Label fx:id="currentPlayerLabel">
+            <HBox.margin>
+               <Insets/>
+            </HBox.margin>
+         </Label>
+         <Label fx:id="questionsCounterLabel"/>
       </HBox>
    </top>
    <right>
       <Button id="next-button" fx:id="nextButton" maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#buttonPushed" prefWidth="50.0" BorderPane.alignment="CENTER">
          <graphic>
             <ImageView fitHeight="80.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@images/next-arrow.png" />
-               </image>
+               <Image url="@images/next-arrow.png"/>
             </ImageView>
          </graphic>
          <BorderPane.margin>

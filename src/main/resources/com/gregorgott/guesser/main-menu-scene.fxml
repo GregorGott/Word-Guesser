@@ -8,27 +8,31 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="main-menu-background" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gregorgott.guesser.MainMenuController">
-   <children>
-      <Label layoutX="151.0" layoutY="31.0" text="Word Guesser">
-         <font>
-            <Font name="Khmer MN" size="52.0" />
-         </font>
-      </Label>
-      <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" />
-      <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" />
-      <Label layoutX="205.0" layoutY="205.0" text="Max mistakes:" />
-      <Spinner fx:id="numberOfQuestionsSpinner" layoutX="296.0" layoutY="240.0" prefHeight="25.0" prefWidth="171.0" />
-      <Button defaultButton="true" layoutX="133.0" layoutY="275.0" mnemonicParsing="false" onAction="#startGame" prefHeight="25.0" prefWidth="334.0" text="Start Game">
-         <padding>
-            <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-         </padding></Button>
-      <Spinner fx:id="maxMistakesSpinner" layoutX="296.0" layoutY="200.0" prefHeight="25.0" prefWidth="171.0" />
-      <Label layoutX="164.0" layoutY="245.0" text="Number of questions:" />
-      <Label layoutX="527.0" layoutY="380.0" text="Version: 1.0.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
-         <font>
-            <Font size="10.0" />
-         </font>
-      </Label>
-   </children>
+<AnchorPane id="main-menu-background" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@stylesheet.css"
+            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.gregorgott.guesser.MainMenuController">
+   <Label layoutX="151.0" layoutY="31.0" text="Word Guesser">
+      <font>
+         <Font name="Khmer MN" size="52.0"/>
+      </font>
+   </Label>
+   <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0"/>
+   <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0"/>
+   <Label layoutX="205.0" layoutY="205.0" text="Max mistakes:"/>
+   <Spinner fx:id="numberOfQuestionsSpinner" layoutX="296.0" layoutY="240.0" prefHeight="25.0" prefWidth="171.0"/>
+   <Button defaultButton="true" layoutX="133.0" layoutY="275.0" mnemonicParsing="false" onAction="#startGame"
+           prefHeight="25.0" prefWidth="334.0" text="Start Game">
+      <padding>
+         <Insets bottom="8.0" left="8.0" right="8.0" top="8.0"/>
+      </padding>
+   </Button>
+   <Spinner fx:id="maxMistakesSpinner" layoutX="296.0" layoutY="200.0" prefHeight="25.0" prefWidth="171.0"/>
+   <Label layoutX="164.0" layoutY="245.0" text="Number of questions:"/>
+   <Label layoutX="527.0" layoutY="380.0" text="Version: 1.0.0" AnchorPane.bottomAnchor="10.0"
+          AnchorPane.rightAnchor="10.0">
+      <font>
+         <Font size="10.0"/>
+      </font>
+   </Label>
 </AnchorPane>

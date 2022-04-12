@@ -4,42 +4,57 @@
     -fx-font-size: 10pt;
 }
 
+/* White buttons with hover effect */
 .button {
-    /* Thin gray border and white fill */
-    -fx-background-color: transparent, #b5b5b5, white, white;
+    -fx-background-color: white;
+    -fx-background-radius: 5;
 }
 
-.button:pressed {
-    /* Gray fill */
-    -fx-background-color: transparent, #b5b5b5, #d9d9d9, #d9d9d9;
+.button:hover {
+    -fx-background-color: #d7d7d7;
 }
 
+/* Rounded, white text fields with thin gray border */
 .text-field {
-    /* Thin gray border and white fill */
-   -fx-background-color: #b5b5b5, white, transparent, transparent;
+    -fx-background-color: white;
+    -fx-background-radius: 5;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-border-color: #b5b5b5;
 }
 
-/* Spinner color */
+/* Spinner */
+.spinner {
+    -fx-background-color: transparent;
+}
+
+/* Spinner buttons color */
 .spinner .increment-arrow-button,
 .spinner .decrement-arrow-button {
-   -fx-background-color: #b5b5b5, white, white, white;
+    -fx-background-color: #b5b5b5, white, white, white;
 }
 
 .spinner .increment-arrow-button:hover,
 .spinner .decrement-arrow-button:hover {
-       -fx-background-color: #b5b5b5, #e7e7e7, transparent, #e7e7e7;
+    -fx-background-color: #b5b5b5, #e7e7e7, transparent, #e7e7e7;
 }
 
-/* Main menu */
+/* Text field corners are rounded on left side */
+.spinner .text-field {
+    -fx-background-radius: 5 0 0 5;
+    -fx-border-radius: 5 0 0 5;
+}
+
+/* Main menu gradient background */
 #main-menu-background {
-    -fx-background-color: linear-gradient(to bottom right, rgba(180,49,0,0.6), rgba(209,29,201,0.6), rgba(0,212,255,0.6));
+    -fx-background-color: linear-gradient(to bottom right, rgba(180, 49, 0, 0.6), rgba(209, 29, 201, 0.6), rgba(0, 212, 255, 0.6));
     -fx-text-background-color: #ffffff;
 }
 
 /* Game UI */
 /* Border pane background */
 #game-background {
-    -fx-background-color: linear-gradient(to right, rgba(255,174,224,1), rgba(138,200,255,1));
+    -fx-background-color: linear-gradient(to right, rgba(255, 174, 224, 1), rgba(138, 200, 255, 1));
 }
 
 /* Top bar */
@@ -48,21 +63,16 @@
 }
 
 #cancel-button {
-    -fx-background-color: transparent, #ced4da, #ced4da, #ced4da;
+    -fx-background-color: #ced4da;
 }
 
 #cancel-button:pressed {
-    -fx-background-color: transparent, #adb5bd, #adb5bd, #adb5bd;
-}
-
-/* Big next button on right side */
-#next-button {
-    -fx-background-radius: 5 5 5 5;
+    -fx-background-color: #adb5bd;
 }
 
 /* Scroll pane with rounded corners and an other scroll bar color */
 .scroll-pane {
-    -fx-background-radius: 5 5 5 5;
+    -fx-background-radius: 5;
     -fx-background-color: white;
 }
 
@@ -78,8 +88,4 @@
 
 .scroll-bar:horizontal .thumb {
     -fx-background-color: #ced4da;
-}
-
-.scroll-bar:horizontal .thumb:pressed {
-    -fx-background-color: #adb5bd;
 }

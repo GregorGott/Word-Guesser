@@ -14,7 +14,7 @@ In the main menu, you can set the number of questions and the maximum mistakes. 
 If you want to play this game on a desktop device just download the correct version for your operating system.
 
 **Download for Windows: (Coming Soon)** <br>
-**Download for Ubuntu: (Coming Soon)** <br>
+**Download for Linux: (Coming Soon)** <br>
 **Download for macOS: (Coming Soon)**
 
 Right after the download you can start the game and have fun.

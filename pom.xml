@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.gregorgott</groupId>
-    <artifactId>Guesser</artifactId>
+    <artifactId>Word_Guesser</artifactId>
     <version>1.0.0</version>
     <name>Word_Guesser</name>
 
@@ -18,12 +18,12 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>17.0.2</version>
+            <version>18</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>17.0.2</version>
+            <version>18</version>
         </dependency>
 
         <dependency>
@@ -61,9 +61,9 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>com.gregorgott.guesser/com.gregorgott.guesser.Main</mainClass>
-                            <launcher>app</launcher>
-                            <jlinkZipName>app</jlinkZipName>
-                            <jlinkImageName>app</jlinkImageName>
+                            <launcher>Launch</launcher>
+                            <jlinkZipName>Word_Guesser</jlinkZipName>
+                            <jlinkImageName>Word_Guesser</jlinkImageName>
                             <noManPages>true</noManPages>
                             <stripDebug>true</stripDebug>
                             <noHeaderFiles>true</noHeaderFiles>

@@ -22,19 +22,19 @@ import java.util.List;
  * @since 2022-04-05
  */
 public class AskQuestionPane {
+    private final VBox mainVBox;
+    private final HBox circleHBox;
+    private final List<Character> usedCharsList;
     public Button checkGuessButton;
     public Label outputLabel, usedCharsLabel;
     public TextField textField;
-    private final VBox mainVBox;
-    private final HBox circleHBox;
-
-    private final List<Character> usedCharsList;
 
     /**
      * Set all elements for the UI. Create a text field in which single letters are written to guess the word.
      * Each character in the outputLabelArray is one underscore in the scroll pane.
-     * @param   outputLabelArray    Each character is an underscore.
-     * @param   maxMistakes         Max amount of mistakes. Each mistake is one circle.
+     *
+     * @param outputLabelArray Each character is an underscore.
+     * @param maxMistakes      Max amount of mistakes. Each mistake is one circle.
      */
     public AskQuestionPane(char[] outputLabelArray, int maxMistakes) {
         Label enterACharLabel = new Label("Enter a character:");

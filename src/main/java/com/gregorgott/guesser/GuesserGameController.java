@@ -41,7 +41,7 @@ public class GuesserGameController {
     private int currentRound = 1;
     private int pointsPlayer1, pointsPlayer2, tempPointsPlayer1, tempPointsPLayer2, numberOfQuestions,
             maxMistakes, mistakesCounter, wordLength;
-    private boolean setQuestionTabActive = true;
+    private boolean isSetQuestionTabActive = true;
 
     private char[] solutionArray, outputLabelArray;
 
@@ -52,8 +52,9 @@ public class GuesserGameController {
 
     /**
      * Start the game and set number of questions and max mistakes.
-     * @param   numberOfQuestions   Number of questions/rounds in game.
-     * @param   maxMistakes         Max amount of allowed mistakes per player.
+     *
+     * @param numberOfQuestions Number of questions/rounds in game.
+     * @param maxMistakes       Max amount of allowed mistakes per player.
      */
     public void startGame(int numberOfQuestions, int maxMistakes) {
         this.numberOfQuestions = numberOfQuestions;
@@ -70,9 +71,9 @@ public class GuesserGameController {
      * to false and switch to ask question.
      */
     public void buttonPushed() {
-        if (setQuestionTabActive) {
+        if (isSetQuestionTabActive) {
             // Button is pushed in set question tab
-            setQuestionTabActive = false;
+            isSetQuestionTabActive = false;
 
             // Switch to next player
             if (currentPlayer == 1) {
@@ -90,7 +91,7 @@ public class GuesserGameController {
             if (numberOfQuestions < currentRound) {
                 openResultScene();
             } else {
-                setQuestionTabActive = true;
+                isSetQuestionTabActive = true;
                 setQuestion();
             }
         }
@@ -130,7 +131,8 @@ public class GuesserGameController {
 
     /**
      * Load word in <code>solutionArray</code> and loads an underscore for every character in <code>outputLabelArray</code>.
-     * @param   word    Is the word to be guessed by the other player.
+     *
+     * @param word Is the word to be guessed by the other player.
      */
     private void loadWordInArray(String word) {
         // Get length of wordToBeGuessed and set the array length
@@ -150,8 +152,9 @@ public class GuesserGameController {
      * Show a text field, a button and a scroll pane with a label on it. The player enters his guess (one character)
      * in the text field and clicks on the <code>checkGuessButton</code> button. The <code>checkGuess</code> method
      * checks the guess.
+     *
      * @see <a href="https://stackoverflow.com/questions/15159988/javafx-2-2-textfield-maxlength">
-     *     JavaFX 2.2 TextField maxlength</a>
+     * JavaFX 2.2 TextField maxlength</a>
      */
     private void askQuestion() {
         setTopBarUI();
@@ -233,7 +236,7 @@ public class GuesserGameController {
                         // Switch all circles to red and end round
                         askQuestionPane.clearCircleHBox();
                         for (int i = 0; i < maxMistakes; i++) {
-                            askQuestionPane.addCircle(Color.rgb(152,0,0));
+                            askQuestionPane.addCircle(Color.rgb(152, 0, 0));
                         }
 
                         endRound();
@@ -242,10 +245,10 @@ public class GuesserGameController {
                         askQuestionPane.clearCircleHBox();
 
                         for (int i = 0; i < mistakesCounter; i++) {
-                            askQuestionPane.addCircle(Color.rgb(176,44,44));
+                            askQuestionPane.addCircle(Color.rgb(176, 44, 44));
                         }
                         for (int i = 0; i < maxMistakes - mistakesCounter; i++) {
-                            askQuestionPane.addCircle( Color.rgb(27,94,23));
+                            askQuestionPane.addCircle(Color.rgb(27, 94, 23));
                         }
                     }
                 }
@@ -255,9 +258,10 @@ public class GuesserGameController {
 
     /**
      * Check if value is in chars array.
-     * @param   value   This char is checked.
-     * @param   chars   The value is searched in this array.
-     * @return          A boolean if the value is in the array.
+     *
+     * @param value This char is checked.
+     * @param chars The value is searched in this array.
+     * @return A boolean if the value is in the array.
      */
     private boolean isCharInArray(char value, char[] chars) {
         for (char c : chars) {
@@ -272,22 +276,22 @@ public class GuesserGameController {
      * Disable 'Check Guess' button and text field in askQuestion, show the solution and restore all variables.
      */
     private void endRound() {
-            // Disable 'Check Guess' button and 'textField', and enable 'nextButton'
-            nextButton.setDisable(false);
-            askQuestionPane.textField.setDisable(true);
-            askQuestionPane.checkGuessButton.setDisable(true);
+        // Disable 'Check Guess' button and 'textField', and enable 'nextButton'
+        nextButton.setDisable(false);
+        askQuestionPane.textField.setDisable(true);
+        askQuestionPane.checkGuessButton.setDisable(true);
 
-            // Show solution
-            askQuestionPane.outputLabel.setText("");
-            for (char c : solutionArray) {
-                askQuestionPane.outputLabel.setText(askQuestionPane.outputLabel.getText() + " " + c + " ");
-            }
+        // Show solution
+        askQuestionPane.outputLabel.setText("");
+        for (char c : solutionArray) {
+            askQuestionPane.outputLabel.setText(askQuestionPane.outputLabel.getText() + " " + c + " ");
+        }
 
-            // Restore variables to default
-            mistakesCounter = 0;
-            tempPointsPlayer1 = 0;
-            tempPointsPLayer2 = 0;
-            usedCharsList.clear();
+        // Restore variables to default
+        mistakesCounter = 0;
+        tempPointsPlayer1 = 0;
+        tempPointsPLayer2 = 0;
+        usedCharsList.clear();
     }
 
     /**
@@ -296,7 +300,7 @@ public class GuesserGameController {
     public void cancelRoundButton() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Warning");
-        alert.setHeaderText("End round");
+        alert.setHeaderText("End round now.");
         alert.setContentText("The round will end immediately, the result may not be correct.");
 
         if (alert.showAndWait().orElse(null) == ButtonType.OK) {
@@ -307,14 +311,14 @@ public class GuesserGameController {
     /**
      * Get winner and set a winner text. Show the winner text in ResultSceneController.
      */
-    public void openResultScene() {
+    private void openResultScene() {
         // Winner text
         String winner;
 
         if (pointsPlayer2 > pointsPlayer1) {
-            winner = "Player 2 won";
+            winner = "Player 2 won.";
         } else if (pointsPlayer2 < pointsPlayer1) {
-            winner = "Player 1 won";
+            winner = "Player 1 won.";
         } else {
             winner = "Draw!";
         }

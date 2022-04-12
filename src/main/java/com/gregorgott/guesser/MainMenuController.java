@@ -48,8 +48,9 @@ public class MainMenuController implements Initializable {
 
     /**
      * Starts the game by loading the game fxml file and pass over attributes to the <code>gameController</code>.
-     * @param   event           Get Source as Node of button to load <code>GuesserGameController</code> on the Stage.
-     * @throws  IOException     Load FXML file.
+     *
+     * @param event Get Source as Node of button to load <code>GuesserGameController</code> on the Stage.
+     * @throws IOException Load FXML file.
      */
     public void startGame(ActionEvent event) throws IOException {
         // Load Game FXML into Scene
@@ -62,15 +63,15 @@ public class MainMenuController implements Initializable {
         guesserGameController.startGame(getNumberOfQuestionsSpinnerValue(), getMaxMistakesSpinnerValue());
 
         // Get current Stage and switch Scene
-        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         numberOfQuestionsSpinner.setValueFactory(
-                new SpinnerValueFactory.IntegerSpinnerValueFactory(2,100, 6, 2));
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 100, 6, 2));
         maxMistakesSpinner.setValueFactory(
-                new SpinnerValueFactory.IntegerSpinnerValueFactory(1,13, 8));
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 13, 8));
     }
 }

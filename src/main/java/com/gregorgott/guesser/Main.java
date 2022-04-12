@@ -15,6 +15,10 @@ import java.io.IOException;
  * @since 2022-04-09
  */
 public class Main extends Application {
+    public static void main(String[] args) {
+        launch();
+    }
+
     @Override
     public void start(Stage stage) throws IOException {
         // Load main-menu-scene.fxml in 'Word Guesser' Stage
@@ -26,9 +30,5 @@ public class Main extends Application {
 
         stage.setScene(scene);
         stage.show();
-    }
-
-    public static void main(String[] args) {
-        launch();
     }
 }

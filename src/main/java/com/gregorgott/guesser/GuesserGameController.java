@@ -4,14 +4,22 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.Scanner;
 
 /**
  * The Game Controller controls the game (ask questions and set questions). Player 1 enters a word and Player 2
@@ -22,26 +30,34 @@ import java.util.*;
  * @since 2022-04-21
  */
 public class GuesserGameController {
+    private final ArrayList<Character> usedCharsList;
+    private final ArrayList<String> usedWordsList;
+    private final FileManager fileManager;
+
+    // Declare FXML basic UI
+    @FXML
+    public BorderPane borderPane;
+    @FXML
+    public Label currentPlayerLabel;
+    @FXML
+    public Label questionsCounterLabel;
+    @FXML
+    public Button nextButton;
+
     private int currentPlayer = 1;
     private int currentRound = 1;
     private int pointsPlayer1, pointsPlayer2, tempPointsPlayer1, tempPointsPLayer2, numberOfQuestions,
             maxMistakes, mistakesCounter, wordLength;
-
     private boolean isSetQuestionTabActive = true;
-
     private char[] solutionArray, outputLabelArray;
-
-    private final ArrayList<Character> usedCharsList;
-    private final ArrayList<String> usedWordsList;
-
     private File pathToGuessingFile;
-
     private GameType gameType;
-
-    private final FileManager fileManager;
     private SetQuestionPane setQuestionPane;
     private AskQuestionPane askQuestionPane;
 
+    /**
+     * Initialize basic array lists and FileManager.
+     */
     public GuesserGameController() {
         fileManager = new FileManager();
 
@@ -49,33 +65,11 @@ public class GuesserGameController {
         usedWordsList = new ArrayList<>();
     }
 
-    // Declare FXML basic UI
-    @FXML
-    public BorderPane borderPane;
-
-    @FXML
-    public Label currentPlayerLabel;
-
-    @FXML
-    public Label questionsCounterLabel;
-
-    @FXML
-    public Button nextButton;
-
     /**
-     * Multiplayer is the normal game mode with two players. One is guessing the word, the other one gives.
-     * In Singleplayer, the computer searches for a random word and the player try to guess it.
-     */
-    public enum GameType {
-        SINGLEPLAYER,
-        MULTIPLAYER
-    }
-
-    /**
-     * Start the game and set number of questions and max mistakes. When the multiplayer mode is selected,
+     * Start the game and set a number of questions and max mistakes. When the multiplayer mode is selected,
      * set a question, but when the Singleplayer mode is selected, set the source file with random words.
      *
-     * @param numberOfQuestions Number of questions/rounds in game.
+     * @param numberOfQuestions Number of questions/rounds in the game.
      * @param maxMistakes       Max amount of allowed mistakes per player.
      * @param gameType          Single or Multiplayer mode.
      */
@@ -94,7 +88,7 @@ public class GuesserGameController {
 
     /**
      * If the big 'next button' on the right side is pushed. Get current tab (setQuestion or askQuestion)
-     * and switch tab. Example: If the current tab is the setQuestion tab set <code>setQuestionTabActive</code>
+     * and switch tab. Example: If the current tab is the setQuestion tab set setQuestionTabActive
      * to false and switch to ask question.
      */
     public void buttonPushed() {
@@ -137,7 +131,7 @@ public class GuesserGameController {
     }
 
     /**
-     * Get current round and player and show it on the top of the Scene.
+     * Get the current round and player and show it on the top of the Scene.
      */
     private void setTopBarUI() {
         currentPlayerLabel.setText("Player " + currentPlayer + "'s turn");
@@ -162,12 +156,12 @@ public class GuesserGameController {
     }
 
     /**
-     * To use the Singleplayer mode the user needs to select a txt file with words. Each line is one word to guess.
-     * Or the user can download a word guessing file from a GitHub Branch.
-     * This method shows an alert with two options: Select a text file or copy a link to download a text file.
-     * To select a file show a FileChooser.
+     * Set pathToGuessing file and check the number of lines in the file. If there are fewer lines than selected amount
+     * of questions, set questions to number of lines.
+     *
+     * @param pathToGuessingFile Path to the text file with words.
      */
-    public void setSingleplayerFile(File pathToGuessingFile) {
+    public void setPathToGuessingFile(File pathToGuessingFile) {
         this.pathToGuessingFile = pathToGuessingFile;
 
         // If there are fewer lines than questions set number of questions to number of lines in file.
@@ -178,7 +172,7 @@ public class GuesserGameController {
     }
 
     /**
-     * Get all lines from pathToGuessingFile and load every line wich not starts with a "##"
+     * Get all lines from pathToGuessingFile and load every line wich not start with a "##"
      * in singleplayerWordList ArrayList.
      */
     private void setSingleplayerWordList() {
@@ -199,7 +193,7 @@ public class GuesserGameController {
     }
 
     /**
-     * Get random word from the selected file, load it in the Array and ask the question.
+     * Get a random word from the selected file, load it in the Array and ask the question.
      */
     private void loadRandomWordInArray() {
         // Get random number between 0 and the size of the wordsInArray Array.
@@ -216,6 +210,7 @@ public class GuesserGameController {
     }
 
     /**
+     * @param string The String to be converted to uppercase.
      * @return The text field text in uppercase.
      */
     private String convertStringToUppercase(String string) {
@@ -242,11 +237,7 @@ public class GuesserGameController {
     }
 
     /**
-     * Show a text field, a button and a scroll pane with a label on it. The player enters his guess (one character)
-     * in the text field and clicks on the <code>checkGuessButton</code> button. The <code>checkGuess</code> method
-     * checks the guess.
-     *
-     * @see <a href="https://stackoverflow.com/questions/15159988/javafx-2-2-textfield-maxlength">JavaFX 2.2 TextField maxlength</a>
+     * Show the askQuestion Pane and check the users input when clicking on the checkGuessButton or pressing Enter.
      */
     private void askQuestion() {
         setTopBarUI();
@@ -347,7 +338,7 @@ public class GuesserGameController {
     }
 
     /**
-     * Check if value is in chars array.
+     * Check if the value is in the chars array.
      *
      * @param value This char is checked.
      * @param chars The value is searched in this array.
@@ -363,7 +354,7 @@ public class GuesserGameController {
     }
 
     /**
-     * Disable 'Check Guess' button and text field in askQuestion, show the solution and restore all variables.
+     * Disable the 'Check Guess' button and the text field in askQuestion, show the solution and restore all variables.
      */
     private void endRound() {
         // Disable 'Check Guess' button and 'textField', and enable 'nextButton'
@@ -385,7 +376,7 @@ public class GuesserGameController {
     }
 
     /**
-     * Show an alert and end round when user clicks on 'OK'.
+     * Show an alert and end round when the user clicks on 'OK'.
      */
     public void cancelRoundButton() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -399,7 +390,7 @@ public class GuesserGameController {
     }
 
     /**
-     * Get winner and set a winner text. Show the winner text in ResultSceneController.
+     * Get the winner and set a winner text. Show the winner text in ResultSceneController.
      */
     private void showResultScene() {
         // Winner text
@@ -432,5 +423,14 @@ public class GuesserGameController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Multiplayer is the normal game mode with two players. One is guessing the word, the other one gives.
+     * In Singleplayer, the computer searches for a random word and the player tries to guess it.
+     */
+    public enum GameType {
+        SINGLEPLAYER,
+        MULTIPLAYER
     }
 }

@@ -8,6 +8,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -96,7 +98,7 @@ public class MainMenuController implements Initializable {
                 alert.setContentText("The file needs to has more than one line.");
                 alert.show();
             } else {
-                guesserGameController.setSingleplayerFile(file);
+                guesserGameController.setPathToGuessingFile(file);
                 loadGameScene(root, stage);
             }
         } else if (getGameType() == GuesserGameController.GameType.MULTIPLAYER) {
@@ -142,7 +144,11 @@ public class MainMenuController implements Initializable {
             return true;
         } else  if (result.orElse(null) == copyLinkButton) {
             // Copy link to download to clipboard
-            // TODO: Copy URL to download page
+            ClipboardContent clipboardContent = new ClipboardContent();
+            clipboardContent.putUrl("https://github.com/GregorGott/WG-Singleplayer-Files");
+
+            Clipboard clipboard = Clipboard.getSystemClipboard();
+            clipboard.setContent(clipboardContent);
         } else if (result.orElse(null) == ButtonType.CANCEL) {
             // Close alert
             alert.close();

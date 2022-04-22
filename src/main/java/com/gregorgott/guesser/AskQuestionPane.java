@@ -35,6 +35,7 @@ public class AskQuestionPane {
      *
      * @param outputLabelArray Each character is an underscore.
      * @param maxMistakes      Max amount of mistakes. Each mistake is one circle.
+     * @see <a href="https://stackoverflow.com/questions/15159988/javafx-2-2-textfield-maxlength">JavaFX 2.2 TextField maxlength</a>
      */
     public AskQuestionPane(char[] outputLabelArray, int maxMistakes) {
         Label enterACharLabel = new Label("Enter a character:");

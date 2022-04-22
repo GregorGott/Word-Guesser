@@ -10,20 +10,45 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 /**
  * The Game Controller controls the game (ask questions and set questions). Player 1 enters a word and Player 2
  * tries to guess it and so on. FXML Scene: guesser-game-scene.fxml
  *
  * @author GregorGott
- * @version 1.0.2
- * @since 2022-04-10
+ * @version 1.1.0
+ * @since 2022-04-21
  */
 public class GuesserGameController {
+    private int currentPlayer = 1;
+    private int currentRound = 1;
+    private int pointsPlayer1, pointsPlayer2, tempPointsPlayer1, tempPointsPLayer2, numberOfQuestions,
+            maxMistakes, mistakesCounter, wordLength;
+
+    private boolean isSetQuestionTabActive = true;
+
+    private char[] solutionArray, outputLabelArray;
+
+    private final ArrayList<Character> usedCharsList;
+    private final ArrayList<String> usedWordsList;
+
+    private File pathToGuessingFile;
+
+    private GameType gameType;
+
+    private final FileManager fileManager;
+    private SetQuestionPane setQuestionPane;
+    private AskQuestionPane askQuestionPane;
+
+    public GuesserGameController() {
+        fileManager = new FileManager();
+
+        usedCharsList = new ArrayList<>();
+        usedWordsList = new ArrayList<>();
+    }
+
     // Declare FXML basic UI
     @FXML
     public BorderPane borderPane;
@@ -37,32 +62,34 @@ public class GuesserGameController {
     @FXML
     public Button nextButton;
 
-    private int currentPlayer = 1;
-    private int currentRound = 1;
-    private int pointsPlayer1, pointsPlayer2, tempPointsPlayer1, tempPointsPLayer2, numberOfQuestions,
-            maxMistakes, mistakesCounter, wordLength;
-    private boolean isSetQuestionTabActive = true;
-
-    private char[] solutionArray, outputLabelArray;
-
-    private List<Character> usedCharsList;
-
-    private SetQuestionPane setQuestionPane;
-    private AskQuestionPane askQuestionPane;
+    /**
+     * Multiplayer is the normal game mode with two players. One is guessing the word, the other one gives.
+     * In Singleplayer, the computer searches for a random word and the player try to guess it.
+     */
+    public enum GameType {
+        SINGLEPLAYER,
+        MULTIPLAYER
+    }
 
     /**
-     * Start the game and set number of questions and max mistakes.
+     * Start the game and set number of questions and max mistakes. When the multiplayer mode is selected,
+     * set a question, but when the Singleplayer mode is selected, set the source file with random words.
      *
      * @param numberOfQuestions Number of questions/rounds in game.
      * @param maxMistakes       Max amount of allowed mistakes per player.
+     * @param gameType          Single or Multiplayer mode.
      */
-    public void startGame(int numberOfQuestions, int maxMistakes) {
+    public void startGame(int numberOfQuestions, int maxMistakes, GameType gameType) {
         this.numberOfQuestions = numberOfQuestions;
         this.maxMistakes = maxMistakes;
+        this.gameType = gameType;
 
-        usedCharsList = new ArrayList<>();
-
-        setQuestion();
+        if (gameType == GameType.MULTIPLAYER) {
+            setQuestion();
+        } else if (gameType == GameType.SINGLEPLAYER) {
+            setSingleplayerWordList();
+            loadRandomWordInArray();
+        }
     }
 
     /**
@@ -71,28 +98,40 @@ public class GuesserGameController {
      * to false and switch to ask question.
      */
     public void buttonPushed() {
-        if (isSetQuestionTabActive) {
-            // Button is pushed in set question tab
-            isSetQuestionTabActive = false;
+        if (gameType == GameType.MULTIPLAYER) {
+            if (isSetQuestionTabActive) {
+                // Button is pushed in set question tab
+                isSetQuestionTabActive = false;
 
-            // Switch to next player
-            if (currentPlayer == 1) {
-                currentPlayer = 2;
+                // Switch to next player
+                if (currentPlayer == 1) {
+                    currentPlayer = 2;
+                } else {
+                    currentPlayer = 1;
+                }
+
+                // Get word from setQuestionPane and load it in an Array and show the question
+                loadWordInArray(convertStringToUppercase(setQuestionPane.getTextFieldText()));
+                askQuestion();
             } else {
-                currentPlayer = 1;
-            }
+                currentRound++;
 
-            // Set center of border pane to askQuestion
-            askQuestion();
-        } else {
+                // Show results if end is reached
+                if (numberOfQuestions < currentRound) {
+                    showResultScene();
+                } else {
+                    isSetQuestionTabActive = true;
+                    setQuestion();
+                }
+            }
+        } else if (gameType == GameType.SINGLEPLAYER) {
             currentRound++;
 
-            // Show results if end is reached
             if (numberOfQuestions < currentRound) {
-                openResultScene();
+                showResultScene();
             } else {
-                isSetQuestionTabActive = true;
-                setQuestion();
+                setTopBarUI();
+                loadRandomWordInArray();
             }
         }
     }
@@ -123,10 +162,64 @@ public class GuesserGameController {
     }
 
     /**
+     * To use the Singleplayer mode the user needs to select a txt file with words. Each line is one word to guess.
+     * Or the user can download a word guessing file from a GitHub Branch.
+     * This method shows an alert with two options: Select a text file or copy a link to download a text file.
+     * To select a file show a FileChooser.
+     */
+    public void setSingleplayerFile(File pathToGuessingFile) {
+        this.pathToGuessingFile = pathToGuessingFile;
+
+        // If there are fewer lines than questions set number of questions to number of lines in file.
+        int linesInFile = fileManager.countLines(pathToGuessingFile, "##");
+        if (numberOfQuestions > linesInFile) {
+            numberOfQuestions = linesInFile;
+        }
+    }
+
+    /**
+     * Get all lines from pathToGuessingFile and load every line wich not starts with a "##"
+     * in singleplayerWordList ArrayList.
+     */
+    private void setSingleplayerWordList() {
+        try {
+            Scanner scanner = new Scanner(pathToGuessingFile);
+            while (scanner.hasNextLine()) {
+                // Load line in String
+                String scannerNextLine = scanner.nextLine();
+                // Detect file comments
+                if (!scannerNextLine.startsWith("##")) {
+                    usedWordsList.add(scannerNextLine);
+                }
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Get random word from the selected file, load it in the Array and ask the question.
+     */
+    private void loadRandomWordInArray() {
+        // Get random number between 0 and the size of the wordsInArray Array.
+        Random randomWord = new Random();
+        int line = randomWord.nextInt(usedWordsList.size());
+
+        // Load it in the Array and ask question
+        loadWordInArray(convertStringToUppercase(usedWordsList.get(line)));
+
+        // Remove line to avoid a second ask of the questions
+        usedWordsList.remove(line);
+
+        askQuestion();
+    }
+
+    /**
      * @return The text field text in uppercase.
      */
-    private String convertTextFieldToUppercase() {
-        return setQuestionPane.getTextFieldText().toUpperCase();
+    private String convertStringToUppercase(String string) {
+        return string.toUpperCase();
     }
 
     /**
@@ -153,13 +246,10 @@ public class GuesserGameController {
      * in the text field and clicks on the <code>checkGuessButton</code> button. The <code>checkGuess</code> method
      * checks the guess.
      *
-     * @see <a href="https://stackoverflow.com/questions/15159988/javafx-2-2-textfield-maxlength">
-     * JavaFX 2.2 TextField maxlength</a>
+     * @see <a href="https://stackoverflow.com/questions/15159988/javafx-2-2-textfield-maxlength">JavaFX 2.2 TextField maxlength</a>
      */
     private void askQuestion() {
         setTopBarUI();
-
-        loadWordInArray(convertTextFieldToUppercase());
 
         // Disable nextButton on right side
         nextButton.setDisable(true);
@@ -304,23 +394,27 @@ public class GuesserGameController {
         alert.setContentText("The round will end immediately, the result may not be correct.");
 
         if (alert.showAndWait().orElse(null) == ButtonType.OK) {
-            openResultScene();
+            showResultScene();
         }
     }
 
     /**
      * Get winner and set a winner text. Show the winner text in ResultSceneController.
      */
-    private void openResultScene() {
+    private void showResultScene() {
         // Winner text
-        String winner;
+        String winner = null;
 
-        if (pointsPlayer2 > pointsPlayer1) {
-            winner = "Player 2 won.";
-        } else if (pointsPlayer2 < pointsPlayer1) {
-            winner = "Player 1 won.";
-        } else {
-            winner = "Draw!";
+        if (gameType == GameType.MULTIPLAYER) {
+            if (pointsPlayer2 > pointsPlayer1) {
+                winner = "Player 2 won.";
+            } else if (pointsPlayer2 < pointsPlayer1) {
+                winner = "Player 1 won.";
+            } else {
+                winner = "Draw!";
+            }
+        } else if (gameType == GameType.SINGLEPLAYER) {
+            winner = pointsPlayer1 + "Punkte erreicht";
         }
 
         // Load result screen

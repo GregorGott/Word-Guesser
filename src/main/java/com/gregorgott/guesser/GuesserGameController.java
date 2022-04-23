@@ -26,8 +26,8 @@ import java.util.Scanner;
  * tries to guess it and so on. FXML Scene: guesser-game-scene.fxml
  *
  * @author GregorGott
- * @version 1.1.0
- * @since 2022-04-21
+ * @version 1.1.1
+ * @since 2022-04-23
  */
 public class GuesserGameController {
     private final ArrayList<Character> usedCharsList;
@@ -317,7 +317,7 @@ public class GuesserGameController {
                         // Switch all circles to red and end round
                         askQuestionPane.clearCircleHBox();
                         for (int i = 0; i < maxMistakes; i++) {
-                            askQuestionPane.addCircle(Color.rgb(152, 0, 0));
+                            askQuestionPane.addCircle(Color.rgb(190, 27, 27));
                         }
 
                         endRound();
@@ -326,10 +326,10 @@ public class GuesserGameController {
                         askQuestionPane.clearCircleHBox();
 
                         for (int i = 0; i < mistakesCounter; i++) {
-                            askQuestionPane.addCircle(Color.rgb(176, 44, 44));
+                            askQuestionPane.addCircle(Color.rgb(190, 27, 27));
                         }
                         for (int i = 0; i < maxMistakes - mistakesCounter; i++) {
-                            askQuestionPane.addCircle(Color.rgb(27, 94, 23));
+                            askQuestionPane.addCircle(Color.rgb(33, 145, 27));
                         }
                     }
                 }

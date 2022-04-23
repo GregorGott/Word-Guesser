@@ -3,41 +3,44 @@ package com.gregorgott.guesser;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 
 /**
  * Show a pane to enter a word to be guessed.
  *
  * @author GregorGott
- * @version 1.0.0
- * @since 2022-04-10
+ * @version 1.0.1
+ * @since 2022-04-23
  */
 public class SetQuestionPane {
 
-    private final VBox vBox;
+    private final HBox hBox;
 
     public TextField textField;
 
     /**
-     * Shows a <code>textField</code> in which the player enters a word. This word tries to guess the other player.
-     * The word needs to be longer than two characters. All elements are in one VBox.
+     * Shows a text field in which the player enters a word. The other player tries to guess the entered word.
+     * The word needs to be longer than two characters. All elements are in one HBox.
      */
     public SetQuestionPane() {
         textField = new TextField("Caretaker");
+        textField.setPrefWidth(250);
 
         Label label = new Label("Enter a word:");
+        label.setId("white-label");
 
-        vBox = new VBox();
-        vBox.setPadding(new Insets(15, 15, 15, 15));
-        vBox.setSpacing(10);
-        vBox.getChildren().addAll(label, textField);
+        hBox = new HBox();
+        hBox.setPadding(new Insets(20));
+        hBox.setSpacing(10);
+        hBox.getChildren().addAll(label, textField);
     }
 
     /**
-     * @return A VBox with all elements
+     * Get the HBox with the text field and label.
+     * @return A HBox with all elements
      */
-    public VBox getPane() {
-        return vBox;
+    public HBox getPane() {
+        return hBox;
     }
 
     /**

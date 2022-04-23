@@ -23,8 +23,8 @@ import java.util.ResourceBundle;
  * and number of questions.
  *
  * @author GregorGott
- * @version 1.1.0
- * @since 2022-04-22
+ * @version 1.1.1
+ * @since 2022-04-23
  */
 public class MainMenuController implements Initializable {
     // Single-, Multiplayer toggle buttons
@@ -59,6 +59,7 @@ public class MainMenuController implements Initializable {
 
     /**
      * Get selected Toggle Button.
+     *
      * @return The selected GameType (Singleplayer or Multiplayer).
      */
     private GuesserGameController.GameType getGameType() {
@@ -109,6 +110,7 @@ public class MainMenuController implements Initializable {
     /**
      * Call the GuesserGameController start method with number of question, number of max mistakes and the game type
      * and load root in a Stage.
+     *
      * @param root  Content of the FXML file.
      * @param stage Stage to load the FXML on it.
      */
@@ -122,6 +124,7 @@ public class MainMenuController implements Initializable {
 
     /**
      * Return a boolean if the user want to select a text file from his computer.
+     *
      * @return A boolean if the user want to select a text file from his computer.
      */
     private boolean isSelectFileFromComputer() {
@@ -142,7 +145,7 @@ public class MainMenuController implements Initializable {
         if (result.orElse(null) == selectFileButton) {
             // If user want to open a file on his computer
             return true;
-        } else  if (result.orElse(null) == copyLinkButton) {
+        } else if (result.orElse(null) == copyLinkButton) {
             // Copy link to download to clipboard
             ClipboardContent clipboardContent = new ClipboardContent();
             clipboardContent.putUrl("https://github.com/GregorGott/WG-Singleplayer-Files");
@@ -164,6 +167,10 @@ public class MainMenuController implements Initializable {
 
         // Toggle Group with mode buttons
         ToggleGroup modeButtons = new ToggleGroup();
+        modeButtons.selectedToggleProperty().addListener((obsVal, oldVal, newVal) -> {
+            if (newVal == null)
+                oldVal.setSelected(true);
+        });
         modeButtons.getToggles().addAll(singleplayerTogglePlayer, multiplayerTogglePlayer);
 
         // Spinner value factories

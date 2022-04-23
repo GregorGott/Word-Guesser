@@ -4,6 +4,16 @@
     -fx-font-size: 10pt;
 }
 
+/* White labels on dark background */
+#white-label {
+    -fx-text-fill: #ffffff;
+}
+
+/* Black labels on white background */
+#black-label {
+    -fx-text-fill: #000000;
+}
+
 /* White buttons with hover effect */
 .button {
     -fx-background-color: white;
@@ -11,50 +21,54 @@
 }
 
 .button:hover {
-    -fx-background-color: #d7d7d7;
+    -fx-background-color: #e7e6e6;
 }
 
 /* Rounded, white text fields with thin gray border */
 .text-field {
     -fx-background-color: white;
     -fx-background-radius: 5;
-    -fx-border-width: 1;
-    -fx-border-radius: 5;
-    -fx-border-color: #b5b5b5;
 }
 
 /* Spinner */
 .spinner {
-    -fx-background-color: transparent;
+    -fx-background-color: white;
 }
 
-/* Spinner buttons color */
 .spinner .increment-arrow-button,
 .spinner .decrement-arrow-button {
-    -fx-background-color: #b5b5b5, white, white, white;
+    -fx-background-color: white;
 }
 
 .spinner .increment-arrow-button:hover,
 .spinner .decrement-arrow-button:hover {
-    -fx-background-color: #b5b5b5, #e7e7e7, transparent, #e7e7e7;
+    -fx-background-color: #e7e6e6;
 }
 
-/* Text field corners are rounded on left side */
 .spinner .text-field {
-    -fx-background-radius: 5 0 0 5;
     -fx-border-radius: 5 0 0 5;
+    -fx-background-radius: 5 0 0 5;
 }
 
-/* Main menu gradient background */
-#main-menu-background {
-    -fx-background-color: linear-gradient(to bottom right, rgba(180, 49, 0, 0.6), rgba(209, 29, 201, 0.6), rgba(0, 212, 255, 0.6));
-    -fx-text-background-color: #ffffff;
+/* Main border pane background */
+#background-ui {
+    -fx-background-color: #2d2d2d;
 }
 
-/* Game UI */
-/* Border pane background */
-#game-background {
-    -fx-background-color: linear-gradient(to right, rgba(255, 174, 224, 1), rgba(138, 200, 255, 1));
+/* Toggle Buttons in main menu */
+#main-menu-toggle-buttons {
+    -fx-background-color: rgba(255, 255, 255, 0.4);
+    -fx-background-radius: 0;
+    -fx-background-insets: 0, 0, 0, 0, 0;
+}
+
+#main-menu-toggle-buttons:selected {
+    -fx-background-color: rgba(255, 255, 255, 0.8);
+}
+
+#start-button {
+    /*-fx-background-radius: 5 0 0 0;*/
+    -fx-shape: "M 0 5 L 1 1 L 5 0 L 5 5";
 }
 
 /* Top bar */
@@ -74,6 +88,7 @@
 .scroll-pane {
     -fx-background-radius: 5;
     -fx-background-color: white;
+    -fx-background-insets: 0, 0, 0, 0, 0;
 }
 
 .scroll-pane .viewport {

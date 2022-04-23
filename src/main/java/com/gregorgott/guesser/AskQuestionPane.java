@@ -1,6 +1,7 @@
 package com.gregorgott.guesser;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -18,8 +19,8 @@ import java.util.List;
  * circle.
  *
  * @author GregorGott
- * @version 1.0.0
- * @since 2022-04-05
+ * @version 1.0.1
+ * @since 2022-04-23
  */
 public class AskQuestionPane {
     private final VBox mainVBox;
@@ -35,9 +36,14 @@ public class AskQuestionPane {
      *
      * @param outputLabelArray Each character is an underscore.
      * @param maxMistakes      Max amount of mistakes. Each mistake is one circle.
+     * @see <a href="https://stackoverflow.com/questions/15159988/javafx-2-2-textfield-maxlength">JavaFX 2.2 TextField maxlength</a>
      */
     public AskQuestionPane(char[] outputLabelArray, int maxMistakes) {
+        usedCharsList = new ArrayList<>();
+
         Label enterACharLabel = new Label("Enter a character:");
+        enterACharLabel.setPrefWidth(115);
+        enterACharLabel.setId("white-label");
 
         textField = new TextField();
         // The listener avoids entering more than one character
@@ -53,8 +59,8 @@ public class AskQuestionPane {
 
         // textField and checkGuessButton are in a guessHBox
         HBox guessHBox = new HBox();
-        guessHBox.setSpacing(20);
-        guessHBox.getChildren().addAll(textField, checkGuessButton);
+        guessHBox.setSpacing(10);
+        guessHBox.getChildren().addAll(enterACharLabel, textField, checkGuessButton);
 
         // Underline/Underscore for each word in "solutionArray"
         outputLabel = new Label();
@@ -65,39 +71,35 @@ public class AskQuestionPane {
         // ScrollPane to scroll if the word is too long
         ScrollPane scrollPane = new ScrollPane(outputLabel);
         scrollPane.setPrefHeight(50);
-        scrollPane.setFocusTraversable(false);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-        scrollPane.setPadding(new Insets(10, 10, 10, 10));
+        scrollPane.setPadding(new Insets(10));
 
-        Label mistakeHeadline = new Label("Mistakes:");
+        Label mistakesLabel = new Label("Mistakes:");
+        mistakesLabel.setId("white-label");
 
         // HBox which contains mistake circles
         circleHBox = new HBox();
+        circleHBox.setAlignment(Pos.CENTER_LEFT);
         circleHBox.setSpacing(8);
 
         // Create circle for each available mistake
         for (int i = 0; i < maxMistakes; i++) {
-            addCircle(Color.rgb(27, 94, 23));
+            addCircle(Color.rgb(33, 145, 27));
         }
 
         // HBox with enterACharLabel and mistake circles
         HBox mistakeCirclesHBox = new HBox();
-        mistakeCirclesHBox.setSpacing(25);
-        mistakeCirclesHBox.getChildren().addAll(mistakeHeadline, circleHBox);
+        mistakeCirclesHBox.setSpacing(10);
+        mistakeCirclesHBox.getChildren().addAll(mistakesLabel, circleHBox);
 
         usedCharsLabel = new Label();
-        usedCharsList = new ArrayList<>();
-
-        VBox pointsInfoVBox = new VBox();
-        pointsInfoVBox.setPadding(new Insets(18, 8, 8, 8));
-        pointsInfoVBox.setSpacing(10);
-        pointsInfoVBox.getChildren().addAll(mistakeCirclesHBox, usedCharsLabel);
+        usedCharsLabel.setId("white-label");
 
         // Main VBox
         mainVBox = new VBox();
-        mainVBox.setSpacing(10);
-        mainVBox.setPadding(new Insets(15, 15, 15, 15));
-        mainVBox.getChildren().addAll(enterACharLabel, guessHBox, scrollPane, pointsInfoVBox);
+        mainVBox.setSpacing(20);
+        mainVBox.setPadding(new Insets(15));
+        mainVBox.getChildren().addAll(guessHBox, scrollPane, mistakeCirclesHBox, usedCharsLabel);
     }
 
     /**

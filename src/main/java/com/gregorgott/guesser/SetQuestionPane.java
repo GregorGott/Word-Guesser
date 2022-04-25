@@ -9,14 +9,13 @@ import javafx.scene.layout.HBox;
  * Show a pane to enter a word to be guessed.
  *
  * @author GregorGott
- * @version 1.0.1
- * @since 2022-04-23
+ * @version 1.0.2
+ * @since 2022-04-25
  */
 public class SetQuestionPane {
 
     private final HBox hBox;
-
-    public TextField textField;
+    private final TextField textField;
 
     /**
      * Shows a text field in which the player enters a word. The other player tries to guess the entered word.
@@ -41,6 +40,13 @@ public class SetQuestionPane {
      */
     public HBox getPane() {
         return hBox;
+    }
+
+    /**
+     * @return The text field.
+     */
+    public TextField getTextField() {
+        return textField;
     }
 
     /**

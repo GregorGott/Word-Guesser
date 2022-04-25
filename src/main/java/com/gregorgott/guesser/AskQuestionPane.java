@@ -19,16 +19,16 @@ import java.util.List;
  * circle.
  *
  * @author GregorGott
- * @version 1.0.1
- * @since 2022-04-23
+ * @version 1.0.2
+ * @since 2022-04-25
  */
 public class AskQuestionPane {
     private final VBox mainVBox;
     private final HBox circleHBox;
     private final List<Character> usedCharsList;
     public Button checkGuessButton;
-    public Label outputLabel, usedCharsLabel;
-    public TextField textField;
+    private final Label outputLabel, usedCharsLabel;
+    private final TextField textField;
 
     /**
      * Set all elements for the UI. Create a text field in which single letters are written to guess the word.
@@ -110,21 +110,64 @@ public class AskQuestionPane {
     }
 
     /**
-     * @return The text from the single char text field.
+     * Returns the text field which only accepts one character.
+     * @return The text field.
      */
-    public String getTextField() {
-        return this.textField.getText();
+    public TextField getTextField() {
+        return textField;
     }
 
+    /**
+     * @return The text from the single char text field.
+     */
+    public String getTextFieldText() {
+        return textField.getText();
+    }
+
+    /**
+     * Set the text field text to attribute.
+     * @param text Is the text to show in the text field.
+     */
+    public void setTextFieldText(String text) {
+        textField.setText(text);
+    }
+
+    /**
+     * @return The text from the OutputLabel, which is displayed in the scrollPane.
+     */
+    public String getOutputLabelText() {
+        return outputLabel.getText();
+    }
+
+    /**
+     * Set the text of the outputLabel.
+     * @param text The text to show.
+     */
+    public void setOutputLabel(String text) {
+        outputLabel.setText(text);
+    }
+
+    /**
+     * Get the circleHBox and deletes all children.
+     */
     public void clearCircleHBox() {
         circleHBox.getChildren().clear();
     }
 
+    /**
+     * Add a circle with a given color to the circleHBox.
+     * @param color The color of the circle.
+     */
     public void addCircle(Color color) {
         Circle circle = new Circle(0, 0, 5, color);
         circleHBox.getChildren().add(circle);
     }
 
+    /**
+     * A list of all used characters is shown in the bottom of the Scene. This method is called to add a new character
+     * to it.
+     * @param character The character to be added.
+     */
     public void addUsedCharacter(char character) {
         usedCharsList.add(character);
 

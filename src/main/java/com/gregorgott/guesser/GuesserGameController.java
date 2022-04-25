@@ -26,12 +26,12 @@ import java.util.Scanner;
  * tries to guess it and so on. FXML Scene: guesser-game-scene.fxml
  *
  * @author GregorGott
- * @version 1.1.1
- * @since 2022-04-23
+ * @version 1.1.2
+ * @since 2022-04-25
  */
 public class GuesserGameController {
     private final ArrayList<Character> usedCharsList;
-    private final ArrayList<String> usedWordsList;
+    private final ArrayList<String> singleplayerWordsList;
     private final FileManager fileManager;
 
     // Declare FXML basic UI
@@ -47,7 +47,7 @@ public class GuesserGameController {
     private int currentPlayer = 1;
     private int currentRound = 1;
     private int pointsPlayer1, pointsPlayer2, tempPointsPlayer1, tempPointsPLayer2, numberOfQuestions,
-            maxMistakes, mistakesCounter, wordLength;
+            maxMistakes, mistakesCounter, wordLength, pointsToBeReached;
     private boolean isSetQuestionTabActive = true;
     private char[] solutionArray, outputLabelArray;
     private File pathToGuessingFile;
@@ -62,7 +62,7 @@ public class GuesserGameController {
         fileManager = new FileManager();
 
         usedCharsList = new ArrayList<>();
-        usedWordsList = new ArrayList<>();
+        singleplayerWordsList = new ArrayList<>();
     }
 
     /**
@@ -110,8 +110,8 @@ public class GuesserGameController {
             } else {
                 currentRound++;
 
-                // Show results if end is reached
                 if (numberOfQuestions < currentRound) {
+                    // Show results if end is reached
                     showResultScene();
                 } else {
                     isSetQuestionTabActive = true;
@@ -122,6 +122,7 @@ public class GuesserGameController {
             currentRound++;
 
             if (numberOfQuestions < currentRound) {
+                // Show results if end is reached
                 showResultScene();
             } else {
                 setTopBarUI();
@@ -146,7 +147,7 @@ public class GuesserGameController {
         setTopBarUI();
 
         setQuestionPane = new SetQuestionPane();
-        setQuestionPane.textField.setOnKeyPressed(event -> {
+        setQuestionPane.getTextField().setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 buttonPushed();
             }
@@ -183,7 +184,7 @@ public class GuesserGameController {
                 String scannerNextLine = scanner.nextLine();
                 // Detect file comments
                 if (!scannerNextLine.startsWith("##")) {
-                    usedWordsList.add(scannerNextLine);
+                    singleplayerWordsList.add(scannerNextLine);
                 }
             }
             scanner.close();
@@ -198,13 +199,13 @@ public class GuesserGameController {
     private void loadRandomWordInArray() {
         // Get random number between 0 and the size of the wordsInArray Array.
         Random randomWord = new Random();
-        int line = randomWord.nextInt(usedWordsList.size());
+        int line = randomWord.nextInt(singleplayerWordsList.size());
 
         // Load it in the Array and ask question
-        loadWordInArray(convertStringToUppercase(usedWordsList.get(line)));
+        loadWordInArray(convertStringToUppercase(singleplayerWordsList.get(line)));
 
         // Remove line to avoid a second ask of the questions
-        usedWordsList.remove(line);
+        singleplayerWordsList.remove(line);
 
         askQuestion();
     }
@@ -247,7 +248,7 @@ public class GuesserGameController {
 
         askQuestionPane = new AskQuestionPane(outputLabelArray, maxMistakes);
         // Press enter instead of pushing the 'checkGuessButton' button
-        askQuestionPane.textField.setOnKeyPressed(event -> {
+        askQuestionPane.getTextField().setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 checkGuess();
             }
@@ -265,8 +266,8 @@ public class GuesserGameController {
      */
     private void checkGuess() {
         // Get character and clear the text field
-        String singleChar = askQuestionPane.getTextField();
-        askQuestionPane.textField.setText("");
+        String singleChar = askQuestionPane.getTextFieldText();
+        askQuestionPane.setTextFieldText("");
 
         // If text field is not empty
         if (!singleChar.isEmpty()) {
@@ -281,12 +282,12 @@ public class GuesserGameController {
                         if (charFromInput == solutionArray[i]) {
                             // Set outputLabelArray at index i to solutionArray at index i
                             outputLabelArray[i] = solutionArray[i];
-                            askQuestionPane.outputLabel.setText("");
+                            askQuestionPane.setOutputLabel("");
 
                             // Show new outputLabelArray
                             for (int i2 = 0; i2 < wordLength; i2++) {
-                                askQuestionPane.outputLabel.setText(
-                                        askQuestionPane.outputLabel.getText() + " " + outputLabelArray[i2] + " ");
+                                askQuestionPane.setOutputLabel(
+                                        askQuestionPane.getOutputLabelText() + " " + outputLabelArray[i2] + " ");
                             }
 
                             // Add one point to player
@@ -359,13 +360,13 @@ public class GuesserGameController {
     private void endRound() {
         // Disable 'Check Guess' button and 'textField', and enable 'nextButton'
         nextButton.setDisable(false);
-        askQuestionPane.textField.setDisable(true);
+        askQuestionPane.getTextField().setDisable(true);
         askQuestionPane.checkGuessButton.setDisable(true);
 
         // Show solution
-        askQuestionPane.outputLabel.setText("");
+        askQuestionPane.setOutputLabel("");
         for (char c : solutionArray) {
-            askQuestionPane.outputLabel.setText(askQuestionPane.outputLabel.getText() + " " + c + " ");
+            askQuestionPane.setOutputLabel(askQuestionPane.getOutputLabelText() + " " + c + " ");
         }
 
         // Restore variables to default
@@ -393,7 +394,7 @@ public class GuesserGameController {
      * Get the winner and set a winner text. Show the winner text in ResultSceneController.
      */
     private void showResultScene() {
-        // Winner text
+        // Set winner text
         String winner = null;
 
         if (gameType == GameType.MULTIPLAYER) {

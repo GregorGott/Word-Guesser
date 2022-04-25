@@ -152,9 +152,6 @@ public class MainMenuController implements Initializable {
 
             Clipboard clipboard = Clipboard.getSystemClipboard();
             clipboard.setContent(clipboardContent);
-        } else if (result.orElse(null) == ButtonType.CANCEL) {
-            // Close alert
-            alert.close();
         }
 
         return false;

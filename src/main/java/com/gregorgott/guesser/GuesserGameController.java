@@ -16,18 +16,15 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * The Game Controller controls the game (ask questions and set questions). Player 1 enters a word and Player 2
  * tries to guess it and so on. FXML Scene: guesser-game-scene.fxml
  *
  * @author GregorGott
- * @version 1.1.2
- * @since 2022-04-25
+ * @version 1.1.3
+ * @since 2022-04-26
  */
 public class GuesserGameController {
     private final ArrayList<Character> usedCharsList;
@@ -46,7 +43,7 @@ public class GuesserGameController {
 
     private int currentPlayer = 1;
     private int currentRound = 1;
-    private int pointsPlayer1, pointsPlayer2, tempPointsPlayer1, tempPointsPLayer2, numberOfQuestions,
+    private int pointsPlayer1, pointsPlayer2, tempPointsPlayer1, tempPointsPlayer2, numberOfQuestions,
             maxMistakes, mistakesCounter, wordLength, pointsToBeReached;
     private boolean isSetQuestionTabActive = true;
     private char[] solutionArray, outputLabelArray;
@@ -81,6 +78,7 @@ public class GuesserGameController {
         if (gameType == GameType.MULTIPLAYER) {
             setQuestion();
         } else if (gameType == GameType.SINGLEPLAYER) {
+            setNumberOfQuestions();
             setSingleplayerWordList();
             loadRandomWordInArray();
         }
@@ -157,17 +155,22 @@ public class GuesserGameController {
     }
 
     /**
-     * Set pathToGuessing file and check the number of lines in the file. If there are fewer lines than selected amount
-     * of questions, set questions to number of lines.
+     * Set pathToGuessing file and check the number of lines in the file.
      *
      * @param pathToGuessingFile Path to the text file with words.
      */
     public void setPathToGuessingFile(File pathToGuessingFile) {
         this.pathToGuessingFile = pathToGuessingFile;
+    }
 
+    /**
+     * Check how many lines the pathToGuessingFile file has. If there are fewer lines than selected amount
+     * of questions, set questions to number of lines.
+     */
+    private void setNumberOfQuestions() {
         // If there are fewer lines than questions set number of questions to number of lines in file.
         int linesInFile = fileManager.countLines(pathToGuessingFile, "##");
-        if (numberOfQuestions > linesInFile) {
+        if (linesInFile < numberOfQuestions) {
             numberOfQuestions = linesInFile;
         }
     }
@@ -207,7 +210,32 @@ public class GuesserGameController {
         // Remove line to avoid a second ask of the questions
         singleplayerWordsList.remove(line);
 
+        pointsToBeReached += calculatePointsToBeReached();
+
         askQuestion();
+    }
+
+    /**
+     * Calculate how many points the player can reach.
+     * @return The amount of points the player can reach.
+     */
+    private int calculatePointsToBeReached() {
+        // Sort solution array to get duplicates in array
+        char[] sortedSolutionArray = solutionArray.clone();
+        Arrays.sort(sortedSolutionArray);
+
+        // A String must contain at least one character
+        // E.g.: "ooooooooo" contains one unique character "o"
+        int counter = 1;
+
+        // Check if element in array is the same one as one index after
+        for (int i = 0; i < sortedSolutionArray.length - 1; i++) {
+            if (sortedSolutionArray[i] != sortedSolutionArray[i + 1]) {
+                counter++;
+            }
+        }
+
+        return counter;
     }
 
     /**
@@ -280,6 +308,17 @@ public class GuesserGameController {
                 if (isCharInArray(charFromInput, solutionArray)) {
                     for (int i = 0; i < wordLength; i++) {
                         if (charFromInput == solutionArray[i]) {
+                            // Add one point to player
+                            if (!usedCharsList.contains(charFromInput)) {
+                                if (currentPlayer == 1) {
+                                    tempPointsPlayer1++;
+                                } else {
+                                    tempPointsPlayer2++;
+                                }
+                            }
+
+                            usedCharsList.add(charFromInput);
+
                             // Set outputLabelArray at index i to solutionArray at index i
                             outputLabelArray[i] = solutionArray[i];
                             askQuestionPane.setOutputLabel("");
@@ -290,17 +329,10 @@ public class GuesserGameController {
                                         askQuestionPane.getOutputLabelText() + " " + outputLabelArray[i2] + " ");
                             }
 
-                            // Add one point to player
-                            if (currentPlayer == 1) {
-                                tempPointsPlayer1++;
-                            } else {
-                                tempPointsPLayer2++;
-                            }
-
                             // If the solution is found, add temporary points to permanent points and end the round
                             if (Arrays.equals(solutionArray, outputLabelArray)) {
                                 pointsPlayer1 += tempPointsPlayer1;
-                                pointsPlayer2 += tempPointsPLayer2;
+                                pointsPlayer2 += tempPointsPlayer2;
 
                                 endRound();
                             }
@@ -372,7 +404,7 @@ public class GuesserGameController {
         // Restore variables to default
         mistakesCounter = 0;
         tempPointsPlayer1 = 0;
-        tempPointsPLayer2 = 0;
+        tempPointsPlayer2 = 0;
         usedCharsList.clear();
     }
 
@@ -406,7 +438,7 @@ public class GuesserGameController {
                 winner = "Draw!";
             }
         } else if (gameType == GameType.SINGLEPLAYER) {
-            winner = pointsPlayer1 + "Punkte erreicht";
+            winner = "Score " + pointsPlayer1 + " out of " + pointsToBeReached + ".";
         }
 
         // Load result screen

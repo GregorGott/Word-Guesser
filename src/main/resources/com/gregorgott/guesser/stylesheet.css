@@ -73,7 +73,7 @@
 
 /* Top bar */
 #top-bar {
-    -fx-background-color: white;
+    -fx-background-color: #f6f6f6;
 }
 
 #cancel-button {

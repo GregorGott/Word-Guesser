@@ -3,34 +3,38 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" id="background-ui" fx:id="borderPane" minHeight="350.0" minWidth="550.0"
-            stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/17"
-            fx:controller="com.gregorgott.guesser.GuesserGameController">
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane id="background-ui" fx:id="borderPane" minHeight="350.0" minWidth="550.0" stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gregorgott.guesser.GuesserGameController">
     <top>
-        <HBox id="top-bar" alignment="CENTER_LEFT" spacing="20.0" BorderPane.alignment="CENTER">
+        <VBox id="top-bar" BorderPane.alignment="CENTER">
             <BorderPane.margin>
                 <Insets/>
             </BorderPane.margin>
-            <padding>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-            </padding>
-            <Button id="cancel-button" focusTraversable="false" mnemonicParsing="false" onAction="#cancelRoundButton"
-                    text="End round"/>
-            <Label id="black-label" fx:id="currentPlayerLabel">
-                <HBox.margin>
-                    <Insets/>
-                </HBox.margin>
-            </Label>
-            <Label id="black-label" fx:id="questionsCounterLabel"/>
-        </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+                <padding>
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                </padding>
+                <Button id="cancel-button" focusTraversable="false" mnemonicParsing="false"
+                        onAction="#cancelRoundButton" text="End round"/>
+                <Label id="black-label" fx:id="currentPlayerLabel">
+                    <HBox.margin>
+                        <Insets/>
+                    </HBox.margin>
+                </Label>
+                <Label id="black-label" fx:id="questionsCounterLabel"/>
+            </HBox>
+            <ProgressBar maxWidth="1.7976931348623157E308" prefHeight="10.0" progress="0.43"/>
+        </VBox>
     </top>
-    <right>
-        <Button fx:id="nextButton" alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false"
-                onAction="#buttonPushed" prefWidth="80.0" text="Next" BorderPane.alignment="BOTTOM_CENTER">
+   <bottom>
+        <Button fx:id="nextButton" alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#buttonPushed" prefWidth="80.0" text="Next" BorderPane.alignment="BOTTOM_RIGHT">
             <BorderPane.margin>
-                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
             </BorderPane.margin>
         </Button>
-    </right>
+   </bottom>
 </BorderPane>

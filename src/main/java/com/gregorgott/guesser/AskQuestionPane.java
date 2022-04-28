@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -26,7 +27,7 @@ public class AskQuestionPane {
     private final VBox mainVBox;
     private final HBox circleHBox;
     private final List<Character> usedCharsList;
-    public Button checkGuessButton;
+    private final Button checkGuessButton, showTipButton;
     private final Label outputLabel, usedCharsLabel;
     private final TextField textField;
 
@@ -42,7 +43,6 @@ public class AskQuestionPane {
         usedCharsList = new ArrayList<>();
 
         Label enterACharLabel = new Label("Enter a character:");
-        enterACharLabel.setPrefWidth(115);
         enterACharLabel.setId("white-label");
 
         textField = new TextField();
@@ -53,12 +53,14 @@ public class AskQuestionPane {
                 textField.setText(s);
             }
         });
+        HBox.setHgrow(textField, Priority.ALWAYS);
 
         // Check button
         checkGuessButton = new Button("Check Guess");
 
         // textField and checkGuessButton are in a guessHBox
         HBox guessHBox = new HBox();
+        guessHBox.setAlignment(Pos.CENTER_LEFT);
         guessHBox.setSpacing(10);
         guessHBox.getChildren().addAll(enterACharLabel, textField, checkGuessButton);
 

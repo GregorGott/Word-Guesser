@@ -84,6 +84,18 @@
     -fx-background-color: #adb5bd;
 }
 
+/* Top bar progress bar */
+#top-bar-progress-bar .bar {
+    -fx-background-color: #ad0c0c;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
+
+#top-bar-progress-bar .track {
+    -fx-background-radius: 0;
+    -fx-background-color: #f6f6f6;
+}
+
 /* Scroll pane with rounded corners and an other scroll bar color */
 .scroll-pane {
     -fx-background-radius: 5;

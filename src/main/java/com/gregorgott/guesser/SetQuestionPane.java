@@ -5,6 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
 /**
  * Show a pane to enter a word to be guessed.
@@ -24,6 +25,7 @@ public class SetQuestionPane {
      */
     public SetQuestionPane() {
         textField = new TextField("Caretaker");
+        HBox.setHgrow(textField, Priority.ALWAYS);
 
         Label label = new Label("Enter a word:");
         label.setId("white-label");

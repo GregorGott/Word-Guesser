@@ -86,7 +86,7 @@
 
 /* Top bar progress bar */
 #top-bar-progress-bar .bar {
-    -fx-background-color: #ad0c0c;
+    -fx-background-color: #aa0c0c;
     -fx-background-insets: 0;
     -fx-background-radius: 0;
 }

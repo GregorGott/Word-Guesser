@@ -30,7 +30,7 @@
         </VBox>
     </top>
    <bottom>
-        <Button fx:id="nextButton" alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#buttonPushed" prefWidth="80.0" text="Next" BorderPane.alignment="BOTTOM_RIGHT">
+        <Button alignment="CENTER" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#buttonPushed" prefWidth="80.0" text="Next" BorderPane.alignment="BOTTOM_RIGHT">
             <BorderPane.margin>
                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
             </BorderPane.margin>

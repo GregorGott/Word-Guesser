@@ -1,7 +1,7 @@
 package com.gregorgott.guesser.panes;
 
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -10,17 +10,16 @@ import javafx.scene.layout.HBox;
  * Show a pane to enter a word to be guessed.
  *
  * @author GregorGott
- * @version 1.0.3
- * @since 2022-04-29
+ * @version 1.0.4
+ * @since 2022-04-30
  */
 public class SetQuestionPane {
 
-    private final Parent root;
+    private final Node root;
     private final TextField wordToGuessTextField;
 
     /**
-     * Shows a VBox with to text fields. In wordToGuess the player enters a word and in optionalTipTextField the
-     * player enters a optional tip for the other player.
+     * Shows a VBox with one text field in which the player enters a random word.
      */
     public SetQuestionPane() {
         // Enter a word
@@ -39,7 +38,7 @@ public class SetQuestionPane {
     /**
      * @return Root Parent with all UI elements.
      */
-    public Parent getPane() {
+    public Node getPane() {
         return root;
     }
 

@@ -24,8 +24,8 @@ import java.util.Random;
  * circle.
  *
  * @author GregorGott
- * @version 1.1.1
- * @since 2022-04-30
+ * @version 1.1.2
+ * @since 2022-05-03
  */
 public class AskQuestionPane {
     private final char[] solutionArray, outputArray;
@@ -125,9 +125,9 @@ public class AskQuestionPane {
 
         // ScrollPane to scroll if the word is too long
         ScrollPane scrollPane = new ScrollPane(outputLabel);
-        scrollPane.setPrefHeight(50);
+        scrollPane.setPrefHeight(40);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-        scrollPane.setPadding(new Insets(10));
+        scrollPane.setPadding(new Insets(5));
 
         Label mistakesLabel = new Label("Mistakes:");
         mistakesLabel.setId("white-label");
@@ -255,6 +255,7 @@ public class AskQuestionPane {
         finished = true;
 
         System.arraycopy(solutionArray, 0, outputArray, 0, solutionArray.length);
+        usedCharsList.clear();
 
         setOutputLabel();
     }

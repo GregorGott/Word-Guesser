@@ -27,8 +27,8 @@ import java.util.Scanner;
  * tries to guess it and so on. FXML Scene: guesser-game-scene.fxml
  *
  * @author GregorGott
- * @version 1.1.5
- * @since 2022-04-30
+ * @version 1.1.6
+ * @since 2022-05-03
  */
 public class GuesserGameController {
     private final ArrayList<String> singleplayerWordsList;
@@ -95,6 +95,12 @@ public class GuesserGameController {
             if (isSetQuestionTabActive) {
                 isSetQuestionTabActive = false;
 
+                if (currentPlayer == 1) {
+                    currentPlayer = 2;
+                } else {
+                    currentPlayer = 1;
+                }
+
                 // Get word from setQuestionPane and load it in an Array and show the question
                 loadWordInArray(convertStringToUppercase(setQuestionPane.getWordToBeGuessed()));
                 askQuestion();
@@ -105,11 +111,11 @@ public class GuesserGameController {
                     currentRound++;
 
                     if (currentPlayer == 1) {
-                        pointsPlayer1 = askQuestionPane.getPoints();
-                        currentPlayer = 2;
+                        pointsPlayer1 = pointsPlayer1 + askQuestionPane.getPoints();
+                        System.out.println(pointsPlayer1);
                     } else {
-                        pointsPlayer2 = askQuestionPane.getPoints();
-                        currentPlayer = 1;
+                        pointsPlayer2 = pointsPlayer2 + askQuestionPane.getPoints();
+                        System.out.println(pointsPlayer2);
                     }
 
                     if (numberOfQuestions < currentRound) {
@@ -123,6 +129,7 @@ public class GuesserGameController {
         } else {
             currentRound++;
 
+            pointsPlayer1 = pointsPlayer1 + askQuestionPane.getPoints();
             if (numberOfQuestions < currentRound) {
                 // Show results if end is reached
                 showResultScene();
@@ -306,8 +313,15 @@ public class GuesserGameController {
     private void showResultScene() {
         // Set winner text
         String winner = null;
+        String points1Text = null;
+        String points2Text = null;
+        int points2 = 0;
 
         if (gameType == GameType.MULTIPLAYER) {
+            points2 = pointsPlayer2;
+            points1Text = "Player 1";
+            points2Text = "Player 2";
+
             if (pointsPlayer2 > pointsPlayer1) {
                 winner = "Player 2 won.";
             } else if (pointsPlayer2 < pointsPlayer1) {
@@ -316,6 +330,9 @@ public class GuesserGameController {
                 winner = "Draw!";
             }
         } else if (gameType == GameType.SINGLEPLAYER) {
+            points2 = pointsToBeReached;
+            points1Text = "Guessed words";
+            points2Text = "Not guessed words";
             winner = "Score " + pointsPlayer1 + " out of " + pointsToBeReached + ".";
         }
 
@@ -326,6 +343,7 @@ public class GuesserGameController {
 
             ResultSceneController resultSceneController = loader.getController();
             resultSceneController.setWinnerLabel(winner);
+            resultSceneController.setPieChart(pointsPlayer1, points2, points1Text, points2Text);
 
             Stage stage = (Stage) borderPane.getScene().getWindow();
             Scene scene = new Scene(root);

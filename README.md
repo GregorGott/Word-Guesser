@@ -32,7 +32,7 @@ In the end, the winner is the one who has guessed the longest words.
 If you want to play this game on a desktop device, just download the correct version for your operating system.
 
 **Download for
-Windows: [Download msi](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0-beta.2/Word-Guesser-win-x86_x64.msi)** <br>
+Windows: [Download exe](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0-beta.2/Word-Guesser-win-x86_x64.exe)** <br>
 **Download for Linux: (Coming Soon)** <br>
 **Download for macOS (
 Intel): [Download dmg](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0-beta.2/Word-Guesser-mac-x86_x64.dmg)**

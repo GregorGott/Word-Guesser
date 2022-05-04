@@ -73,7 +73,7 @@
 
 /* Top bar */
 #top-bar {
-    -fx-background-color: white;
+    -fx-background-color: #f6f6f6;
 }
 
 #cancel-button {
@@ -82,6 +82,18 @@
 
 #cancel-button:pressed {
     -fx-background-color: #adb5bd;
+}
+
+/* Top bar progress bar */
+#top-bar-progress-bar .bar {
+    -fx-background-color: #aa0c0c;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
+
+#top-bar-progress-bar .track {
+    -fx-background-radius: 0;
+    -fx-background-color: #f6f6f6;
 }
 
 /* Scroll pane with rounded corners and an other scroll bar color */

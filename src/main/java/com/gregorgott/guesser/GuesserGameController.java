@@ -1,16 +1,17 @@
 package com.gregorgott.guesser;
 
+import com.gregorgott.guesser.panes.AskQuestionPane;
+import com.gregorgott.guesser.panes.SetQuestionPane;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -26,30 +27,28 @@ import java.util.Scanner;
  * tries to guess it and so on. FXML Scene: guesser-game-scene.fxml
  *
  * @author GregorGott
- * @version 1.1.1
- * @since 2022-04-23
+ * @version 1.1.6
+ * @since 2022-05-03
  */
 public class GuesserGameController {
-    private final ArrayList<Character> usedCharsList;
-    private final ArrayList<String> usedWordsList;
+    private final ArrayList<String> singleplayerWordsList;
     private final FileManager fileManager;
 
     // Declare FXML basic UI
     @FXML
-    public BorderPane borderPane;
+    private BorderPane borderPane;
     @FXML
-    public Label currentPlayerLabel;
+    private Label currentPlayerLabel;
     @FXML
-    public Label questionsCounterLabel;
+    private Label questionsCounterLabel;
     @FXML
-    public Button nextButton;
+    private ProgressBar roundProgressBar;
 
     private int currentPlayer = 1;
     private int currentRound = 1;
-    private int pointsPlayer1, pointsPlayer2, tempPointsPlayer1, tempPointsPLayer2, numberOfQuestions,
-            maxMistakes, mistakesCounter, wordLength;
-    private boolean isSetQuestionTabActive = true;
-    private char[] solutionArray, outputLabelArray;
+    private int pointsPlayer1, pointsPlayer2, numberOfQuestions, maxMistakes, pointsToBeReached;
+    private boolean isSetQuestionTabActive;
+    private char[] solutionArray;
     private File pathToGuessingFile;
     private GameType gameType;
     private SetQuestionPane setQuestionPane;
@@ -60,13 +59,12 @@ public class GuesserGameController {
      */
     public GuesserGameController() {
         fileManager = new FileManager();
-
-        usedCharsList = new ArrayList<>();
-        usedWordsList = new ArrayList<>();
+        isSetQuestionTabActive = true;
+        singleplayerWordsList = new ArrayList<>();
     }
 
     /**
-     * Start the game and set a number of questions and max mistakes. When the multiplayer mode is selected,
+     * Start the game and set the number of questions and max mistakes. When the multiplayer mode is selected,
      * set a question, but when the Singleplayer mode is selected, set the source file with random words.
      *
      * @param numberOfQuestions Number of questions/rounds in the game.
@@ -81,23 +79,22 @@ public class GuesserGameController {
         if (gameType == GameType.MULTIPLAYER) {
             setQuestion();
         } else if (gameType == GameType.SINGLEPLAYER) {
+            setNumberOfQuestions();
             setSingleplayerWordList();
             loadRandomWordInArray();
         }
     }
 
     /**
-     * If the big 'next button' on the right side is pushed. Get current tab (setQuestion or askQuestion)
-     * and switch tab. Example: If the current tab is the setQuestion tab set setQuestionTabActive
-     * to false and switch to ask question.
+     * If the big 'next button' on the right side is pushed. Get the current tab (setQuestion or askQuestion)
+     * and switch tab. Example: If the current tab is the setQuestion tab, set setQuestionTabActive
+     * to false and switch to askQuestionPane.
      */
     public void buttonPushed() {
         if (gameType == GameType.MULTIPLAYER) {
             if (isSetQuestionTabActive) {
-                // Button is pushed in set question tab
                 isSetQuestionTabActive = false;
 
-                // Switch to next player
                 if (currentPlayer == 1) {
                     currentPlayer = 2;
                 } else {
@@ -105,23 +102,36 @@ public class GuesserGameController {
                 }
 
                 // Get word from setQuestionPane and load it in an Array and show the question
-                loadWordInArray(convertStringToUppercase(setQuestionPane.getTextFieldText()));
+                loadWordInArray(convertStringToUppercase(setQuestionPane.getWordToBeGuessed()));
                 askQuestion();
             } else {
-                currentRound++;
-
-                // Show results if end is reached
-                if (numberOfQuestions < currentRound) {
-                    showResultScene();
-                } else {
+                if (askQuestionPane.isFinished()) {
                     isSetQuestionTabActive = true;
-                    setQuestion();
+
+                    currentRound++;
+
+                    if (currentPlayer == 1) {
+                        pointsPlayer1 = pointsPlayer1 + askQuestionPane.getPoints();
+                        System.out.println(pointsPlayer1);
+                    } else {
+                        pointsPlayer2 = pointsPlayer2 + askQuestionPane.getPoints();
+                        System.out.println(pointsPlayer2);
+                    }
+
+                    if (numberOfQuestions < currentRound) {
+                        // Show results if end is reached
+                        showResultScene();
+                    } else {
+                        setQuestion();
+                    }
                 }
             }
-        } else if (gameType == GameType.SINGLEPLAYER) {
+        } else {
             currentRound++;
 
+            pointsPlayer1 = pointsPlayer1 + askQuestionPane.getPoints();
             if (numberOfQuestions < currentRound) {
+                // Show results if end is reached
                 showResultScene();
             } else {
                 setTopBarUI();
@@ -136,6 +146,15 @@ public class GuesserGameController {
     private void setTopBarUI() {
         currentPlayerLabel.setText("Player " + currentPlayer + "'s turn");
         questionsCounterLabel.setText("Round " + currentRound + " of " + numberOfQuestions);
+
+        setRoundProgressBar();
+    }
+
+    /**
+     * Set the progress bar at the top to show the round progress.
+     */
+    private void setRoundProgressBar() {
+        roundProgressBar.setProgress((double) currentRound / numberOfQuestions);
     }
 
     /**
@@ -146,7 +165,7 @@ public class GuesserGameController {
         setTopBarUI();
 
         setQuestionPane = new SetQuestionPane();
-        setQuestionPane.textField.setOnKeyPressed(event -> {
+        setQuestionPane.getWordToGuessTextField().setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 buttonPushed();
             }
@@ -156,17 +175,22 @@ public class GuesserGameController {
     }
 
     /**
-     * Set pathToGuessing file and check the number of lines in the file. If there are fewer lines than selected amount
-     * of questions, set questions to number of lines.
+     * Set the pathToGuessing file and check the number of lines in the file.
      *
      * @param pathToGuessingFile Path to the text file with words.
      */
     public void setPathToGuessingFile(File pathToGuessingFile) {
         this.pathToGuessingFile = pathToGuessingFile;
+    }
 
+    /**
+     * Check how many lines the pathToGuessingFile file has. If there are fewer lines than the selected amount
+     * of questions, set questions to the number of lines.
+     */
+    private void setNumberOfQuestions() {
         // If there are fewer lines than questions set number of questions to number of lines in file.
         int linesInFile = fileManager.countLines(pathToGuessingFile, "##");
-        if (numberOfQuestions > linesInFile) {
+        if (linesInFile < numberOfQuestions) {
             numberOfQuestions = linesInFile;
         }
     }
@@ -183,7 +207,7 @@ public class GuesserGameController {
                 String scannerNextLine = scanner.nextLine();
                 // Detect file comments
                 if (!scannerNextLine.startsWith("##")) {
-                    usedWordsList.add(scannerNextLine);
+                    singleplayerWordsList.add(scannerNextLine);
                 }
             }
             scanner.close();
@@ -198,19 +222,45 @@ public class GuesserGameController {
     private void loadRandomWordInArray() {
         // Get random number between 0 and the size of the wordsInArray Array.
         Random randomWord = new Random();
-        int line = randomWord.nextInt(usedWordsList.size());
+        int line = randomWord.nextInt(singleplayerWordsList.size());
 
         // Load it in the Array and ask question
-        loadWordInArray(convertStringToUppercase(usedWordsList.get(line)));
+        loadWordInArray(convertStringToUppercase(singleplayerWordsList.get(line)));
 
         // Remove line to avoid a second ask of the questions
-        usedWordsList.remove(line);
+        singleplayerWordsList.remove(line);
+
+        pointsToBeReached += calculatePointsToBeReached();
 
         askQuestion();
     }
 
     /**
-     * @param string The String to be converted to uppercase.
+     * Calculate how many points the player can reach.
+     *
+     * @return The number of points the player can reach.
+     */
+    private int calculatePointsToBeReached() {
+        // Sort solution array to get duplicates in array
+        char[] sortedSolutionArray = solutionArray.clone();
+        Arrays.sort(sortedSolutionArray);
+
+        // A String must contain at least one character
+        // E.g.: "ooooooooo" contains one unique character "o"
+        int counter = 1;
+
+        // Check if element in array is the same one as one index after
+        for (int i = 0; i < sortedSolutionArray.length - 1; i++) {
+            if (sortedSolutionArray[i] != sortedSolutionArray[i + 1]) {
+                counter++;
+            }
+        }
+
+        return counter;
+    }
+
+    /**
+     * @param string The string to be converted to uppercase.
      * @return The text field text in uppercase.
      */
     private String convertStringToUppercase(String string) {
@@ -218,161 +268,29 @@ public class GuesserGameController {
     }
 
     /**
-     * Load word in <code>solutionArray</code> and loads an underscore for every character in <code>outputLabelArray</code>.
+     * Load word in solutionArray and loads an underscore for every character in outputLabelArray.
      *
      * @param word Is the word to be guessed by the other player.
      */
     private void loadWordInArray(String word) {
         // Get length of wordToBeGuessed and set the array length
-        wordLength = word.length();
+        int wordLength = word.length();
         solutionArray = new char[wordLength];
-        outputLabelArray = new char[wordLength];
 
         for (int i = 0; i < wordLength; i++) {
             // Load char at position i (counter var) into solution array
             solutionArray[i] = word.charAt(i);
-            // Load underlines/underscores into output label array
-            outputLabelArray[i] = '_';
         }
     }
 
     /**
-     * Show the askQuestion Pane and check the users input when clicking on the checkGuessButton or pressing Enter.
+     * Show the askQuestion Pane and check the user input when clicking on the checkGuessButton or pressing Enter.
      */
     private void askQuestion() {
         setTopBarUI();
 
-        // Disable nextButton on right side
-        nextButton.setDisable(true);
-
-        askQuestionPane = new AskQuestionPane(outputLabelArray, maxMistakes);
-        // Press enter instead of pushing the 'checkGuessButton' button
-        askQuestionPane.textField.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                checkGuess();
-            }
-        });
-        askQuestionPane.checkGuessButton.setOnAction(event -> checkGuess());
-
-        borderPane.setCenter(askQuestionPane.getPane());
-    }
-
-    /**
-     * Get character from askQuestionPane textField and check if the solution array contains the character. If not, add
-     * the character to usedCharsList and add one mistake circle. If the max amount of mistakes is reached, show the
-     * solution and disable the askQuestionPane buttons.
-     * Is the character in the solution array show where the character is used in the word.
-     */
-    private void checkGuess() {
-        // Get character and clear the text field
-        String singleChar = askQuestionPane.getTextField();
-        askQuestionPane.textField.setText("");
-
-        // If text field is not empty
-        if (!singleChar.isEmpty()) {
-            // Convert the character to uppercase
-            char charFromInput = singleChar.toUpperCase().charAt(0);
-
-            // If character is not already in the usedCharsList
-            if (!usedCharsList.contains(charFromInput)) {
-                // If character is in the array
-                if (isCharInArray(charFromInput, solutionArray)) {
-                    for (int i = 0; i < wordLength; i++) {
-                        if (charFromInput == solutionArray[i]) {
-                            // Set outputLabelArray at index i to solutionArray at index i
-                            outputLabelArray[i] = solutionArray[i];
-                            askQuestionPane.outputLabel.setText("");
-
-                            // Show new outputLabelArray
-                            for (int i2 = 0; i2 < wordLength; i2++) {
-                                askQuestionPane.outputLabel.setText(
-                                        askQuestionPane.outputLabel.getText() + " " + outputLabelArray[i2] + " ");
-                            }
-
-                            // Add one point to player
-                            if (currentPlayer == 1) {
-                                tempPointsPlayer1++;
-                            } else {
-                                tempPointsPLayer2++;
-                            }
-
-                            // If the solution is found, add temporary points to permanent points and end the round
-                            if (Arrays.equals(solutionArray, outputLabelArray)) {
-                                pointsPlayer1 += tempPointsPlayer1;
-                                pointsPlayer2 += tempPointsPLayer2;
-
-                                endRound();
-                            }
-                        }
-                    }
-                } else {
-                    // Character is not in array
-                    // Add 1 to mistake counter and add character to usedCharsList
-                    mistakesCounter++;
-                    usedCharsList.add(charFromInput);
-                    askQuestionPane.addUsedCharacter(charFromInput);
-
-                    // If max amount of mistakes is reached
-                    if (mistakesCounter == maxMistakes) {
-                        // Switch all circles to red and end round
-                        askQuestionPane.clearCircleHBox();
-                        for (int i = 0; i < maxMistakes; i++) {
-                            askQuestionPane.addCircle(Color.rgb(190, 27, 27));
-                        }
-
-                        endRound();
-                    } else {
-                        // Clear mistake circles and add one red circle
-                        askQuestionPane.clearCircleHBox();
-
-                        for (int i = 0; i < mistakesCounter; i++) {
-                            askQuestionPane.addCircle(Color.rgb(190, 27, 27));
-                        }
-                        for (int i = 0; i < maxMistakes - mistakesCounter; i++) {
-                            askQuestionPane.addCircle(Color.rgb(33, 145, 27));
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Check if the value is in the chars array.
-     *
-     * @param value This char is checked.
-     * @param chars The value is searched in this array.
-     * @return A boolean if the value is in the array.
-     */
-    private boolean isCharInArray(char value, char[] chars) {
-        for (char c : chars) {
-            if (c == value) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Disable the 'Check Guess' button and the text field in askQuestion, show the solution and restore all variables.
-     */
-    private void endRound() {
-        // Disable 'Check Guess' button and 'textField', and enable 'nextButton'
-        nextButton.setDisable(false);
-        askQuestionPane.textField.setDisable(true);
-        askQuestionPane.checkGuessButton.setDisable(true);
-
-        // Show solution
-        askQuestionPane.outputLabel.setText("");
-        for (char c : solutionArray) {
-            askQuestionPane.outputLabel.setText(askQuestionPane.outputLabel.getText() + " " + c + " ");
-        }
-
-        // Restore variables to default
-        mistakesCounter = 0;
-        tempPointsPlayer1 = 0;
-        tempPointsPLayer2 = 0;
-        usedCharsList.clear();
+        askQuestionPane = new AskQuestionPane(solutionArray, maxMistakes);
+        borderPane.setCenter(askQuestionPane.getRoot());
     }
 
     /**
@@ -393,10 +311,17 @@ public class GuesserGameController {
      * Get the winner and set a winner text. Show the winner text in ResultSceneController.
      */
     private void showResultScene() {
-        // Winner text
+        // Set winner text
         String winner = null;
+        String points1Text = null;
+        String points2Text = null;
+        int points2 = 0;
 
         if (gameType == GameType.MULTIPLAYER) {
+            points2 = pointsPlayer2;
+            points1Text = "Player 1";
+            points2Text = "Player 2";
+
             if (pointsPlayer2 > pointsPlayer1) {
                 winner = "Player 2 won.";
             } else if (pointsPlayer2 < pointsPlayer1) {
@@ -405,7 +330,10 @@ public class GuesserGameController {
                 winner = "Draw!";
             }
         } else if (gameType == GameType.SINGLEPLAYER) {
-            winner = pointsPlayer1 + "Punkte erreicht";
+            points2 = pointsToBeReached;
+            points1Text = "Guessed words";
+            points2Text = "Not guessed words";
+            winner = "Score " + pointsPlayer1 + " out of " + pointsToBeReached + ".";
         }
 
         // Load result screen
@@ -415,6 +343,7 @@ public class GuesserGameController {
 
             ResultSceneController resultSceneController = loader.getController();
             resultSceneController.setWinnerLabel(winner);
+            resultSceneController.setPieChart(pointsPlayer1, points2, points1Text, points2Text);
 
             Stage stage = (Stage) borderPane.getScene().getWindow();
             Scene scene = new Scene(root);
@@ -434,3 +363,4 @@ public class GuesserGameController {
         MULTIPLAYER
     }
 }
+

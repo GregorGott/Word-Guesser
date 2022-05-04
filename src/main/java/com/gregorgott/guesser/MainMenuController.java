@@ -19,8 +19,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
- * The first Scene to be shown when the application starts. Here the user can set the max amount of mistakes
- * and number of questions.
+ * This is the main menu of Word Guesser. Here the player can select the amount of questions and rounds and switch
+ * between single and multiplayer mode.
  *
  * @author GregorGott
  * @version 1.1.1
@@ -72,14 +72,12 @@ public class MainMenuController implements Initializable {
 
     /**
      * Get selected game type. Show a file chooser, if the Singleplayer mode is selected.
-     * Starts the game by loading the game fxml file and pass over attributes to the gameController.
+     * Starts the game by loading the game FXML file and passing over attributes to the gameController.
      *
-     * @param event Get Source as Node of button to load GuesserGameController on the Stage.
+     * @param event Get Source as Node of the button to load GuesserGameController on the Stage.
      * @throws IOException Exceptions while loading the FXML file.
      */
     public void startGame(ActionEvent event) throws IOException {
-        FileManager fileManager = new FileManager();
-
         FXMLLoader loader = new FXMLLoader(getClass().getResource("guesser-game-scene.fxml"));
         Parent root = loader.load();
         guesserGameController = loader.getController();
@@ -89,6 +87,7 @@ public class MainMenuController implements Initializable {
 
         if (getGameType() == GuesserGameController.GameType.SINGLEPLAYER && isSelectFileFromComputer()) {
             // If the user want to select a file from the computer
+            FileManager fileManager = new FileManager();
             File file = fileManager.selectFile();
 
             // The file needs more than one line
@@ -108,7 +107,7 @@ public class MainMenuController implements Initializable {
     }
 
     /**
-     * Call the GuesserGameController start method with number of question, number of max mistakes and the game type
+     * Call the GuesserGameController start method with the number of questions, number of max mistakes and the game type
      * and load root in a Stage.
      *
      * @param root  Content of the FXML file.
@@ -123,15 +122,15 @@ public class MainMenuController implements Initializable {
     }
 
     /**
-     * Return a boolean if the user want to select a text file from his computer.
+     * Return a boolean if the user wants to select a text file from his computer.
      *
-     * @return A boolean if the user want to select a text file from his computer.
+     * @return A boolean if the user wants to select a text file from his computer.
      */
     private boolean isSelectFileFromComputer() {
         ButtonType copyLinkButton = new ButtonType("Copy link");
         ButtonType selectFileButton = new ButtonType("Select File");
 
-        // Show alert with information message
+        // Show an alert with an information message
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Singleplayer Game");
         alert.setHeaderText("How to use Singleplayer?");
@@ -152,9 +151,6 @@ public class MainMenuController implements Initializable {
 
             Clipboard clipboard = Clipboard.getSystemClipboard();
             clipboard.setContent(clipboardContent);
-        } else if (result.orElse(null) == ButtonType.CANCEL) {
-            // Close alert
-            alert.close();
         }
 
         return false;

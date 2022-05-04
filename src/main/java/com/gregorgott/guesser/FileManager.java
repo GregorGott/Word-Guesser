@@ -17,9 +17,9 @@ import java.util.Scanner;
 public class FileManager {
 
     /**
-     * Show a file chooser which only accepts .txt files and gets the selected file.
+     * Show a file chooser which only accepts text files and get the selected file.
      *
-     * @return The selected file.
+     * @return The selected text file.
      */
     public File selectFile() {
         FileChooser fileChooser = new FileChooser();

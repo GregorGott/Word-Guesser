@@ -6,4 +6,5 @@ The icons are not created by me. Please note therefore the attached license.
 
 ### License
 Apache License 2.0: https://github.com/google/material-design-icons/blob/master/LICENSE
+
 The license is also saved in this folder (LICENSE.txt).

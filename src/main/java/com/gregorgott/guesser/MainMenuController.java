@@ -7,15 +7,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
@@ -23,8 +23,8 @@ import java.util.ResourceBundle;
  * between single and multiplayer mode.
  *
  * @author GregorGott
- * @version 1.1.1
- * @since 2022-04-23
+ * @version 1.1.2
+ * @since 2022-05-08
  */
 public class MainMenuController implements Initializable {
     // Single-, Multiplayer toggle buttons
@@ -40,8 +40,6 @@ public class MainMenuController implements Initializable {
 
     @FXML
     private Spinner<Integer> maxMistakesSpinner;
-
-    private GuesserGameController guesserGameController;
 
     /**
      * @return Number of questions from the Spinner.
@@ -78,82 +76,32 @@ public class MainMenuController implements Initializable {
      * @throws IOException Exceptions while loading the FXML file.
      */
     public void startGame(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("guesser-game-scene.fxml"));
-        Parent root = loader.load();
-        guesserGameController = loader.getController();
-
         // Get current Stage
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-        if (getGameType() == GuesserGameController.GameType.SINGLEPLAYER && isSelectFileFromComputer()) {
-            // If the user want to select a file from the computer
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("guesser-game-scene.fxml"));
+        Parent root = loader.load();
+
+        GuesserGameController guesserGameController = loader.getController();
+
+        if (getGameType() == GuesserGameController.GameType.SINGLEPLAYER) {
             FileManager fileManager = new FileManager();
-            File file = fileManager.selectFile();
+            File file = fileManager.selectSingleplayerFile();
 
-            // The file needs more than one line
-            if (fileManager.countLines(file, "##") < 1) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("File not valid");
-                alert.setHeaderText("Please select another file");
-                alert.setContentText("The file needs to has more than one line.");
-                alert.show();
-            } else {
+            if (file != null) {
                 guesserGameController.setPathToGuessingFile(file);
-                loadGameScene(root, stage);
+
+                guesserGameController.startGame(getNumberOfQuestionsSpinnerValue(), getMaxMistakesSpinnerValue(), getGameType());
+
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
             }
-        } else if (getGameType() == GuesserGameController.GameType.MULTIPLAYER) {
-            loadGameScene(root, stage);
+        } else {
+            guesserGameController.startGame(getNumberOfQuestionsSpinnerValue(), getMaxMistakesSpinnerValue(), getGameType());
+
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
         }
-    }
-
-    /**
-     * Call the GuesserGameController start method with the number of questions, number of max mistakes and the game type
-     * and load root in a Stage.
-     *
-     * @param root  Content of the FXML file.
-     * @param stage Stage to load the FXML on it.
-     */
-    private void loadGameScene(Parent root, Stage stage) {
-        guesserGameController.startGame(getNumberOfQuestionsSpinnerValue(), getMaxMistakesSpinnerValue(),
-                getGameType());
-
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-    }
-
-    /**
-     * Return a boolean if the user wants to select a text file from his computer.
-     *
-     * @return A boolean if the user wants to select a text file from his computer.
-     */
-    private boolean isSelectFileFromComputer() {
-        ButtonType copyLinkButton = new ButtonType("Copy link");
-        ButtonType selectFileButton = new ButtonType("Select File");
-
-        // Show an alert with an information message
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Singleplayer Game");
-        alert.setHeaderText("How to use Singleplayer?");
-        alert.setContentText("Word Guesser needs a file with random words you can guess. Each line is a new word." +
-                "You can download a file on GitHub or select a file on your hard-drive.");
-        alert.getButtonTypes().clear();
-        alert.getButtonTypes().addAll(copyLinkButton, selectFileButton, ButtonType.CANCEL);
-
-        Optional<ButtonType> result = alert.showAndWait();
-
-        if (result.orElse(null) == selectFileButton) {
-            // If user want to open a file on his computer
-            return true;
-        } else if (result.orElse(null) == copyLinkButton) {
-            // Copy link to download to clipboard
-            ClipboardContent clipboardContent = new ClipboardContent();
-            clipboardContent.putUrl("https://github.com/GregorGott/WG-Singleplayer-Files");
-
-            Clipboard clipboard = Clipboard.getSystemClipboard();
-            clipboard.setContent(clipboardContent);
-        }
-
-        return false;
     }
 
     @Override

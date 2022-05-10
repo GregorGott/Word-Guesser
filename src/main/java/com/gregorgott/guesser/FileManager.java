@@ -14,14 +14,15 @@ import java.awt.Desktop;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.Scanner;
 
 /**
  * Manages all file actions.
  *
  * @author GregorGott
- * @version 1.1.1
- * @since 2022-05-09
+ * @version 1.1.2
+ * @since 2022-05-10
  */
 public class FileManager {
     private final Stage stage;
@@ -47,9 +48,10 @@ public class FileManager {
      * @since 1.1.0
      */
     private void setScene() {
-        Label label = new Label("Do you want to download or update all Singleplayer files? If you want to " +
-                "select a file from your Computer click 'Open'.");
+        Label label = new Label("Do you want to download all Singleplayer files? If you want to " +
+                "select a file from your Computer, click 'Open'.");
         label.setWrapText(true);
+        label.setId("white-label");
 
         Button downloadButton = new Button("Download");
         downloadButton.setOnAction(x -> download());
@@ -65,10 +67,12 @@ public class FileManager {
 
         BorderPane borderPane = new BorderPane();
         borderPane.setPadding(new Insets(10));
+        borderPane.setId("background-ui");
         borderPane.setTop(label);
         borderPane.setCenter(hBox);
 
         Scene scene = new Scene(borderPane);
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("stylesheet.css")).toExternalForm());
 
         stage.setResizable(false);
         stage.setTitle("Singleplayer");

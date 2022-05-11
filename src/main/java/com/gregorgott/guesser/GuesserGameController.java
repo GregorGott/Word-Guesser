@@ -17,21 +17,19 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * The Game Controller controls the game (ask questions and set questions). Player 1 enters a word and Player 2
  * tries to guess it and so on. FXML Scene: guesser-game-scene.fxml
  *
  * @author GregorGott
- * @version 1.1.6
- * @since 2022-05-03
+ * @version 1.1.7
+ * @since 2022-05-10
  */
 public class GuesserGameController {
     private final ArrayList<String> singleplayerWordsList;
+    private final List<String> usedWordsList;
     private final FileManager fileManager;
 
     // Declare FXML basic UI
@@ -61,6 +59,7 @@ public class GuesserGameController {
         fileManager = new FileManager();
         isSetQuestionTabActive = true;
         singleplayerWordsList = new ArrayList<>();
+        usedWordsList = new ArrayList<>();
     }
 
     /**
@@ -93,17 +92,33 @@ public class GuesserGameController {
     public void buttonPushed() {
         if (gameType == GameType.MULTIPLAYER) {
             if (isSetQuestionTabActive) {
-                isSetQuestionTabActive = false;
+                // Get word from setQuestionPane
+                String s = setQuestionPane.getWordToBeGuessed();
 
-                if (currentPlayer == 1) {
-                    currentPlayer = 2;
+                // Check if the word was already entered before
+                if (!usedWordsList.contains(s)) {
+                    isSetQuestionTabActive = false;
+
+                    // Switch player
+                    if (currentPlayer == 1) {
+                        currentPlayer = 2;
+                    } else {
+                        currentPlayer = 1;
+                    }
+
+                    // Add word to usedWordsList
+                    usedWordsList.add(s);
+
+                    // Get word from setQuestionPane and load it in an Array and show the question
+                    loadWordInArray(convertStringToUppercase(s));
+                    askQuestion();
                 } else {
-                    currentPlayer = 1;
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information");
+                    alert.setHeaderText("Try to enter another word.");
+                    alert.setContentText("The word " + s + " was already entered before.");
+                    alert.show();
                 }
-
-                // Get word from setQuestionPane and load it in an Array and show the question
-                loadWordInArray(convertStringToUppercase(setQuestionPane.getWordToBeGuessed()));
-                askQuestion();
             } else {
                 if (askQuestionPane.isFinished()) {
                     isSetQuestionTabActive = true;
@@ -348,7 +363,6 @@ public class GuesserGameController {
             Stage stage = (Stage) borderPane.getScene().getWindow();
             Scene scene = new Scene(root);
             stage.setScene(scene);
-            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -6,8 +6,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" id="background-ui" minHeight="350.0" minWidth="550.0"
-            stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/17"
+<BorderPane id="background-ui" minHeight="350.0" minWidth="550.0" stylesheets="@stylesheet.css"
+            xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.gregorgott.guesser.MainMenuController">
     <center>
         <VBox spacing="15.0" BorderPane.alignment="TOP_LEFT">

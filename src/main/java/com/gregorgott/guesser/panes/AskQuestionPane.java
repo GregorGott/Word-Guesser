@@ -24,8 +24,8 @@ import java.util.Random;
  * circle.
  *
  * @author GregorGott
- * @version 1.1.2
- * @since 2022-05-03
+ * @version 1.1.3
+ * @since 2022-05-10
  */
 public class AskQuestionPane {
     private final char[] solutionArray, outputArray;
@@ -41,8 +41,8 @@ public class AskQuestionPane {
     private boolean finished;
 
     /**
-     * Initialize variables, set points and mistakes to zero and set finished to false. Fill the output array with
-     * underlines for each character.
+     * Initialize variables, set points and mistakes to zero and set finished to false. Fill all non whitespace characters
+     * with underscores.
      *
      * @param solutionLabelArray Each character is an underline.
      * @param maxMistakes        Max amount of mistakes. Each mistake is one circle.
@@ -53,7 +53,14 @@ public class AskQuestionPane {
         this.solutionArray = solutionLabelArray;
 
         outputArray = new char[solutionLabelArray.length];
-        Arrays.fill(outputArray, '_');
+
+        for (int i = 0; i < solutionArray.length; i++) {
+            if (solutionArray[i] == ' ') {
+                outputArray[i] = ' ';
+            } else {
+                outputArray[i] = '_';
+            }
+        }
 
         usedCharsList = new ArrayList<>();
 
@@ -125,9 +132,9 @@ public class AskQuestionPane {
 
         // ScrollPane to scroll if the word is too long
         ScrollPane scrollPane = new ScrollPane(outputLabel);
-        scrollPane.setPrefHeight(40);
+        scrollPane.setPrefHeight(50);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-        scrollPane.setPadding(new Insets(5));
+        scrollPane.setPadding(new Insets(8));
 
         Label mistakesLabel = new Label("Mistakes:");
         mistakesLabel.setId("white-label");

@@ -28,6 +28,7 @@ public class ResultSceneController {
 
     /**
      * Set the winner label.
+     *
      * @param text Text to show in the winnerLabel.
      */
     public void setWinnerLabel(String text) {
@@ -36,8 +37,9 @@ public class ResultSceneController {
 
     /**
      * Set a pie chart with the points of the player(s).
-     * @param i1 (Multiplayer) Points of player 1. (Singleplayer) Guessed words.
-     * @param i2 (Multiplayer) Points of player 2. (Singleplayer) Not guessed words.
+     *
+     * @param i1      (Multiplayer) Points of player 1. (Singleplayer) Guessed words.
+     * @param i2      (Multiplayer) Points of player 2. (Singleplayer) Not guessed words.
      * @param legend1 Legend for i1.
      * @param legend2 Legend for i2
      */
@@ -59,6 +61,5 @@ public class ResultSceneController {
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
-        stage.show();
     }
 }

@@ -9,9 +9,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import java.awt.Desktop;
 
-import java.io.*;
+import java.awt.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Objects;
@@ -21,8 +23,8 @@ import java.util.Scanner;
  * Manages all file actions.
  *
  * @author GregorGott
- * @version 1.1.2
- * @since 2022-05-10
+ * @version 1.1.3
+ * @since 2022-05-13
  */
 public class FileManager {
     private final Stage stage;
@@ -77,7 +79,7 @@ public class FileManager {
         stage.setResizable(false);
         stage.setTitle("Singleplayer");
         stage.setWidth(300);
-        stage.setHeight(120);
+        stage.setHeight(150);
         stage.setScene(scene);
         stage.showAndWait();
     }
@@ -111,7 +113,11 @@ public class FileManager {
         fileChooser.setTitle("Select a Singleplayer file");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
 
-        file = fileChooser.showOpenDialog(null).getAbsoluteFile();
+        file = fileChooser.showOpenDialog(null);
+
+        if (file != null) {
+            file = file.getAbsoluteFile();
+        }
 
         closeStage();
     }

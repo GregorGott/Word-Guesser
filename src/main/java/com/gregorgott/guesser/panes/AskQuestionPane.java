@@ -24,15 +24,15 @@ import java.util.Random;
  * circle.
  *
  * @author GregorGott
- * @version 1.1.3
- * @since 2022-05-10
+ * @version 1.1.4
+ * @since 2022-05-13
  */
 public class AskQuestionPane {
     private final char[] solutionArray, outputArray;
     private final int maxMistakes;
+    private final List<Character> usedCharsList;
     private Node root;
     private HBox circleHBox, hBox_1;
-    private final List<Character> usedCharsList;
     private Label outputLabel, usedCharsLabel;
     private TextField textField;
     private Button showTipButton;
@@ -304,8 +304,10 @@ public class AskQuestionPane {
      */
     private void setShowTipButton() {
         showTipButton.setOnAction(event -> {
-            ArrayList<Integer> leftUnderlinesIndex = new ArrayList<>();
+            // Get index from every underscore in outputArray
+            List<Integer> leftUnderlinesIndex = new ArrayList<>();
 
+            // Count number of underscores in output array
             for (int i = 0; i < outputArray.length; i++) {
                 if (outputArray[i] == '_') {
                     leftUnderlinesIndex.add(i);
@@ -316,6 +318,7 @@ public class AskQuestionPane {
             int random = new Random().nextInt(leftUnderlinesIndex.size());
             char c = solutionArray[leftUnderlinesIndex.get(random)];
 
+            // Show the tip in output array by replacing every c in outputArray
             for (int i = 0; i < solutionArray.length; i++) {
                 if (solutionArray[i] == c) {
                     outputArray[i] = solutionArray[i];

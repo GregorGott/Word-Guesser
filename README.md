@@ -90,6 +90,7 @@ If he guessed all words he gets 6 points.
 ## License
 
 GNU General Public License v3.0: https://www.gnu.org/licenses/quick-guide-gplv3.html
+
 Please notice that the images are contributed under another license.
 You can find more
 information [here](https://github.com/GregorGott/Word-Guesser/blob/beta/src/main/resources/com/gregorgott/guesser/images/LICENSE.txt)

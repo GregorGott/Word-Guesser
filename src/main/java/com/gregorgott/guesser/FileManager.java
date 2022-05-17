@@ -1,14 +1,9 @@
 package com.gregorgott.guesser;
 
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
+import com.gregorgott.mdialogwindows.MAlert;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.awt.*;
 import java.io.File;
@@ -16,18 +11,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Objects;
 import java.util.Scanner;
 
 /**
  * Manages all file actions.
  *
  * @author GregorGott
- * @version 1.1.3
- * @since 2022-05-13
+ * @version 1.1.4
+ * @since 2022-05-17
  */
 public class FileManager {
-    private final Stage stage;
+    private Stage stage;
     private File file;
 
     public FileManager() {
@@ -35,53 +29,25 @@ public class FileManager {
     }
 
     /**
+     * Shows a MAlert with the options to download the single-player files, open a file chooser and cancel.
+     *
      * @return A selected text file.
      * @since 1.0.0
      */
-    public File selectSingleplayerFile() {
-        setScene();
+    public File selectSingleplayerFile(Window window) {
+        MAlert mAlert = new MAlert(MAlert.MAlertType.CONFIRMATION, "Singleplayer", window);
+        mAlert.setAlertStyle(MAlert.MAlertStyle.DARK_ROUNDED);
+        mAlert.setHeadline("Select Singleplayer files.");
+        mAlert.setContentText("Do you want to download all Singleplayer files? If you want to " +
+                "select a file from your Computer, click 'Open'.");
+        mAlert.addButton("Download", x -> download(), false);
+        mAlert.addButton("Open", x -> chooseFile(), true);
+        mAlert.addButton("Cancel", x -> mAlert.closeAlert(), false);
+
+        stage = mAlert.getStage();
+        stage.showAndWait();
 
         return file;
-    }
-
-    /**
-     * Set the Scene with description label and two buttons for downloading and open Singleplayer files.
-     *
-     * @since 1.1.0
-     */
-    private void setScene() {
-        Label label = new Label("Do you want to download all Singleplayer files? If you want to " +
-                "select a file from your Computer, click 'Open'.");
-        label.setWrapText(true);
-        label.setId("white-label");
-
-        Button downloadButton = new Button("Download");
-        downloadButton.setOnAction(x -> download());
-        Button openButton = new Button("Open");
-        openButton.setOnAction(x -> chooseFile());
-        Button cancelButton = new Button("Cancel");
-        cancelButton.setOnAction(x -> closeStage());
-
-        HBox hBox = new HBox();
-        hBox.setAlignment(Pos.BOTTOM_RIGHT);
-        hBox.setSpacing(10);
-        hBox.getChildren().addAll(downloadButton, openButton, cancelButton);
-
-        BorderPane borderPane = new BorderPane();
-        borderPane.setPadding(new Insets(10));
-        borderPane.setId("background-ui");
-        borderPane.setTop(label);
-        borderPane.setCenter(hBox);
-
-        Scene scene = new Scene(borderPane);
-        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("stylesheet.css")).toExternalForm());
-
-        stage.setResizable(false);
-        stage.setTitle("Singleplayer");
-        stage.setWidth(300);
-        stage.setHeight(150);
-        stage.setScene(scene);
-        stage.showAndWait();
     }
 
     /**

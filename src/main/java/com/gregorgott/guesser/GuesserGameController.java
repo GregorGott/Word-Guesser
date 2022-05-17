@@ -2,12 +2,11 @@ package com.gregorgott.guesser;
 
 import com.gregorgott.guesser.panes.AskQuestionPane;
 import com.gregorgott.guesser.panes.SetQuestionPane;
+import com.gregorgott.mdialogwindows.MAlert;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.input.KeyCode;
@@ -24,8 +23,8 @@ import java.util.*;
  * tries to guess it and so on. FXML Scene: guesser-game-scene.fxml
  *
  * @author GregorGott
- * @version 1.1.7
- * @since 2022-05-10
+ * @version 1.1.8
+ * @since 2022-05-17
  */
 public class GuesserGameController {
     private final ArrayList<String> singleplayerWordsList;
@@ -85,9 +84,9 @@ public class GuesserGameController {
     }
 
     /**
-     * If the big 'next button' on the right side is pushed. Get the current tab (setQuestion or askQuestion)
-     * and switch tab. Example: If the current tab is the setQuestion tab, set setQuestionTabActive
-     * to false and switch to askQuestionPane.
+     * Is called when the 'Next' button on the right side is pushed.
+     * Get the current tab (setQuestion or askQuestion) and switch tab.
+     * Switch player add points.
      */
     public void buttonPushed() {
         if (gameType == GameType.MULTIPLAYER) {
@@ -95,29 +94,35 @@ public class GuesserGameController {
                 // Get word from setQuestionPane
                 String s = setQuestionPane.getWordToBeGuessed();
 
-                // Check if the word was already entered before
-                if (!usedWordsList.contains(s)) {
-                    isSetQuestionTabActive = false;
+                // Check if text field is not empty
+                if (!s.isEmpty()) {
+                    // Check if the word was already entered before
+                    if (!usedWordsList.contains(s)) {
+                        isSetQuestionTabActive = false;
 
-                    // Switch player
-                    if (currentPlayer == 1) {
-                        currentPlayer = 2;
+                        // Switch player
+                        if (currentPlayer == 1) {
+                            currentPlayer = 2;
+                        } else {
+                            currentPlayer = 1;
+                        }
+
+                        // Add word to usedWordsList
+                        usedWordsList.add(s);
+
+                        // Get word from setQuestionPane and load it in an Array and show the question
+                        loadWordInArray(convertStringToUppercase(s));
+                        askQuestion();
                     } else {
-                        currentPlayer = 1;
+                        MAlert mAlert = new MAlert(MAlert.MAlertType.INFORMATION, "Information", borderPane.getScene().getWindow());
+                        mAlert.setHeadline("Try to enter another word.");
+                        mAlert.setContentText("The word \"" + s + "\" was already entered before.");
+                        mAlert.setAlertStyle(MAlert.MAlertStyle.DARK_ROUNDED);
+                        mAlert.addButton("OK", x -> mAlert.closeAlert(), true);
+
+                        Stage stage = mAlert.getStage();
+                        stage.showAndWait();
                     }
-
-                    // Add word to usedWordsList
-                    usedWordsList.add(s);
-
-                    // Get word from setQuestionPane and load it in an Array and show the question
-                    loadWordInArray(convertStringToUppercase(s));
-                    askQuestion();
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Information");
-                    alert.setHeaderText("Try to enter another word.");
-                    alert.setContentText("The word " + s + " was already entered before.");
-                    alert.show();
                 }
             } else {
                 if (askQuestionPane.isFinished()) {
@@ -127,10 +132,8 @@ public class GuesserGameController {
 
                     if (currentPlayer == 1) {
                         pointsPlayer1 = pointsPlayer1 + askQuestionPane.getPoints();
-                        System.out.println(pointsPlayer1);
                     } else {
                         pointsPlayer2 = pointsPlayer2 + askQuestionPane.getPoints();
-                        System.out.println(pointsPlayer2);
                     }
 
                     if (numberOfQuestions < currentRound) {
@@ -211,8 +214,8 @@ public class GuesserGameController {
     }
 
     /**
-     * Get all lines from pathToGuessingFile and load every line wich not start with a "##"
-     * in singleplayerWordList ArrayList.
+     * Get all lines from pathToGuessingFile and load every line which not start with a "##" or an empty line
+     * in <code>singleplayerWordList</code> List.
      */
     private void setSingleplayerWordList() {
         try {
@@ -220,8 +223,8 @@ public class GuesserGameController {
             while (scanner.hasNextLine()) {
                 // Load line in String
                 String scannerNextLine = scanner.nextLine();
-                // Detect file comments
-                if (!scannerNextLine.startsWith("##")) {
+                // Detect file comments and empty lines
+                if (!scannerNextLine.startsWith("##") && !scannerNextLine.isEmpty()) {
                     singleplayerWordsList.add(scannerNextLine);
                 }
             }
@@ -312,14 +315,18 @@ public class GuesserGameController {
      * Show an alert and end round when the user clicks on 'OK'.
      */
     public void cancelRoundButton() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Warning");
-        alert.setHeaderText("End round now.");
-        alert.setContentText("The round will end immediately, the result may not be correct.");
-
-        if (alert.showAndWait().orElse(null) == ButtonType.OK) {
+        MAlert mAlert = new MAlert(MAlert.MAlertType.CONFIRMATION, "Warning", borderPane.getScene().getWindow());
+        mAlert.setHeadline("End round now.");
+        mAlert.setContentText("The round will end immediately, the result may not be correct.");
+        mAlert.setAlertStyle(MAlert.MAlertStyle.DARK_ROUNDED);
+        mAlert.addButton("Cancel", x -> mAlert.closeAlert(), false);
+        mAlert.addButton("End round", x -> {
             showResultScene();
-        }
+            mAlert.closeAlert();
+        }, true);
+
+        Stage stage = mAlert.getStage();
+        stage.showAndWait();
     }
 
     /**
@@ -377,4 +384,3 @@ public class GuesserGameController {
         MULTIPLAYER
     }
 }
-

@@ -23,21 +23,19 @@ import java.util.ResourceBundle;
  * between single and multiplayer mode.
  *
  * @author GregorGott
- * @version 1.1.2
- * @since 2022-05-08
+ * @version 1.1.3
+ * @since 2022-05-17
  */
 public class MainMenuController implements Initializable {
     // Single-, Multiplayer toggle buttons
     @FXML
     private ToggleButton multiplayerTogglePlayer;
-
     @FXML
     private ToggleButton singleplayerTogglePlayer;
 
     // Declare FXML Spinners
     @FXML
     private Spinner<Integer> numberOfQuestionsSpinner;
-
     @FXML
     private Spinner<Integer> maxMistakesSpinner;
 
@@ -86,18 +84,20 @@ public class MainMenuController implements Initializable {
 
         if (getGameType() == GuesserGameController.GameType.SINGLEPLAYER) {
             FileManager fileManager = new FileManager();
-            File file = fileManager.selectSingleplayerFile();
+            File file = fileManager.selectSingleplayerFile(stage.getScene().getWindow());
 
             if (file != null) {
                 guesserGameController.setPathToGuessingFile(file);
 
-                guesserGameController.startGame(getNumberOfQuestionsSpinnerValue(), getMaxMistakesSpinnerValue(), getGameType());
+                guesserGameController.startGame(getNumberOfQuestionsSpinnerValue(), getMaxMistakesSpinnerValue(),
+                        getGameType());
 
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
             }
         } else {
-            guesserGameController.startGame(getNumberOfQuestionsSpinnerValue(), getMaxMistakesSpinnerValue(), getGameType());
+            guesserGameController.startGame(getNumberOfQuestionsSpinnerValue(), getMaxMistakesSpinnerValue(),
+                    getGameType());
 
             Scene scene = new Scene(root);
             stage.setScene(scene);

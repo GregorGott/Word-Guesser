@@ -3,6 +3,7 @@ module com.gregorgott.guesser {
     requires javafx.fxml;
     requires javafx.graphics;
     requires java.desktop;
+    requires com.gregorgott.mdialogwindows;
 
     opens com.gregorgott.guesser to javafx.fxml;
     exports com.gregorgott.guesser;

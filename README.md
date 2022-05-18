@@ -19,6 +19,7 @@
 3. [Install Word Guesser](https://github.com/GregorGott/Word-Guesser#install-word-guesser)
 4. [The Points System](https://github.com/GregorGott/Word-Guesser#the-points-system)
 5. [Images](https://github.com/GregorGott/Word-Guesser#images)
+6. [License & Developer Information](https://github.com/GregorGott/Word-Guesser#license-&-developer-information)
 
 ## The Gameplay
 
@@ -29,16 +30,14 @@ In the end, the winner is the one who has guessed the longest words.
 
 ## Download Word Guesser
 
-> ⚠️ Word Guesser is currently a Beta. It can contain bugs and unfinished features.
-
-If you want to play this game on a desktop device, just download the correct version
+Just download the correct version
 for your operating system.
 
 **Download for
-Windows: [Download exe](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0-beta.3/Word-Guesser-win-x86_x64.exe)** <br>
+Windows: [Download exe](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0/Word-Guesser-win-x86_x64.exe)** <br>
 **Download for Linux: (Coming Soon)** <br>
-**Download for macOS (
-Intel): [Download dmg](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0-beta.3/Word-Guesser-mac-x86_x64.dmg)**
+**Download for macOS
+(Intel): [Download dmg](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0/Word-Guesser-mac-x86_x64.dmg)**
 
 Right after the download, you can start the game and have fun.
 
@@ -74,9 +73,9 @@ Player 1 gives the word "Caretaker". Player 2 enters "C" and "A" and receives tw
 If player 2 enters "Y" he does not get a point and keeps his two points.
 If he guessed all words he gets 6 points.
 
-|C|A|R|E|T|A| K |E|R|
-|-|-|-|-|-|-|--------|-|-|
-|1|2|3|4|5|<b>2</b>|6|<b>4</b>|<b>3</b>|
+| C   | A   | R   | E   | T   | A        | K   | E        | R        |
+|-----|-----|-----|-----|-----|----------|-----|----------|----------|
+| 1   | 2   | 3   | 4   | 5   | <b>2</b> | 6   | <b>4</b> | <b>4</b> |
 
 ## Images
 
@@ -87,9 +86,13 @@ If he guessed all words he gets 6 points.
   <img src="README_IMGS/previewImage5.png" width="49.5%" alt="Player 2 won"/>
 </p>
 
-## License
+## License & Developer Information
+### Developer Information
+This project uses Modern-Dialog-Windows. Check it out [here](https://github.com/GregorGott/Modern-Dialog-Windows).
 
+### License
 GNU General Public License v3.0: https://www.gnu.org/licenses/quick-guide-gplv3.html
+
 Please notice that the images are contributed under another license.
 You can find more
 information [here](https://github.com/GregorGott/Word-Guesser/blob/beta/src/main/resources/com/gregorgott/guesser/images/LICENSE.txt)

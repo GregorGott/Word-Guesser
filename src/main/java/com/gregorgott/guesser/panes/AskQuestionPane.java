@@ -41,7 +41,7 @@ public class AskQuestionPane {
     private boolean finished;
 
     /**
-     * Initialize variables, set points and mistakes to zero and set finished to false. Fill all non whitespace characters
+     * Initialize variables, set points and mistakes to zero and set finished to false. Fill all non-whitespace characters
      * with underscores.
      *
      * @param solutionLabelArray Each character is an underline.

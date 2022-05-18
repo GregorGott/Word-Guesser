@@ -353,8 +353,8 @@ public class GuesserGameController {
             }
         } else if (gameType == GameType.SINGLEPLAYER) {
             points2 = pointsToBeReached;
-            points1Text = "Guessed words";
-            points2Text = "Not guessed words";
+            points1Text = "Guessed characters";
+            points2Text = "Not guessed characters";
             winner = "Score " + pointsPlayer1 + " out of " + pointsToBeReached + ".";
         }
 
@@ -376,7 +376,7 @@ public class GuesserGameController {
     }
 
     /**
-     * Multiplayer is the normal game mode with two players. One is guessing the word, the other one gives.
+     * Multiplayer is the normal game mode with two players. One is guessing the word, and the other one gives.
      * In Singleplayer, the computer searches for a random word and the player tries to guess it.
      */
     public enum GameType {

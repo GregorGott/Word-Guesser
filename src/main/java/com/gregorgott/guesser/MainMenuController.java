@@ -79,6 +79,7 @@ public class MainMenuController implements Initializable {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("guesser-game-scene.fxml"));
         Parent root = loader.load();
+        Scene scene = new Scene(root);
 
         GuesserGameController guesserGameController = loader.getController();
 
@@ -92,14 +93,12 @@ public class MainMenuController implements Initializable {
                 guesserGameController.startGame(getNumberOfQuestionsSpinnerValue(), getMaxMistakesSpinnerValue(),
                         getGameType());
 
-                Scene scene = new Scene(root);
                 stage.setScene(scene);
             }
         } else {
             guesserGameController.startGame(getNumberOfQuestionsSpinnerValue(), getMaxMistakesSpinnerValue(),
                     getGameType());
 
-            Scene scene = new Scene(root);
             stage.setScene(scene);
         }
     }

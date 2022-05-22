@@ -28,15 +28,16 @@ import java.util.Random;
  * @since 2022-05-13
  */
 public class AskQuestionPane {
-    private final char[] solutionArray, outputArray;
+    private final char[] solutionArray;
+    private final char[] outputArray;
     private final int maxMistakes;
     private final List<Character> usedCharsList;
     private Node root;
     private HBox circleHBox, hBox_1;
-    private Label outputLabel, usedCharsLabel;
+    private Label outputLabel;
+    private Label usedCharsLabel;
     private TextField textField;
     private Button showTipButton;
-
     private int points, mistakes;
     private boolean finished;
 
@@ -44,18 +45,18 @@ public class AskQuestionPane {
      * Initialize variables, set points and mistakes to zero and set finished to false. Fill all non-whitespace characters
      * with underscores.
      *
-     * @param solutionLabelArray Each character is an underline.
-     * @param maxMistakes        Max amount of mistakes. Each mistake is one circle.
+     * @param solutionArray an Array with the solution.
+     * @param maxMistakes   Max amount of mistakes. Each mistake is one circle.
      * @see <a href="https://stackoverflow.com/questions/15159988/javafx-2-2-textfield-maxlength">JavaFX 2.2 TextField maxlength</a>
      */
-    public AskQuestionPane(char[] solutionLabelArray, int maxMistakes) {
+    public AskQuestionPane(char[] solutionArray, int maxMistakes) {
         this.maxMistakes = maxMistakes;
-        this.solutionArray = solutionLabelArray;
+        this.solutionArray = solutionArray;
 
-        outputArray = new char[solutionLabelArray.length];
+        outputArray = new char[solutionArray.length];
 
-        for (int i = 0; i < solutionArray.length; i++) {
-            if (solutionArray[i] == ' ') {
+        for (int i = 0; i < this.solutionArray.length; i++) {
+            if (this.solutionArray[i] == ' ') {
                 outputArray[i] = ' ';
             } else {
                 outputArray[i] = '_';

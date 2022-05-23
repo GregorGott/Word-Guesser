@@ -22,7 +22,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         // Load main-menu-scene.fxml in 'Word Guesser' Stage
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("main-menu-scene.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("mode-selector-scene.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
 
         stage.setTitle("Word Guesser");

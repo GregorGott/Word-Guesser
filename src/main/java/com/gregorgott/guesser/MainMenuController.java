@@ -1,5 +1,6 @@
 package com.gregorgott.guesser;
 
+import com.gregorgott.guesser.panes.GameMode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,8 +24,8 @@ import java.util.ResourceBundle;
  * between single and multiplayer mode.
  *
  * @author GregorGott
- * @version 1.1.3
- * @since 2022-05-17
+ * @version 1.1.4
+ * @since 2022-05-23
  */
 public class MainMenuController implements Initializable {
     // Single-, Multiplayer toggle buttons
@@ -38,6 +39,16 @@ public class MainMenuController implements Initializable {
     private Spinner<Integer> numberOfQuestionsSpinner;
     @FXML
     private Spinner<Integer> maxMistakesSpinner;
+
+    private GameMode gameMode;
+
+    /**
+     * Sets the game mode.
+     * @param gameMode the game mode.
+     */
+    public void setGameMode(GameMode gameMode) {
+        this.gameMode = gameMode;
+    }
 
     /**
      * @return Number of questions from the Spinner.

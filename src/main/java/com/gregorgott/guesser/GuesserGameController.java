@@ -1,6 +1,8 @@
 package com.gregorgott.guesser;
 
-import com.gregorgott.guesser.panes.AskQuestionPane;
+import com.gregorgott.guesser.panes.CardsAskQuestionPane;
+import com.gregorgott.guesser.panes.GameMode;
+import com.gregorgott.guesser.panes.OriginalAskQuestionPane;
 import com.gregorgott.guesser.panes.SetQuestionPane;
 import com.gregorgott.mdialogwindows.MAlert;
 import javafx.fxml.FXML;
@@ -49,7 +51,9 @@ public class GuesserGameController {
     private File pathToGuessingFile;
     private GameType gameType;
     private SetQuestionPane setQuestionPane;
-    private AskQuestionPane askQuestionPane;
+    private OriginalAskQuestionPane originalAskQuestionPane;
+    private CardsAskQuestionPane cardsAskQuestionPane;
+    private GameMode gameMode;
 
     /**
      * Initialize basic array lists and FileManager.
@@ -69,10 +73,11 @@ public class GuesserGameController {
      * @param maxMistakes       Max amount of allowed mistakes per player.
      * @param gameType          Single or Multiplayer mode.
      */
-    public void startGame(int numberOfQuestions, int maxMistakes, GameType gameType) {
+    public void startGame(int numberOfQuestions, int maxMistakes, GameType gameType, GameMode gameMode) {
         this.numberOfQuestions = numberOfQuestions;
         this.maxMistakes = maxMistakes;
         this.gameType = gameType;
+        this.gameMode = gameMode;
 
         if (gameType == GameType.MULTIPLAYER) {
             setQuestion();
@@ -88,7 +93,7 @@ public class GuesserGameController {
      * Get the current tab (setQuestion or askQuestion) and switch tab.
      * Switch player add points.
      */
-    public void buttonPushed() {
+    public void nextButtonPushed() {
         if (gameType == GameType.MULTIPLAYER) {
             if (isSetQuestionTabActive) {
                 // Get word from setQuestionPane
@@ -125,15 +130,15 @@ public class GuesserGameController {
                     }
                 }
             } else {
-                if (askQuestionPane.isFinished()) {
+                if (checkIfFinished()) {
                     isSetQuestionTabActive = true;
 
                     currentRound++;
 
                     if (currentPlayer == 1) {
-                        pointsPlayer1 = pointsPlayer1 + askQuestionPane.getPoints();
+                        pointsPlayer1 = pointsPlayer1 + getPoints();
                     } else {
-                        pointsPlayer2 = pointsPlayer2 + askQuestionPane.getPoints();
+                        pointsPlayer2 = pointsPlayer2 + getPoints();
                     }
 
                     if (numberOfQuestions < currentRound) {
@@ -147,7 +152,7 @@ public class GuesserGameController {
         } else {
             currentRound++;
 
-            pointsPlayer1 = pointsPlayer1 + askQuestionPane.getPoints();
+            pointsPlayer1 = pointsPlayer1 + getPoints();
             if (numberOfQuestions < currentRound) {
                 // Show results if end is reached
                 showResultScene();
@@ -156,6 +161,24 @@ public class GuesserGameController {
                 loadRandomWordInArray();
             }
         }
+    }
+
+    private boolean checkIfFinished() {
+        if (gameMode == GameMode.ORIGINAL) {
+            return originalAskQuestionPane.isFinished();
+        } else if (gameMode == GameMode.CARDS) {
+            return cardsAskQuestionPane.isFinished();
+        }
+        return false;
+    }
+
+    private int getPoints() {
+        if (gameMode == GameMode.ORIGINAL) {
+            return originalAskQuestionPane.getPoints();
+        } else if (gameMode == GameMode.CARDS) {
+            return cardsAskQuestionPane.getPoints();
+        }
+        return 0;
     }
 
     /**
@@ -185,7 +208,7 @@ public class GuesserGameController {
         setQuestionPane = new SetQuestionPane();
         setQuestionPane.getWordToGuessTextField().setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
-                buttonPushed();
+                nextButtonPushed();
             }
         });
 
@@ -307,8 +330,13 @@ public class GuesserGameController {
     private void askQuestion() {
         setTopBarUI();
 
-        askQuestionPane = new AskQuestionPane(solutionArray, maxMistakes);
-        borderPane.setCenter(askQuestionPane.getRoot());
+        if (gameMode == GameMode.ORIGINAL) {
+            originalAskQuestionPane = new OriginalAskQuestionPane(solutionArray, maxMistakes);
+            borderPane.setCenter(originalAskQuestionPane.getRoot());
+        } else if (gameMode == GameMode.CARDS) {
+            cardsAskQuestionPane = new CardsAskQuestionPane(solutionArray);
+            borderPane.setCenter(cardsAskQuestionPane.getRoot());
+        }
     }
 
     /**

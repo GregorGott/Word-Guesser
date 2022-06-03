@@ -102,13 +102,13 @@ public class MainMenuController implements Initializable {
                 guesserGameController.setPathToGuessingFile(file);
 
                 guesserGameController.startGame(getNumberOfQuestionsSpinnerValue(), getMaxMistakesSpinnerValue(),
-                        getGameType());
+                        getGameType(), gameMode);
 
                 stage.setScene(scene);
             }
         } else {
             guesserGameController.startGame(getNumberOfQuestionsSpinnerValue(), getMaxMistakesSpinnerValue(),
-                    getGameType());
+                    getGameType(), gameMode);
 
             stage.setScene(scene);
         }

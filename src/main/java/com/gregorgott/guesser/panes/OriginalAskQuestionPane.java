@@ -20,19 +20,18 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Show a pane where the player tries to guess the given word. And control the mistakes circles. Each Mistake is one
- * circle.
+ * This is the classic game mode where the player tries to guess a word by only knowing the length of the word.
  *
  * @author GregorGott
- * @version 1.1.4
- * @since 2022-05-13
+ * @version 1.1.5
+ * @since 2022-06-03
  */
-public class AskQuestionPane {
+public class OriginalAskQuestionPane {
     private final char[] solutionArray;
     private final char[] outputArray;
     private final int maxMistakes;
     private final List<Character> usedCharsList;
-    private Node root;
+    private final Node root;
     private HBox circleHBox, hBox_1;
     private Label outputLabel;
     private Label usedCharsLabel;
@@ -49,7 +48,7 @@ public class AskQuestionPane {
      * @param maxMistakes   Max amount of mistakes. Each mistake is one circle.
      * @see <a href="https://stackoverflow.com/questions/15159988/javafx-2-2-textfield-maxlength">JavaFX 2.2 TextField maxlength</a>
      */
-    public AskQuestionPane(char[] solutionArray, int maxMistakes) {
+    public OriginalAskQuestionPane(char[] solutionArray, int maxMistakes) {
         this.maxMistakes = maxMistakes;
         this.solutionArray = solutionArray;
 
@@ -69,7 +68,7 @@ public class AskQuestionPane {
         mistakes = 0;
         finished = false;
 
-        setRoot(loadAskQuestionPane());
+        root = loadAskQuestionPane();
     }
 
     /**
@@ -77,15 +76,6 @@ public class AskQuestionPane {
      */
     public Node getRoot() {
         return root;
-    }
-
-    /**
-     * Set the root node.
-     *
-     * @param n Is the node to set root to.
-     */
-    private void setRoot(Node n) {
-        root = n;
     }
 
     /**

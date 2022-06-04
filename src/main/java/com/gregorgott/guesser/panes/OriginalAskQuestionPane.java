@@ -11,8 +11,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,21 +21,19 @@ import java.util.Random;
  * This is the classic game mode where the player tries to guess a word by only knowing the length of the word.
  *
  * @author GregorGott
- * @version 1.1.5
- * @since 2022-06-03
+ * @version 1.2.0
+ * @since 2022-06-04
  */
-public class OriginalAskQuestionPane {
+public class OriginalAskQuestionPane extends AskQuestionPane {
     private final char[] solutionArray;
     private final char[] outputArray;
     private final int maxMistakes;
-    private final List<Character> usedCharsList;
     private final Node root;
-    private HBox circleHBox, hBox_1;
+    private HBox hBox_1;
     private Label outputLabel;
     private Label usedCharsLabel;
     private TextField textField;
     private Button showTipButton;
-    private int points, mistakes;
     private boolean finished;
 
     /**
@@ -49,6 +45,7 @@ public class OriginalAskQuestionPane {
      * @see <a href="https://stackoverflow.com/questions/15159988/javafx-2-2-textfield-maxlength">JavaFX 2.2 TextField maxlength</a>
      */
     public OriginalAskQuestionPane(char[] solutionArray, int maxMistakes) {
+        super(maxMistakes);
         this.maxMistakes = maxMistakes;
         this.solutionArray = solutionArray;
 
@@ -62,10 +59,6 @@ public class OriginalAskQuestionPane {
             }
         }
 
-        usedCharsList = new ArrayList<>();
-
-        points = 0;
-        mistakes = 0;
         finished = false;
 
         root = loadAskQuestionPane();
@@ -127,21 +120,6 @@ public class OriginalAskQuestionPane {
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         scrollPane.setPadding(new Insets(8));
 
-        Label mistakesLabel = new Label("Mistakes:");
-        mistakesLabel.setId("white-label");
-
-        // HBox which contains mistake circles
-        circleHBox = new HBox();
-        circleHBox.setAlignment(Pos.CENTER_LEFT);
-        circleHBox.setSpacing(8);
-
-        setCircleHBox();
-
-        // HBox with enterACharLabel and mistake circles
-        HBox mistakeCirclesHBox = new HBox();
-        mistakeCirclesHBox.setSpacing(10);
-        mistakeCirclesHBox.getChildren().addAll(mistakesLabel, circleHBox);
-
         usedCharsLabel = new Label();
         usedCharsLabel.setId("white-label");
 
@@ -149,7 +127,7 @@ public class OriginalAskQuestionPane {
         VBox mainVBox = new VBox();
         mainVBox.setSpacing(20);
         mainVBox.setPadding(new Insets(20));
-        mainVBox.getChildren().addAll(hBox_1, scrollPane, mistakeCirclesHBox, usedCharsLabel);
+        mainVBox.getChildren().addAll(hBox_1, scrollPane, getCircleHBox(), usedCharsLabel);
 
         return mainVBox;
     }
@@ -179,12 +157,12 @@ public class OriginalAskQuestionPane {
             char inputInUppercase = s.toUpperCase().charAt(0);
 
             // Check if the character has been entered before
-            if (!usedCharsList.contains(inputInUppercase)) {
-                addUsedCharacter(inputInUppercase);
+            if (!getUsedCharsList().contains(inputInUppercase)) {
+                updateUsedCharsLabel(inputInUppercase);
 
                 // Check if the character is in the array
                 if (isCharInArray(inputInUppercase, solutionArray)) {
-                    points++;
+                    addPoints(1);
 
                     // Replace underlines with every character from input
                     for (int i = 0; i < solutionArray.length; i++) {
@@ -199,12 +177,11 @@ public class OriginalAskQuestionPane {
                     }
                 } else {
                     // Input not in array
-                    mistakes++;
-                    setCircleHBox();
+                    addMistake();
 
-                    if (mistakes == maxMistakes) {
+                    if (getMistakes() == maxMistakes) {
                         // Delete all points and end the round
-                        points = 0;
+                        setPoints(0);
                         endRound();
                     }
                 }
@@ -235,13 +212,13 @@ public class OriginalAskQuestionPane {
      *
      * @param character The character to be added.
      */
-    private void addUsedCharacter(char character) {
-        usedCharsList.add(character);
+    private void updateUsedCharsLabel(char character) {
+        super.addUsedCharacter(character);
 
-        usedCharsLabel.setText("Already used characters: " + usedCharsList.get(0));
-
-        for (int i = 1; i < usedCharsList.size(); i++) {
-            usedCharsLabel.setText(usedCharsLabel.getText() + ", " + usedCharsList.get(i));
+        if (getUsedCharsList().size() == 1) {
+            usedCharsLabel.setText("Used characters: " + getUsedCharsList().get(0));
+        } else {
+            usedCharsLabel.setText(usedCharsLabel.getText() + ", " + super.getUsedCharsList().get(getUsedCharsList().size() - 1));
         }
     }
 
@@ -253,33 +230,9 @@ public class OriginalAskQuestionPane {
         finished = true;
 
         System.arraycopy(solutionArray, 0, outputArray, 0, solutionArray.length);
-        usedCharsList.clear();
+        getUsedCharsList().clear();
 
         setOutputLabel();
-    }
-
-    /**
-     * For each mistake a red and for each left mistake a green circle.
-     */
-    private void setCircleHBox() {
-        clearCircleHBox();
-
-        for (int i = 0; i < mistakes; i++) {
-            addCircle(Color.rgb(170, 12, 12));
-        }
-
-        if (mistakes < maxMistakes) {
-            for (int i = 0; i < maxMistakes - mistakes; i++) {
-                addCircle(Color.rgb(33, 145, 27));
-            }
-        }
-    }
-
-    /**
-     * @return The points the player achieved.
-     */
-    public int getPoints() {
-        return points;
     }
 
     /**
@@ -317,29 +270,12 @@ public class OriginalAskQuestionPane {
             }
 
             setOutputLabel();
-            addUsedCharacter(c);
-            points--;
+            updateUsedCharsLabel(c);
+            addPoints(-1);
 
             if (Arrays.equals(solutionArray, outputArray)) {
                 endRound();
             }
         });
-    }
-
-    /**
-     * Get the circleHBox and deletes all children.
-     */
-    public void clearCircleHBox() {
-        circleHBox.getChildren().clear();
-    }
-
-    /**
-     * Add a circle with a given colour to the circleHBox.
-     *
-     * @param color The colour of the circle.
-     */
-    public void addCircle(Color color) {
-        Circle circle = new Circle(0, 0, 5, color);
-        circleHBox.getChildren().add(circle);
     }
 }

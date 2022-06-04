@@ -17,19 +17,17 @@ import java.util.Random;
  * The cards question mode is simpler than the original, because each character is shown in a button.
  *
  * @author GregorGott
- * @version 1.0.0
- * @since 2022-06-03
+ * @version 1.1.0
+ * @since 2022-06-04
  */
-public class CardsAskQuestionPane {
+public class CardsAskQuestionPane extends AskQuestionPane {
     private final char[] solutionArray;
     private final char[] outputArray;
     private final ArrayList<Character> sortedArray;
     private final Pane root;
     private final Label outputLabel;
     private final ArrayList<Button> buttons;
-    private int mistakes;
     private boolean finished;
-    private int points;
 
     /**
      * The constructor initializes needed variables and fills the solution array with underscores for each character.
@@ -37,7 +35,8 @@ public class CardsAskQuestionPane {
      * @param solutionArray the solution as an array to check the players input.
      * @since 1.0.0
      */
-    public CardsAskQuestionPane(char[] solutionArray) {
+    public CardsAskQuestionPane(char[] solutionArray, int maxMistakes) {
+        super(maxMistakes);
         this.solutionArray = solutionArray;
         outputArray = new char[solutionArray.length];
         sortedArray = createSortedArray();
@@ -51,8 +50,6 @@ public class CardsAskQuestionPane {
             }
         }
 
-        points = 0;
-        mistakes = 0;
         finished = false;
 
         root = new Pane();
@@ -93,8 +90,9 @@ public class CardsAskQuestionPane {
         characterButtonsFlowPane.setAlignment(Pos.CENTER);
         characterButtonsFlowPane.getChildren().addAll(buttons);
 
-        VBox vBox = new VBox(scrollPane, characterButtonsFlowPane);
+        VBox vBox = new VBox(scrollPane, characterButtonsFlowPane, getCircleHBox());
         vBox.setSpacing(20);
+        vBox.setPadding(new Insets(20));
         root.getChildren().add(vBox);
     }
 
@@ -108,8 +106,8 @@ public class CardsAskQuestionPane {
             String s = String.valueOf(getRandomFromArray(sortedArray));
 
             Button button = new Button(s);
-            button.setOnAction(x -> checkButton(s.charAt(0)));
-            sortedArray.remove(new Character(s.charAt(0)));
+            button.setOnAction(x -> checkButton(button, s.charAt(0)));
+            sortedArray.remove(Character.valueOf(s.charAt(0)));
             buttons.add(button);
         }
     }
@@ -121,62 +119,47 @@ public class CardsAskQuestionPane {
      * @param c the button text as a char.
      * @since 2022-06-03
      */
-    private void checkButton(char c) {
-        if (checkIfArrayContains(solutionArray, c)) {
-            int firstPosition = 0;
+    private void checkButton(Button button, char c) {
+        int firstPosition = 0;
 
-            // Get the first position
+        // Get the first position
+        for (int i = 0; i < solutionArray.length; i++) {
+            if (solutionArray[i] == c) {
+                firstPosition = i;
+                break;
+            }
+        }
+
+        // If the char is the first one in the solutionArray
+        if (firstPosition == 0) {
             for (int i = 0; i < solutionArray.length; i++) {
                 if (solutionArray[i] == c) {
-                    firstPosition = i;
-                    break;
+                    outputArray[i] = solutionArray[i];
                 }
             }
 
-            // If the char is the first one in the solutionArray
-            if (firstPosition == 0) {
+            button.setDisable(true);
+        } else {
+            if (outputArray[firstPosition - 1] != '_') {
                 for (int i = 0; i < solutionArray.length; i++) {
                     if (solutionArray[i] == c) {
                         outputArray[i] = solutionArray[i];
                     }
                 }
+
+                button.setDisable(true);
             } else {
-                if (outputArray[firstPosition - 1] != '_') {
-                    for (int i = 0; i < solutionArray.length; i++) {
-                        if (solutionArray[i] == c) {
-                            outputArray[i] = solutionArray[i];
-                        }
-                    }
-                }
-            }
-
-            setOutputLabel();
-            points++;
-
-            // If the solution is found
-            if (Arrays.equals(solutionArray, outputArray)) {
-                finished = true;
-            }
-        } else {
-            mistakes++;
-        }
-    }
-
-    /**
-     * This Method checks if the given array contains a key as a char.
-     *
-     * @param array the array.
-     * @param key   the key that is searched for in the array.
-     * @return a boolean, if the key is in the array.
-     * @since 2022-06-03
-     */
-    private boolean checkIfArrayContains(char[] array, char key) {
-        for (char a : array) {
-            if (a == key) {
-                return true;
+                addMistake();
             }
         }
-        return false;
+
+        setOutputLabel();
+        addPoints(1);
+
+        // Check if the solution is found
+        if (Arrays.equals(solutionArray, outputArray)) {
+            endRound();
+        }
     }
 
     /**
@@ -219,19 +202,19 @@ public class CardsAskQuestionPane {
         return array.get(random);
     }
 
+    private void endRound() {
+        finished = true;
+
+        for (Button button : buttons) {
+            button.setDisable(true);
+        }
+    }
+
     /**
      * @return a boolean if the round is finished
      * @since 1.0.0
      */
     public boolean isFinished() {
         return finished;
-    }
-
-    /**
-     * @return the reached points.
-     * @since 1.0.0
-     */
-    public int getPoints() {
-        return points;
     }
 }

@@ -55,8 +55,15 @@ public class ResultSceneController {
         }
     }
 
-    public void backToMainMenu(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("main-menu-scene.fxml"));
+    /**
+     * The only button on the Scene, to go back to the mode selector.
+     *
+     * @param event an action event to switch the Scene.
+     * @throws IOException if the FXML file wis nout found.
+     * @since 1.1.0
+     */
+    public void backToModeSelector(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("mode-selector-scene.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

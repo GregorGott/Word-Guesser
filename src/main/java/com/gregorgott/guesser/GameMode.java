@@ -1,4 +1,4 @@
-package com.gregorgott.guesser.panes;
+package com.gregorgott.guesser;
 
 public enum GameMode {
     CARDS,

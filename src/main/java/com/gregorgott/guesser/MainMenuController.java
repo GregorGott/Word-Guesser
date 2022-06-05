@@ -1,6 +1,5 @@
 package com.gregorgott.guesser;
 
-import com.gregorgott.guesser.panes.GameMode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,10 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -24,10 +20,13 @@ import java.util.ResourceBundle;
  * between single and multiplayer mode.
  *
  * @author GregorGott
- * @version 1.1.4
- * @since 2022-05-23
+ * @version 1.1.5
+ * @since 2022-06-05
  */
 public class MainMenuController implements Initializable {
+    @FXML
+    private Label modeLabel;
+
     // Single-, Multiplayer toggle buttons
     @FXML
     private ToggleButton multiplayerTogglePlayer;
@@ -43,11 +42,17 @@ public class MainMenuController implements Initializable {
     private GameMode gameMode;
 
     /**
-     * Sets the game mode.
+     * Sets the game mode and updates the <code>modeLabel</code>.
+     *
      * @param gameMode the game mode.
      */
     public void setGameMode(GameMode gameMode) {
         this.gameMode = gameMode;
+
+        switch (gameMode) {
+            case ORIGINAL -> modeLabel.setText("Original");
+            case CARDS -> modeLabel.setText("Cards");
+        }
     }
 
     /**
@@ -75,6 +80,23 @@ public class MainMenuController implements Initializable {
         } else {
             return GuesserGameController.GameType.MULTIPLAYER;
         }
+    }
+
+    /**
+     * The button is in the upper right corner and is pushed to go back to the mode selector.
+     *
+     * @param event an action event to switch the Scene.
+     * @throws IOException if the fxml file is not found.
+     * @since 1.1.5
+     */
+    public void backToModeSelector(ActionEvent event) throws IOException {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("mode-selector-scene.fxml"));
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+
+        stage.setScene(scene);
     }
 
     /**

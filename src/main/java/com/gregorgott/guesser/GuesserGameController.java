@@ -1,7 +1,6 @@
 package com.gregorgott.guesser;
 
 import com.gregorgott.guesser.panes.CardsAskQuestionPane;
-import com.gregorgott.guesser.panes.GameMode;
 import com.gregorgott.guesser.panes.OriginalAskQuestionPane;
 import com.gregorgott.guesser.panes.SetQuestionPane;
 import com.gregorgott.mdialogwindows.MAlert;

@@ -6,8 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" id="background-ui" maxHeight="-Infinity" maxWidth="-Infinity"
-            minHeight="350.0"
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" id="background-ui" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="350.0"
             minWidth="550.0" prefHeight="350.0" prefWidth="550.0" stylesheets="@stylesheet.css"
             xmlns="http://javafx.com/javafx/18" fx:controller="com.gregorgott.guesser.ResultSceneController">
     <center>
@@ -21,8 +20,8 @@
         </VBox>
     </center>
     <bottom>
-        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#backToMainMenu" text="Back to menu"
-                BorderPane.alignment="CENTER">
+        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#backToModeSelector"
+                text="Back to mode selector" BorderPane.alignment="CENTER">
             <BorderPane.margin>
                 <Insets/>
             </BorderPane.margin>

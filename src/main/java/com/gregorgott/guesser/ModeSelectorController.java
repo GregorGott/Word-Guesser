@@ -1,6 +1,5 @@
 package com.gregorgott.guesser;
 
-import com.gregorgott.guesser.panes.GameMode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

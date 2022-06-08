@@ -1,145 +1,114 @@
 package com.gregorgott.guesser.panes;
 
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 
 /**
- * Show a pane where the player tries to guess the given word. And control the mistakes circles. Each Mistake is one
- * circle.
+ * The parent class for all game modes with mistakes and points counter.
  *
  * @author GregorGott
- * @version 1.1.4
- * @since 2022-05-13
+ * @version 1.0.0
+ * @since 2022-06-04
  */
 public class AskQuestionPane {
-    private final char[] solutionArray, outputArray;
+    private final ArrayList<Character> usedCharsList;
     private final int maxMistakes;
-    private final List<Character> usedCharsList;
-    private Node root;
-    private HBox circleHBox, hBox_1;
-    private Label outputLabel, usedCharsLabel;
-    private TextField textField;
-    private Button showTipButton;
-
-    private int points, mistakes;
-    private boolean finished;
+    private HBox circleHBox;
+    private int points;
+    private int mistakes;
 
     /**
-     * Initialize variables, set points and mistakes to zero and set finished to false. Fill all non-whitespace characters
-     * with underscores.
+     * The constructor initializes all needed variables and sets the points to zero.
      *
-     * @param solutionLabelArray Each character is an underline.
-     * @param maxMistakes        Max amount of mistakes. Each mistake is one circle.
-     * @see <a href="https://stackoverflow.com/questions/15159988/javafx-2-2-textfield-maxlength">JavaFX 2.2 TextField maxlength</a>
+     * @param maxMistakes the max amount of allowed mistakes.
+     * @since 1.0.0
      */
-    public AskQuestionPane(char[] solutionLabelArray, int maxMistakes) {
-        this.maxMistakes = maxMistakes;
-        this.solutionArray = solutionLabelArray;
-
-        outputArray = new char[solutionLabelArray.length];
-
-        for (int i = 0; i < solutionArray.length; i++) {
-            if (solutionArray[i] == ' ') {
-                outputArray[i] = ' ';
-            } else {
-                outputArray[i] = '_';
-            }
-        }
-
+    public AskQuestionPane(int maxMistakes) {
         usedCharsList = new ArrayList<>();
-
+        circleHBox = new HBox();
         points = 0;
-        mistakes = 0;
-        finished = false;
-
-        setRoot(loadAskQuestionPane());
+        this.maxMistakes = maxMistakes;
     }
 
     /**
-     * @return The root node with all UI elements.
+     * @return an array list with all used characters.
+     * @since 1.0.0
      */
-    public Node getRoot() {
-        return root;
+    public ArrayList<Character> getUsedCharsList() {
+        return usedCharsList;
     }
 
     /**
-     * Set the root node.
+     * This method is called to add a new character to the <code>usedCharsList</code>.
      *
-     * @param n Is the node to set root to.
+     * @param character ist the character to be added.
+     * @since 1.0.0
      */
-    private void setRoot(Node n) {
-        root = n;
+    public void addUsedCharacter(char character) {
+        usedCharsList.add(character);
     }
 
     /**
-     * Show a text field which only accepts single characters, a button to check if the input is in the word and a
-     * button to show a tip. The output is shown in a scroll pane. Underneath is the mistakes counter and
-     * a list with all used characters.
-     *
-     * @return A node with all UI elements.
+     * @return reached points as int.
+     * @since 1.0.0
      */
-    private Node loadAskQuestionPane() {
-        Label enterACharLabel = new Label("Enter a character:");
-        enterACharLabel.setId("white-label");
+    public int getPoints() {
+        return points;
+    }
 
-        textField = new TextField();
-        // The listener avoids entering more than one character
-        textField.textProperty().addListener((ov, oldValue, newValue) -> {
-            if (textField.getText().length() > 1) {
-                String s = textField.getText().substring(0, 1);
-                textField.setText(s);
-            }
-        });
-        textField.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER) {
-                checkGuess();
-            }
-        });
-        HBox.setHgrow(textField, Priority.ALWAYS);
+    /**
+     * @param i is the new <code>points</code> value.
+     * @since 1.0.0
+     */
+    public void setPoints(int i) {
+        points = i;
+    }
 
-        // Check button
-        Button checkGuessButton = new Button("Check Guess");
-        checkGuessButton.setOnAction(event -> checkGuess());
+    /**
+     * Add given points to <code>points</code>.
+     *
+     * @param i points to be added to <code>points</code>.
+     * @since 1.0.0
+     */
+    public void addPoints(int i) {
+        points = points + i;
+    }
 
-        showTipButton = new Button("Show Tip");
-        setShowTipButton();
+    /**
+     * @return number of mistakes.
+     * @since 1.0.0
+     */
+    public int getMistakes() {
+        return mistakes;
+    }
 
-        // textField, checkGuessButton and tipButton are in a HBox
-        hBox_1 = new HBox();
-        hBox_1.setAlignment(Pos.CENTER_LEFT);
-        hBox_1.setSpacing(10);
-        hBox_1.getChildren().addAll(enterACharLabel, textField, checkGuessButton, showTipButton);
+    /**
+     * Adds one to <code>mistakes</code> and updates the <code>circleHBox</code>.
+     *
+     * @since 1.0.0
+     */
+    public void addMistake() {
+        mistakes++;
 
-        // Underline for each word in "solutionArray"
-        outputLabel = new Label();
-        setOutputLabel();
+        setCircleHBox();
+    }
 
-        // ScrollPane to scroll if the word is too long
-        ScrollPane scrollPane = new ScrollPane(outputLabel);
-        scrollPane.setPrefHeight(50);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-        scrollPane.setPadding(new Insets(8));
-
+    /**
+     * Sets an HBox with circle for each possible mistake (<code>maxMistakes</code>).
+     *
+     * @return the HBox with the mistake circles.
+     * @since 1.0.0
+     */
+    public Node getCircleHBox() {
         Label mistakesLabel = new Label("Mistakes:");
         mistakesLabel.setId("white-label");
 
-        // HBox which contains mistake circles
         circleHBox = new HBox();
         circleHBox.setAlignment(Pos.CENTER_LEFT);
         circleHBox.setSpacing(8);
@@ -147,128 +116,17 @@ public class AskQuestionPane {
         setCircleHBox();
 
         // HBox with enterACharLabel and mistake circles
-        HBox mistakeCirclesHBox = new HBox();
-        mistakeCirclesHBox.setSpacing(10);
-        mistakeCirclesHBox.getChildren().addAll(mistakesLabel, circleHBox);
+        HBox mistakesHBox = new HBox();
+        mistakesHBox.setSpacing(10);
+        mistakesHBox.getChildren().addAll(mistakesLabel, circleHBox);
 
-        usedCharsLabel = new Label();
-        usedCharsLabel.setId("white-label");
-
-        // Main VBox
-        VBox mainVBox = new VBox();
-        mainVBox.setSpacing(20);
-        mainVBox.setPadding(new Insets(20));
-        mainVBox.getChildren().addAll(hBox_1, scrollPane, mistakeCirclesHBox, usedCharsLabel);
-
-        return mainVBox;
-    }
-
-    /**
-     * Update the outputLabel. An underline for each not guessed character.
-     */
-    private void setOutputLabel() {
-        outputLabel.setText("");
-        for (char c : outputArray) {
-            outputLabel.setText(outputLabel.getText() + " " + c + " ");
-        }
-    }
-
-    /**
-     * Get the textField text and check if it is empty. If not convert it to uppercase and check if it has been entered
-     * before. If not, check if the character in the solutionLabelArray, when it is, add one point and show the
-     * character in the outputLabelArray.
-     */
-    private void checkGuess() {
-        // Get input
-        String s = textField.getText();
-        textField.setText("");
-
-        if (!s.isEmpty()) {
-            // Convert input to uppercase
-            char inputInUppercase = s.toUpperCase().charAt(0);
-
-            // Check if the character has been entered before
-            if (!usedCharsList.contains(inputInUppercase)) {
-                addUsedCharacter(inputInUppercase);
-
-                // Check if the character is in the array
-                if (isCharInArray(inputInUppercase, solutionArray)) {
-                    points++;
-
-                    // Replace underlines with every character from input
-                    for (int i = 0; i < solutionArray.length; i++) {
-                        if (solutionArray[i] == inputInUppercase) {
-                            outputArray[i] = solutionArray[i];
-                            setOutputLabel();
-
-                            if (Arrays.equals(solutionArray, outputArray)) {
-                                endRound();
-                            }
-                        }
-                    }
-                } else {
-                    // Input not in array
-                    mistakes++;
-                    setCircleHBox();
-
-                    if (mistakes == maxMistakes) {
-                        // Delete all points and end the round
-                        points = 0;
-                        endRound();
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Check if the value is in the chars array.
-     *
-     * @param value This char is checked.
-     * @param chars The value is searched in this array.
-     * @return A boolean if the value is in the array.
-     */
-    private boolean isCharInArray(char value, char[] chars) {
-        for (char c : chars) {
-            if (c == value) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    /**
-     * A list of all used characters is shown at the bottom of the Scene. This method is called adding a new character
-     * to it.
-     *
-     * @param character The character to be added.
-     */
-    private void addUsedCharacter(char character) {
-        usedCharsList.add(character);
-
-        usedCharsLabel.setText("Already used characters: " + usedCharsList.get(0));
-
-        for (int i = 1; i < usedCharsList.size(); i++) {
-            usedCharsLabel.setText(usedCharsLabel.getText() + ", " + usedCharsList.get(i));
-        }
-    }
-
-    /**
-     * Disable the input text field and show the solution if not guessed.
-     */
-    private void endRound() {
-        hBox_1.setDisable(true);
-        finished = true;
-
-        System.arraycopy(solutionArray, 0, outputArray, 0, solutionArray.length);
-        usedCharsList.clear();
-
-        setOutputLabel();
+        return mistakesHBox;
     }
 
     /**
      * For each mistake a red and for each left mistake a green circle.
+     *
+     * @since 1.0.0
      */
     private void setCircleHBox() {
         clearCircleHBox();
@@ -285,60 +143,11 @@ public class AskQuestionPane {
     }
 
     /**
-     * @return The points the player achieved.
-     */
-    public int getPoints() {
-        return points;
-    }
-
-    /**
-     * @return A boolean if the round is ended.
-     */
-    public boolean isFinished() {
-        return finished;
-    }
-
-    /**
-     * If the player clicks on this button, get a random left underline and replace it with the matching character from
-     * the solutionArray.
-     */
-    private void setShowTipButton() {
-        showTipButton.setOnAction(event -> {
-            // Get index from every underscore in outputArray
-            List<Integer> leftUnderlinesIndex = new ArrayList<>();
-
-            // Count number of underscores in output array
-            for (int i = 0; i < outputArray.length; i++) {
-                if (outputArray[i] == '_') {
-                    leftUnderlinesIndex.add(i);
-                }
-            }
-
-            // Get random index from the array list and get the character in the solution array
-            int random = new Random().nextInt(leftUnderlinesIndex.size());
-            char c = solutionArray[leftUnderlinesIndex.get(random)];
-
-            // Show the tip in output array by replacing every c in outputArray
-            for (int i = 0; i < solutionArray.length; i++) {
-                if (solutionArray[i] == c) {
-                    outputArray[i] = solutionArray[i];
-                }
-            }
-
-            setOutputLabel();
-            addUsedCharacter(c);
-            points--;
-
-            if (Arrays.equals(solutionArray, outputArray)) {
-                endRound();
-            }
-        });
-    }
-
-    /**
      * Get the circleHBox and deletes all children.
+     *
+     * @since 1.0.0
      */
-    public void clearCircleHBox() {
+    private void clearCircleHBox() {
         circleHBox.getChildren().clear();
     }
 
@@ -346,8 +155,9 @@ public class AskQuestionPane {
      * Add a circle with a given colour to the circleHBox.
      *
      * @param color The colour of the circle.
+     * @since 1.0.0
      */
-    public void addCircle(Color color) {
+    private void addCircle(Color color) {
         Circle circle = new Circle(0, 0, 5, color);
         circleHBox.getChildren().add(circle);
     }

@@ -14,11 +14,6 @@
             <BorderPane.margin>
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
             </BorderPane.margin>
-            <Label id="white-label" text="Word Guesser">
-                <font>
-                    <Font name="Bodoni 72 Oldstyle Book" size="50.0"/>
-                </font>
-            </Label>
             <HBox>
                 <ToggleButton id="main-menu-toggle-buttons" fx:id="multiplayerTogglePlayer" mnemonicParsing="false"
                               prefWidth="100.0" text="1 vs. 1"/>
@@ -57,4 +52,17 @@
             </graphic>
         </Button>
     </right>
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="10.0" BorderPane.alignment="CENTER_LEFT">
+            <BorderPane.margin>
+                <Insets left="10.0" top="10.0"/>
+            </BorderPane.margin>
+            <Button mnemonicParsing="false" onAction="#backToModeSelector" text="Back"/>
+            <Label id="white-label" fx:id="modeLabel" text="Selected Mode">
+                <font>
+                    <Font name="Bodoni 72 Oldstyle Book" size="28.0"/>
+                </font>
+            </Label>
+        </HBox>
+    </top>
 </BorderPane>

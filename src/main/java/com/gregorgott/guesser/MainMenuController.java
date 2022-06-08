@@ -7,10 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -23,10 +20,13 @@ import java.util.ResourceBundle;
  * between single and multiplayer mode.
  *
  * @author GregorGott
- * @version 1.1.3
- * @since 2022-05-17
+ * @version 1.1.5
+ * @since 2022-06-05
  */
 public class MainMenuController implements Initializable {
+    @FXML
+    private Label modeLabel;
+
     // Single-, Multiplayer toggle buttons
     @FXML
     private ToggleButton multiplayerTogglePlayer;
@@ -38,6 +38,22 @@ public class MainMenuController implements Initializable {
     private Spinner<Integer> numberOfQuestionsSpinner;
     @FXML
     private Spinner<Integer> maxMistakesSpinner;
+
+    private GameMode gameMode;
+
+    /**
+     * Sets the game mode and updates the <code>modeLabel</code>.
+     *
+     * @param gameMode the game mode.
+     */
+    public void setGameMode(GameMode gameMode) {
+        this.gameMode = gameMode;
+
+        switch (gameMode) {
+            case CLASSIC -> modeLabel.setText("Classic");
+            case CARDS -> modeLabel.setText("Cards");
+        }
+    }
 
     /**
      * @return Number of questions from the Spinner.
@@ -67,6 +83,23 @@ public class MainMenuController implements Initializable {
     }
 
     /**
+     * The button is in the upper right corner and is pushed to go back to the mode selector.
+     *
+     * @param event an action event to switch the Scene.
+     * @throws IOException if the fxml file is not found.
+     * @since 1.1.5
+     */
+    public void backToModeSelector(ActionEvent event) throws IOException {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("mode-selector-scene.fxml"));
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+
+        stage.setScene(scene);
+    }
+
+    /**
      * Get selected game type. Show a file chooser, if the Singleplayer mode is selected.
      * Starts the game by loading the game FXML file and passing over attributes to the gameController.
      *
@@ -79,6 +112,7 @@ public class MainMenuController implements Initializable {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("guesser-game-scene.fxml"));
         Parent root = loader.load();
+        Scene scene = new Scene(root);
 
         GuesserGameController guesserGameController = loader.getController();
 
@@ -90,16 +124,14 @@ public class MainMenuController implements Initializable {
                 guesserGameController.setPathToGuessingFile(file);
 
                 guesserGameController.startGame(getNumberOfQuestionsSpinnerValue(), getMaxMistakesSpinnerValue(),
-                        getGameType());
+                        getGameType(), gameMode);
 
-                Scene scene = new Scene(root);
                 stage.setScene(scene);
             }
         } else {
             guesserGameController.startGame(getNumberOfQuestionsSpinnerValue(), getMaxMistakesSpinnerValue(),
-                    getGameType());
+                    getGameType(), gameMode);
 
-            Scene scene = new Scene(root);
             stage.setScene(scene);
         }
     }

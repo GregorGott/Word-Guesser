@@ -2,13 +2,20 @@
 
 ![Preview](README_IMGS/previewImage1.png)
 
-<h2 align="center">
+<h2 style="text-align: center;">
     A simple two-player word-guessing game.
 </h2>
 
 > In "Word Guesser" one player gives a word that the other player needs to guess.
 > The player may enter single letters to find the word. However, the round
 > ends if the player enters too many characters which are not in the word.
+
+<div style="text-align: center">
+
+[![](https://img.shields.io/badge/Download-Windows-blue?style=for-the-badge)](https://github.com/GregorGott/Word-Guesser/releases/download/v1.1.0/Word-Guesser-win-x86_x64.exe)
+[![](https://img.shields.io/badge/Download-macOS-blue?style=for-the-badge)](https://github.com/GregorGott/Word-Guesser/releases/download/v1.1.0/Word-Guesser-win-x86_x64.exe)
+
+</div>
 
 ***
 
@@ -30,23 +37,26 @@ In the end, the winner is the one who has guessed the longest words.
 
 ## Download Word Guesser
 
-Just download the correct version
-for your operating system.
+Just download the correct version for your operating system. Right after the download, you can start the game and have
+fun.
+
+### Stable Release 1.0.0
 
 **Download for
 Windows: [Download exe](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0/Word-Guesser-win-x86_x64.exe)** <br>
-**Download for Linux: (Coming Soon)** <br>
-**Download for macOS
-(Intel): [Download dmg](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0/Word-Guesser-mac-x86_x64.dmg)**
+**Download for macOS (Intel): [Download dmg](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0/Word-Guesser-mac-x86_x64.dmg)**
 
-Right after the download, you can start the game and have fun.
+### Beta Release 1.1.0 Beta 1
+
+**Download for
+Windows: [Download exe](https://github.com/GregorGott/Word-Guesser/releases/download/v1.1.0-beta.1/Word-Guesser-win-x86_x64.exe)** <br>
+**Download for macOS (Intel): [Download dmg](https://github.com/GregorGott/Word-Guesser/releases/download/v1.1.0-beta.1/Word-Guesser-mac-x86_x64.dmg)**
 
 ## Install Word Guesser
 
 ### Install Word Guesser on Mac
 
-1. [Download](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0-beta.3/Word-Guesser-mac-x86_x64.dmg)
-   the _dmg_ file.
+1. Dwonload the _dmg_ file.
 2. Open the downloaded file.
 3. Drag "Word Guesser" to your _Applications_ folder.
 4. Open Finder and go to "Applications".
@@ -58,8 +68,7 @@ because of the Mac security settings.
 
 ### Install Word Guesser on Windows
 
-1. [Download](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0-beta.3/Word-Guesser-win-x86_x64.exe)
-   the _exe_ file.
+1. Download the _exe_ file.
 2. If you get an alert that the developer is unknown, click on "Open".
 3. The installation starts.
 
@@ -80,17 +89,20 @@ If he guessed all words he gets 6 points.
 ## Images
 
 <p>
-  <img src="README_IMGS/previewImage2.png" width="49.5%" alt="Main menu"/>
-  <img src="README_IMGS/previewImage3.png" width="49.5%" alt="Set question"/> 
-  <img src="README_IMGS/previewImage4.png" width="49.5%" alt="Ask question"/>
-  <img src="README_IMGS/previewImage5.png" width="49.5%" alt="Player 2 won"/>
+  <img src="README_IMGS/previewImage2.png" style="width: 49.5%" alt="Main menu"/>
+  <img src="README_IMGS/previewImage3.png" style="width: 49.5%" alt="Set question"/> 
+  <img src="README_IMGS/previewImage4.png" style="width: 49.5%" alt="Ask question"/>
+  <img src="README_IMGS/previewImage5.png" style="width: 49.5%" alt="Player 2 won"/>
 </p>
 
 ## License & Developer Information
+
 ### Developer Information
+
 This project uses Modern-Dialog-Windows. Check it out [here](https://github.com/GregorGott/Modern-Dialog-Windows).
 
 ### License
+
 GNU General Public License v3.0: https://www.gnu.org/licenses/quick-guide-gplv3.html
 
 Please notice that the images are contributed under another license.

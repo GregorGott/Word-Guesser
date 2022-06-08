@@ -49,15 +49,14 @@ Windows: [Download exe](https://github.com/GregorGott/Word-Guesser/releases/down
 ### Beta Release 1.1.0 Beta 1
 
 **Download for
-Windows: [Download exe](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0-beta.1/Word-Guesser-win-x86_x64.exe)** <br>
-**Download for macOS (Intel): [Download dmg](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0-beta.1/Word-Guesser-mac-x86_x64.dmg)**
+Windows: [Download exe](https://github.com/GregorGott/Word-Guesser/releases/download/v1.1.0-beta.1/Word-Guesser-win-x86_x64.exe)** <br>
+**Download for macOS (Intel): [Download dmg](https://github.com/GregorGott/Word-Guesser/releases/download/v1.1.0-beta.1/Word-Guesser-mac-x86_x64.dmg)**
 
 ## Install Word Guesser
 
 ### Install Word Guesser on Mac
 
-1. [Download](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0-beta.3/Word-Guesser-mac-x86_x64.dmg)
-   the _dmg_ file.
+1. Dwonload the _dmg_ file.
 2. Open the downloaded file.
 3. Drag "Word Guesser" to your _Applications_ folder.
 4. Open Finder and go to "Applications".
@@ -69,8 +68,7 @@ because of the Mac security settings.
 
 ### Install Word Guesser on Windows
 
-1. [Download](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0-beta.3/Word-Guesser-win-x86_x64.exe)
-   the _exe_ file.
+1. Download the _exe_ file.
 2. If you get an alert that the developer is unknown, click on "Open".
 3. The installation starts.
 

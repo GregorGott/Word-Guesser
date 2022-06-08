@@ -21,7 +21,7 @@ public class ModeSelectorController {
     private GameMode gameMode;
 
     /**
-     * Sets the game mode to <code>ORIGINAL</code> and loads the main menu.
+     * Sets the game mode to <code>CLASSIC</code> and loads the main menu.
      *
      * @param event action event to get Stage.
      * @throws IOException if the fxml file was not found.
@@ -29,7 +29,7 @@ public class ModeSelectorController {
      */
     @FXML
     private void classicMode(ActionEvent event) throws IOException {
-        gameMode = GameMode.ORIGINAL;
+        gameMode = GameMode.CLASSIC;
         loadMainMenu(event);
     }
 

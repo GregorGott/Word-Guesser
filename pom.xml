@@ -6,7 +6,7 @@
 
     <groupId>com.gregorgott</groupId>
     <artifactId>Word-Guesser</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 
     <!-- Thanks to wiverson, see https://github.com/wiverson/maven-jpackage-template-->
     <!-- This description text is included in the Windows installer by default, see windows-jpackage.txt -->

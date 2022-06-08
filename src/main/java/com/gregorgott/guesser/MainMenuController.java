@@ -50,7 +50,7 @@ public class MainMenuController implements Initializable {
         this.gameMode = gameMode;
 
         switch (gameMode) {
-            case ORIGINAL -> modeLabel.setText("Original");
+            case CLASSIC -> modeLabel.setText("Classic");
             case CARDS -> modeLabel.setText("Cards");
         }
     }

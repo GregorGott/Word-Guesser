@@ -24,7 +24,7 @@ import java.util.Random;
  * @version 1.2.0
  * @since 2022-06-04
  */
-public class OriginalAskQuestionPane extends AskQuestionPane {
+public class ClassicAskQuestionPane extends AskQuestionPane {
     private final char[] solutionArray;
     private final char[] outputArray;
     private final int maxMistakes;
@@ -44,7 +44,7 @@ public class OriginalAskQuestionPane extends AskQuestionPane {
      * @param maxMistakes   Max amount of mistakes. Each mistake is one circle.
      * @see <a href="https://stackoverflow.com/questions/15159988/javafx-2-2-textfield-maxlength">JavaFX 2.2 TextField maxlength</a>
      */
-    public OriginalAskQuestionPane(char[] solutionArray, int maxMistakes) {
+    public ClassicAskQuestionPane(char[] solutionArray, int maxMistakes) {
         super(maxMistakes);
         this.maxMistakes = maxMistakes;
         this.solutionArray = solutionArray;

@@ -1,7 +1,7 @@
 package com.gregorgott.guesser;
 
 import com.gregorgott.guesser.panes.CardsAskQuestionPane;
-import com.gregorgott.guesser.panes.OriginalAskQuestionPane;
+import com.gregorgott.guesser.panes.ClassicAskQuestionPane;
 import com.gregorgott.guesser.panes.SetQuestionPane;
 import com.gregorgott.mdialogwindows.MAlert;
 import javafx.fxml.FXML;
@@ -49,7 +49,7 @@ public class GuesserGameController {
     private File pathToGuessingFile;
     private GameType gameType;
     private SetQuestionPane setQuestionPane;
-    private OriginalAskQuestionPane originalAskQuestionPane;
+    private ClassicAskQuestionPane classicAskQuestionPane;
     private CardsAskQuestionPane cardsAskQuestionPane;
     private GameMode gameMode;
 
@@ -170,8 +170,8 @@ public class GuesserGameController {
      * @since < 1.1.9
      */
     private boolean checkIfFinished() {
-        if (gameMode == GameMode.ORIGINAL) {
-            return originalAskQuestionPane.isFinished();
+        if (gameMode == GameMode.CLASSIC) {
+            return classicAskQuestionPane.isFinished();
         } else if (gameMode == GameMode.CARDS) {
             return cardsAskQuestionPane.isFinished();
         }
@@ -185,8 +185,8 @@ public class GuesserGameController {
      * @since < 1.1.9
      */
     private int getPoints() {
-        if (gameMode == GameMode.ORIGINAL) {
-            return originalAskQuestionPane.getPoints();
+        if (gameMode == GameMode.CLASSIC) {
+            return classicAskQuestionPane.getPoints();
         } else if (gameMode == GameMode.CARDS) {
             return cardsAskQuestionPane.getPoints();
         }
@@ -361,9 +361,9 @@ public class GuesserGameController {
     private void askQuestion() {
         setTopBarUI();
 
-        if (gameMode == GameMode.ORIGINAL) {
-            originalAskQuestionPane = new OriginalAskQuestionPane(solutionArray, maxMistakes);
-            borderPane.setCenter(originalAskQuestionPane.getRoot());
+        if (gameMode == GameMode.CLASSIC) {
+            classicAskQuestionPane = new ClassicAskQuestionPane(solutionArray, maxMistakes);
+            borderPane.setCenter(classicAskQuestionPane.getRoot());
         } else if (gameMode == GameMode.CARDS) {
             cardsAskQuestionPane = new CardsAskQuestionPane(solutionArray, maxMistakes);
             borderPane.setCenter(cardsAskQuestionPane.getRoot());

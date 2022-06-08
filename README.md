@@ -44,21 +44,13 @@ fun.
 
 **Download for
 Windows: [Download exe](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0/Word-Guesser-win-x86_x64.exe)** <br>
-**Download for Linux: (Coming Soon)** <br>
-**Download for macOS
-(
-Intel): [Download dmg](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0/Word-Guesser-mac-x86_x64.dmg)**
+**Download for macOS (Intel): [Download dmg](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0/Word-Guesser-mac-x86_x64.dmg)**
 
 ### Beta Release 1.1.0 Beta 1
 
-These releases can contain bugs and unfinished features.
-
 **Download for
-Windows: [Download exe](https://github.com/GregorGott/Word-Guesser/releases/download/v1.1.0-beta.1/Word-Guesser-win-x86_x64.exe)** <br>
-**Download for Linux: (Coming Soon)** <br>
-**Download for macOS
-(
-Intel): [Download dmg](https://github.com/GregorGott/Word-Guesser/releases/download/v1.1.0-beta.1/Word-Guesser-mac-x86_x64.dmg)**
+Windows: [Download exe](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0-beta.1/Word-Guesser-win-x86_x64.exe)** <br>
+**Download for macOS (Intel): [Download dmg](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0-beta.1/Word-Guesser-mac-x86_x64.dmg)**
 
 ## Install Word Guesser
 
@@ -109,7 +101,7 @@ If he guessed all words he gets 6 points.
 
 ### Developer Information
 
-This project uses Modern-Dialog-Windows. Check it out [here](https://github.com/GregorGott/Word-Guesser).
+This project uses Modern-Dialog-Windows. Check it out [here](https://github.com/GregorGott/Modern-Dialog-Windows).
 
 ### License
 

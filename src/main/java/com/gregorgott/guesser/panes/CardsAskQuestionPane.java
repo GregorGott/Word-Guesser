@@ -14,11 +14,11 @@ import java.util.Arrays;
 import java.util.Random;
 
 /**
- * The cards question mode is simpler than the original, because each character is shown in a button.
+ * The cards question mode is simpler than the classic mode, because each character is shown in a button.
  *
  * @author GregorGott
- * @version 1.1.0
- * @since 2022-06-04
+ * @version 1.1.1
+ * @since 2022-06-08
  */
 public class CardsAskQuestionPane extends AskQuestionPane {
     private final char[] solutionArray;
@@ -132,6 +132,7 @@ public class CardsAskQuestionPane extends AskQuestionPane {
 
         // If the char is the first one in the solutionArray
         if (firstPosition == 0) {
+            addPoints(1);
             for (int i = 0; i < solutionArray.length; i++) {
                 if (solutionArray[i] == c) {
                     outputArray[i] = solutionArray[i];
@@ -141,8 +142,14 @@ public class CardsAskQuestionPane extends AskQuestionPane {
             button.setDisable(true);
         } else {
             if (outputArray[firstPosition - 1] != '_') {
+                // Counter variable to avoid getting for the same character multiple points
+                int j = 0;
                 for (int i = 0; i < solutionArray.length; i++) {
                     if (solutionArray[i] == c) {
+                        if (j == 0) {
+                            addPoints(1);
+                        }
+                        j++;
                         outputArray[i] = solutionArray[i];
                     }
                 }
@@ -154,7 +161,6 @@ public class CardsAskQuestionPane extends AskQuestionPane {
         }
 
         setOutputLabel();
-        addPoints(1);
 
         // Check if the solution is found
         if (Arrays.equals(solutionArray, outputArray)) {

@@ -12,8 +12,8 @@
 
 <div style="text-align: center">
 
-[![](https://img.shields.io/badge/Download-Windows-blue?style=for-the-badge)](https://github.com/GregorGott/Word-Guesser/releases/download/v1.1.0/Word-Guesser-win-x86_x64.exe)
-[![](https://img.shields.io/badge/Download-macOS-blue?style=for-the-badge)](https://github.com/GregorGott/Word-Guesser/releases/download/v1.1.0/Word-Guesser-win-x86_x64.exe)
+[![](https://img.shields.io/badge/Download-macOS-blue?logo=apple&style=for-the-badge)](https://github.com/GregorGott/Word-Guesser/releases/download/v1.1.0/Word-Guesser-mac-x86_x64.dmg)
+[![](https://img.shields.io/badge/Download-Windows-blue?logo=windows&style=for-the-badge)](https://github.com/GregorGott/Word-Guesser/releases/download/v1.1.0/Word-Guesser-win-x86_x64.exe)
 
 </div>
 
@@ -40,23 +40,17 @@ In the end, the winner is the one who has guessed the longest words.
 Just download the correct version for your operating system. Right after the download, you can start the game and have
 fun.
 
-### Stable Release 1.0.0
+### Stable Release 1.1.0
 
 **Download for
-Windows: [Download exe](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0/Word-Guesser-win-x86_x64.exe)** <br>
-**Download for macOS (Intel): [Download dmg](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0/Word-Guesser-mac-x86_x64.dmg)**
-
-### Beta Release 1.1.0 Beta 1
-
-**Download for
-Windows: [Download exe](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0-beta.1/Word-Guesser-win-x86_x64.exe)** <br>
-**Download for macOS (Intel): [Download dmg](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0-beta.1/Word-Guesser-mac-x86_x64.dmg)**
+Windows: [Download exe](https://github.com/GregorGott/Word-Guesser/releases/download/v1.1.0/Word-Guesser-win-x86_x64.exe)** <br>
+**Download for macOS (Intel): [Download dmg](https://github.com/GregorGott/Word-Guesser/releases/download/v1.1.0/Word-Guesser-mac-x86_x64.dmg)**
 
 ## Install Word Guesser
 
 ### Install Word Guesser on Mac
 
-1. [Download](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0-beta.3/Word-Guesser-mac-x86_x64.dmg)
+1. [Download](https://github.com/GregorGott/Word-Guesser#stable-release-110)
    the _dmg_ file.
 2. Open the downloaded file.
 3. Drag "Word Guesser" to your _Applications_ folder.
@@ -69,7 +63,7 @@ because of the Mac security settings.
 
 ### Install Word Guesser on Windows
 
-1. [Download](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0-beta.3/Word-Guesser-win-x86_x64.exe)
+1. [Download](https://github.com/GregorGott/Word-Guesser#stable-release-110)
    the _exe_ file.
 2. If you get an alert that the developer is unknown, click on "Open".
 3. The installation starts.
@@ -84,9 +78,9 @@ Player 1 gives the word "Caretaker". Player 2 enters "C" and "A" and receives tw
 If player 2 enters "Y" he does not get a point and keeps his two points.
 If he guessed all words he gets 6 points.
 
-| C   | A   | R   | E   | T   | A        | K   | E        | R        |
-|-----|-----|-----|-----|-----|----------|-----|----------|----------|
-| 1   | 2   | 3   | 4   | 5   | <b>2</b> | 6   | <b>4</b> | <b>4</b> |
+| C   | A   | R   | E   | T   | A     | K   | E     | R     |
+|-----|-----|-----|-----|-----|-------|-----|-------|-------|
+| 1   | 2   | 3   | 4   | 5   | **2** | 6   | **4** | **4** |
 
 ## Images
 
@@ -107,7 +101,5 @@ This project uses Modern-Dialog-Windows. Check it out [here](https://github.com/
 
 GNU General Public License v3.0: https://www.gnu.org/licenses/quick-guide-gplv3.html
 
-Please notice that the images are contributed under another license.
-You can find more
-information [here](https://github.com/GregorGott/Word-Guesser/blob/beta/src/main/resources/com/gregorgott/guesser/images/LICENSE.txt)
-.
+Please notice that the images are contributed under another license. You can find more information
+[here](https://github.com/GregorGott/Word-Guesser/blob/beta/src/main/resources/com/gregorgott/guesser/images/LICENSE.txt).

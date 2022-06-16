@@ -24,12 +24,11 @@ import java.util.*;
  * tries to guess it and so on. FXML Scene: guesser-game-scene.fxml
  *
  * @author GregorGott
- * @version 1.1.9
- * @since 2022-06-04
+ * @version 1.1.10
+ * @since 2022-06-16
  */
 public class GuesserGameController {
     private final List<String> usedWordsList;
-    private final FileManager fileManager;
     private ArrayList<String> singleplayerWordsList;
     // Declare FXML basic UI
     @FXML
@@ -57,7 +56,6 @@ public class GuesserGameController {
      * Initialize array lists and FileManager.
      */
     public GuesserGameController() {
-        fileManager = new FileManager();
         isSetQuestionTabActive = true;
         usedWordsList = new ArrayList<>();
     }
@@ -97,7 +95,7 @@ public class GuesserGameController {
         if (gameType == GameType.MULTIPLAYER) {
             if (isSetQuestionTabActive) {
                 // Get word from setQuestionPane
-                String s = setQuestionPane.getWordToBeGuessed();
+                String s = setQuestionPane.getTextField().getText();
 
                 // Check if text field is not empty
                 if (!s.isEmpty()) {
@@ -122,7 +120,7 @@ public class GuesserGameController {
                         MAlert mAlert = new MAlert(MAlert.MAlertType.INFORMATION, "Information", borderPane.getScene().getWindow());
                         mAlert.setHeadline("Try to enter another word.");
                         mAlert.setContentText("The word \"" + s + "\" was already entered before.");
-                        mAlert.setAlertStyle(MAlert.MAlertStyle.DARK_ROUNDED);
+                        mAlert.setMAlertStyle(MAlert.MAlertStyle.DARK_ROUNDED);
                         mAlert.addButton("OK", x -> mAlert.closeAlert(), true);
 
                         Stage stage = mAlert.getStage();
@@ -224,13 +222,13 @@ public class GuesserGameController {
         setTopBarUI();
 
         setQuestionPane = new SetQuestionPane();
-        setQuestionPane.getWordToGuessTextField().setOnKeyPressed(event -> {
+        setQuestionPane.getTextField().setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 nextButtonPushed();
             }
         });
 
-        borderPane.setCenter(setQuestionPane.getPane());
+        borderPane.setCenter(setQuestionPane.getRoot());
     }
 
     /**
@@ -251,10 +249,37 @@ public class GuesserGameController {
      */
     private void setNumberOfQuestions() {
         // If there are fewer lines than questions set number of questions to number of lines in file.
-        int linesInFile = fileManager.countLines(pathToGuessingFile, "##");
+        int linesInFile = countLines(pathToGuessingFile, "##");
         if (linesInFile < numberOfQuestions) {
             numberOfQuestions = linesInFile;
         }
+    }
+
+    /**
+     * Get a file as input and scan through every line (ignore lines starting with ignoredLines) and return the number
+     * of lines.
+     *
+     * @param file         File to scan.
+     * @param ignoredLines Ignore lines starting with.
+     * @return Number of lines.
+     * @since 1.1.10
+     */
+    public int countLines(File file, String ignoredLines) {
+        int lines = 0;
+
+        try {
+            Scanner scanner = new Scanner(file);
+
+            while (scanner.hasNextLine()) {
+                if (!scanner.nextLine().startsWith(ignoredLines)) {
+                    lines++;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        return lines;
     }
 
     /**
@@ -379,7 +404,7 @@ public class GuesserGameController {
         MAlert mAlert = new MAlert(MAlert.MAlertType.CONFIRMATION, "Warning", borderPane.getScene().getWindow());
         mAlert.setHeadline("End round now.");
         mAlert.setContentText("The round will end immediately, the result may not be correct.");
-        mAlert.setAlertStyle(MAlert.MAlertStyle.DARK_ROUNDED);
+        mAlert.setMAlertStyle(MAlert.MAlertStyle.DARK_ROUNDED);
         mAlert.addButton("Cancel", x -> mAlert.closeAlert(), false);
         mAlert.addButton("End round", x -> {
             showResultScene();

@@ -13,8 +13,8 @@ import java.util.ArrayList;
  * The parent class for all game modes with mistakes and points counter.
  *
  * @author GregorGott
- * @version 1.0.0
- * @since 2022-06-04
+ * @version 1.0.1
+ * @since 2022-06-14
  */
 public class AskQuestionPane {
     private final ArrayList<Character> usedCharsList;
@@ -30,10 +30,10 @@ public class AskQuestionPane {
      * @since 1.0.0
      */
     public AskQuestionPane(int maxMistakes) {
+        this.maxMistakes = maxMistakes;
         usedCharsList = new ArrayList<>();
         circleHBox = new HBox();
         points = 0;
-        this.maxMistakes = maxMistakes;
     }
 
     /**
@@ -42,16 +42,6 @@ public class AskQuestionPane {
      */
     public ArrayList<Character> getUsedCharsList() {
         return usedCharsList;
-    }
-
-    /**
-     * This method is called to add a new character to the <code>usedCharsList</code>.
-     *
-     * @param character ist the character to be added.
-     * @since 1.0.0
-     */
-    public void addUsedCharacter(char character) {
-        usedCharsList.add(character);
     }
 
     /**
@@ -105,7 +95,7 @@ public class AskQuestionPane {
      * @return the HBox with the mistake circles.
      * @since 1.0.0
      */
-    public Node getCircleHBox() {
+    public Node getCirclesPane() {
         Label mistakesLabel = new Label("Mistakes:");
         mistakesLabel.setId("white-label");
 
@@ -115,7 +105,6 @@ public class AskQuestionPane {
 
         setCircleHBox();
 
-        // HBox with enterACharLabel and mistake circles
         HBox mistakesHBox = new HBox();
         mistakesHBox.setSpacing(10);
         mistakesHBox.getChildren().addAll(mistakesLabel, circleHBox);
@@ -129,7 +118,7 @@ public class AskQuestionPane {
      * @since 1.0.0
      */
     private void setCircleHBox() {
-        clearCircleHBox();
+        circleHBox.getChildren().clear();
 
         for (int i = 0; i < mistakes; i++) {
             addCircle(Color.rgb(170, 12, 12));
@@ -143,15 +132,6 @@ public class AskQuestionPane {
     }
 
     /**
-     * Get the circleHBox and deletes all children.
-     *
-     * @since 1.0.0
-     */
-    private void clearCircleHBox() {
-        circleHBox.getChildren().clear();
-    }
-
-    /**
      * Add a circle with a given colour to the circleHBox.
      *
      * @param color The colour of the circle.
@@ -160,5 +140,26 @@ public class AskQuestionPane {
     private void addCircle(Color color) {
         Circle circle = new Circle(0, 0, 5, color);
         circleHBox.getChildren().add(circle);
+    }
+
+    /**
+     * Replaces every character in the <code>solutionArray</code> with an underscore (except for whitespaces).
+     *
+     * @param solutionArray is the full array which should be made "unreadable".
+     * @return an underscore array with the length of the given <code>solutionArray</code>.
+     * @since 1.0.1
+     */
+    public char[] createOutputArray(char[] solutionArray) {
+        char[] outputArray = new char[solutionArray.length];
+
+        for (int i = 0; i < solutionArray.length; i++) {
+            if (solutionArray[i] == ' ') {
+                outputArray[i] = ' ';
+            } else {
+                outputArray[i] = '_';
+            }
+        }
+
+        return outputArray;
     }
 }

@@ -1,7 +1,6 @@
 package com.gregorgott.guesser.panes;
 
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -21,15 +20,15 @@ import java.util.Random;
  * This is the classic game mode where the player tries to guess a word by only knowing the length of the word.
  *
  * @author GregorGott
- * @version 1.2.0
- * @since 2022-06-04
+ * @version 1.2.1
+ * @since 2022-06-14
  */
 public class ClassicAskQuestionPane extends AskQuestionPane {
     private final char[] solutionArray;
     private final char[] outputArray;
     private final int maxMistakes;
-    private final Node root;
-    private HBox hBox_1;
+    private Node root;
+    private HBox enterCharHBox;
     private Label outputLabel;
     private Label usedCharsLabel;
     private TextField textField;
@@ -49,19 +48,11 @@ public class ClassicAskQuestionPane extends AskQuestionPane {
         this.maxMistakes = maxMistakes;
         this.solutionArray = solutionArray;
 
-        outputArray = new char[solutionArray.length];
-
-        for (int i = 0; i < this.solutionArray.length; i++) {
-            if (this.solutionArray[i] == ' ') {
-                outputArray[i] = ' ';
-            } else {
-                outputArray[i] = '_';
-            }
-        }
+        outputArray = createOutputArray(solutionArray);
 
         finished = false;
 
-        root = loadAskQuestionPane();
+        setRoot();
     }
 
     /**
@@ -75,10 +66,8 @@ public class ClassicAskQuestionPane extends AskQuestionPane {
      * Show a text field which only accepts single characters, a button to check if the input is in the word and a
      * button to show a tip. The output is shown in a scroll pane. Underneath is the mistakes counter and
      * a list with all used characters.
-     *
-     * @return A node with all UI elements.
      */
-    private Node loadAskQuestionPane() {
+    private void setRoot() {
         Label enterACharLabel = new Label("Enter a character:");
         enterACharLabel.setId("white-label");
 
@@ -105,10 +94,8 @@ public class ClassicAskQuestionPane extends AskQuestionPane {
         setShowTipButton();
 
         // textField, checkGuessButton and tipButton are in a HBox
-        hBox_1 = new HBox();
-        hBox_1.setAlignment(Pos.CENTER_LEFT);
-        hBox_1.setSpacing(10);
-        hBox_1.getChildren().addAll(enterACharLabel, textField, checkGuessButton, showTipButton);
+        enterCharHBox = new HBox(enterACharLabel, textField, checkGuessButton, showTipButton);
+        enterCharHBox.setSpacing(10);
 
         // Underline for each word in "solutionArray"
         outputLabel = new Label();
@@ -124,12 +111,11 @@ public class ClassicAskQuestionPane extends AskQuestionPane {
         usedCharsLabel.setId("white-label");
 
         // Main VBox
-        VBox mainVBox = new VBox();
+        VBox mainVBox = new VBox(enterCharHBox, scrollPane, getCirclesPane(), usedCharsLabel);
         mainVBox.setSpacing(20);
         mainVBox.setPadding(new Insets(20));
-        mainVBox.getChildren().addAll(hBox_1, scrollPane, getCircleHBox(), usedCharsLabel);
 
-        return mainVBox;
+        root = mainVBox;
     }
 
     /**
@@ -144,7 +130,7 @@ public class ClassicAskQuestionPane extends AskQuestionPane {
 
     /**
      * Get the textField text and check if it is empty. If not convert it to uppercase and check if it has been entered
-     * before. If not, check if the character in the solutionLabelArray, when it is, add one point and show the
+     * before. If not, check if the character is in the <code>solutionLabelArray</code>, when it is, add one point and show the
      * character in the outputLabelArray.
      */
     private void checkGuess() {
@@ -163,27 +149,22 @@ public class ClassicAskQuestionPane extends AskQuestionPane {
                 // Check if the character is in the array
                 if (isCharInArray(inputInUppercase, solutionArray)) {
                     addPoints(1);
-
-                    // Replace underlines with every character from input
-                    for (int i = 0; i < solutionArray.length; i++) {
-                        if (solutionArray[i] == inputInUppercase) {
-                            outputArray[i] = solutionArray[i];
-                            setOutputLabel();
-
-                            if (Arrays.equals(solutionArray, outputArray)) {
-                                endRound();
-                            }
-                        }
-                    }
+                    updateOutputArray(inputInUppercase);
                 } else {
                     // Input not in array
                     addMistake();
+                }
+            }
 
-                    if (getMistakes() == maxMistakes) {
-                        // Delete all points and end the round
-                        setPoints(0);
-                        endRound();
-                    }
+            if (getMistakes() == maxMistakes) {
+                // Delete all points and end the round
+                setPoints(0);
+                endRound();
+            } else {
+                setOutputLabel();
+
+                if (Arrays.equals(solutionArray, outputArray)) {
+                    endRound();
                 }
             }
         }
@@ -213,7 +194,7 @@ public class ClassicAskQuestionPane extends AskQuestionPane {
      * @param character The character to be added.
      */
     private void updateUsedCharsLabel(char character) {
-        super.addUsedCharacter(character);
+        getUsedCharsList().add(character);
 
         if (getUsedCharsList().size() == 1) {
             usedCharsLabel.setText("Used characters: " + getUsedCharsList().get(0));
@@ -226,7 +207,7 @@ public class ClassicAskQuestionPane extends AskQuestionPane {
      * Disable the input text field and show the solution if not guessed.
      */
     private void endRound() {
-        hBox_1.setDisable(true);
+        enterCharHBox.setDisable(true);
         finished = true;
 
         System.arraycopy(solutionArray, 0, outputArray, 0, solutionArray.length);
@@ -240,6 +221,20 @@ public class ClassicAskQuestionPane extends AskQuestionPane {
      */
     public boolean isFinished() {
         return finished;
+    }
+
+    /**
+     * Places every given <code>c</code> in the <code>solutionArray</code> in the <code>outputArray</code>.
+     *
+     * @param c the character that should be placed in the <code>outputArray</code>.
+     * @since 1.2.1
+     */
+    private void updateOutputArray(char c) {
+        for (int i = 0; i < solutionArray.length; i++) {
+            if (solutionArray[i] == c) {
+                outputArray[i] = solutionArray[i];
+            }
+        }
     }
 
     /**
@@ -263,11 +258,7 @@ public class ClassicAskQuestionPane extends AskQuestionPane {
             char c = solutionArray[leftUnderlinesIndex.get(random)];
 
             // Show the tip in output array by replacing every c in outputArray
-            for (int i = 0; i < solutionArray.length; i++) {
-                if (solutionArray[i] == c) {
-                    outputArray[i] = solutionArray[i];
-                }
-            }
+            updateOutputArray(c);
 
             setOutputLabel();
             updateUsedCharsLabel(c);

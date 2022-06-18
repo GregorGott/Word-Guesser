@@ -46,11 +46,11 @@ fun.
 Windows: [Download exe](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0/Word-Guesser-win-x86_x64.exe)** <br>
 **Download for macOS (Intel): [Download dmg](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0/Word-Guesser-mac-x86_x64.dmg)**
 
-### Beta Release 1.1.0 Beta 1
+### Beta Release 1.1.0 Beta 2
 
 **Download for
-Windows: [Download exe](https://github.com/GregorGott/Word-Guesser/releases/download/v1.1.0-beta.1/Word-Guesser-win-x86_x64.exe)** <br>
-**Download for macOS (Intel): [Download dmg](https://github.com/GregorGott/Word-Guesser/releases/download/v1.1.0-beta.1/Word-Guesser-mac-x86_x64.dmg)**
+Windows: [Download exe](https://github.com/GregorGott/Word-Guesser/releases/download/v1.1.0-beta.2/Word-Guesser-win-x86_x64.exe)** <br>
+**Download for macOS (Intel): [Download dmg](https://github.com/GregorGott/Word-Guesser/releases/download/v1.1.0-beta.2/Word-Guesser-mac-x86_x64.dmg)**
 
 ## Install Word Guesser
 

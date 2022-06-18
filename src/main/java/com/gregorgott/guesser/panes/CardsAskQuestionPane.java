@@ -2,11 +2,11 @@ package com.gregorgott.guesser.panes;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
@@ -17,16 +17,17 @@ import java.util.Random;
  * The cards question mode is simpler than the classic mode, because each character is shown in a button.
  *
  * @author GregorGott
- * @version 1.1.1
- * @since 2022-06-08
+ * @version 1.1.2
+ * @since 2022-06-14
  */
 public class CardsAskQuestionPane extends AskQuestionPane {
+    private final Label outputLabel;
+    private final ArrayList<Character> sortedArray;
+    private final ArrayList<Button> buttons;
     private final char[] solutionArray;
     private final char[] outputArray;
-    private final ArrayList<Character> sortedArray;
-    private final Pane root;
-    private final Label outputLabel;
-    private final ArrayList<Button> buttons;
+    private final int maxMistakes;
+    private Node root;
     private boolean finished;
 
     /**
@@ -38,30 +39,23 @@ public class CardsAskQuestionPane extends AskQuestionPane {
     public CardsAskQuestionPane(char[] solutionArray, int maxMistakes) {
         super(maxMistakes);
         this.solutionArray = solutionArray;
-        outputArray = new char[solutionArray.length];
-        sortedArray = createSortedArray();
-        buttons = new ArrayList<>();
+        this.maxMistakes = maxMistakes;
+        outputLabel = new Label();
 
-        for (int i = 0; i < solutionArray.length; i++) {
-            if (solutionArray[i] == ' ') {
-                outputArray[i] = ' ';
-            } else {
-                outputArray[i] = '_';
-            }
-        }
+        outputArray = createOutputArray(solutionArray);
+        sortedArray = new ArrayList<>();
+        buttons = new ArrayList<>();
 
         finished = false;
 
-        root = new Pane();
-        outputLabel = new Label();
-
+        setSortedArray();
         setRoot();
     }
 
     /**
      * @return The root Pane with all elements.
      */
-    public Pane getRoot() {
+    public Node getRoot() {
         return root;
     }
 
@@ -76,13 +70,11 @@ public class CardsAskQuestionPane extends AskQuestionPane {
         setOutputLabel();
 
         ScrollPane scrollPane = new ScrollPane(outputLabel);
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-        scrollPane.setPrefWidth(200);
         scrollPane.setPrefHeight(50);
         scrollPane.setPadding(new Insets(8));
 
-        createCharacterButtons();
+        addCharacterButtons();
 
         FlowPane characterButtonsFlowPane = new FlowPane();
         characterButtonsFlowPane.setHgap(10);
@@ -90,10 +82,10 @@ public class CardsAskQuestionPane extends AskQuestionPane {
         characterButtonsFlowPane.setAlignment(Pos.CENTER);
         characterButtonsFlowPane.getChildren().addAll(buttons);
 
-        VBox vBox = new VBox(scrollPane, characterButtonsFlowPane, getCircleHBox());
+        VBox vBox = new VBox(scrollPane, characterButtonsFlowPane, getCirclesPane());
         vBox.setSpacing(20);
         vBox.setPadding(new Insets(20));
-        root.getChildren().add(vBox);
+        root = vBox;
     }
 
     /**
@@ -101,7 +93,7 @@ public class CardsAskQuestionPane extends AskQuestionPane {
      *
      * @since 2022-06-03
      */
-    private void createCharacterButtons() {
+    private void addCharacterButtons() {
         while (sortedArray.size() > 0) {
             String s = String.valueOf(getRandomFromArray(sortedArray));
 
@@ -131,7 +123,7 @@ public class CardsAskQuestionPane extends AskQuestionPane {
         }
 
         // If the char is the first one in the solutionArray
-        if (firstPosition == 0) {
+        if (firstPosition == 0 || outputArray[firstPosition - 1] != '_') {
             addPoints(1);
             for (int i = 0; i < solutionArray.length; i++) {
                 if (solutionArray[i] == c) {
@@ -141,49 +133,33 @@ public class CardsAskQuestionPane extends AskQuestionPane {
 
             button.setDisable(true);
         } else {
-            if (outputArray[firstPosition - 1] != '_') {
-                // Counter variable to avoid getting for the same character multiple points
-                int j = 0;
-                for (int i = 0; i < solutionArray.length; i++) {
-                    if (solutionArray[i] == c) {
-                        if (j == 0) {
-                            addPoints(1);
-                        }
-                        j++;
-                        outputArray[i] = solutionArray[i];
-                    }
-                }
-
-                button.setDisable(true);
-            } else {
-                addMistake();
-            }
+            addMistake();
         }
 
-        setOutputLabel();
-
-        // Check if the solution is found
-        if (Arrays.equals(solutionArray, outputArray)) {
+        if (maxMistakes == getMistakes()) {
+            setPoints(0);
             endRound();
+        } else {
+            setOutputLabel();
+
+            // Check if the solution is found
+            if (Arrays.equals(solutionArray, outputArray)) {
+                endRound();
+            }
         }
     }
 
     /**
      * Creates an array list, which only contains each character in the solution array once.
      *
-     * @return a sorted array list.
      * @since 2022-06-03
      */
-    private ArrayList<Character> createSortedArray() {
-        ArrayList<Character> tempList = new ArrayList<>();
-
+    private void setSortedArray() {
         for (char c : solutionArray) {
-            if (!tempList.contains(c)) {
-                tempList.add(c);
+            if (!sortedArray.contains(c)) {
+                sortedArray.add(c);
             }
         }
-
-        return tempList;
     }
 
     /**

@@ -117,8 +117,8 @@ public class MainMenuController implements Initializable {
         GuesserGameController guesserGameController = loader.getController();
 
         if (getGameType() == GuesserGameController.GameType.SINGLEPLAYER) {
-            FileManager fileManager = new FileManager();
-            File file = fileManager.selectSingleplayerFile(stage.getScene().getWindow());
+            SinglePlayerFileSelector singlePlayerFileSelector = new SinglePlayerFileSelector();
+            File file = singlePlayerFileSelector.selectSingleplayerFile(stage.getScene().getWindow());
 
             if (file != null) {
                 guesserGameController.setPathToGuessingFile(file);

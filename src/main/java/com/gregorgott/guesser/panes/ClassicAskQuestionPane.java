@@ -1,14 +1,13 @@
 package com.gregorgott.guesser.panes;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
@@ -68,34 +67,25 @@ public class ClassicAskQuestionPane extends AskQuestionPane {
      * a list with all used characters.
      */
     private void setRoot() {
-        Label enterACharLabel = new Label("Enter a character:");
+        Label enterACharLabel = new Label("Guess:");
+        enterACharLabel.setMinWidth(45);
         enterACharLabel.setId("white-label");
 
         textField = new TextField();
-        // The listener avoids entering more than one character
+        textField.setMinWidth(50);
+        textField.setPrefHeight(35);
         textField.textProperty().addListener((ov, oldValue, newValue) -> {
+            // The listener avoids entering more than one character
             if (textField.getText().length() > 1) {
                 String s = textField.getText().substring(0, 1);
                 textField.setText(s);
             }
         });
-        textField.setOnKeyPressed(keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER) {
-                checkGuess();
-            }
-        });
-        HBox.setHgrow(textField, Priority.ALWAYS);
-
-        // Check button
-        Button checkGuessButton = new Button("Check Guess");
-        checkGuessButton.setOnAction(event -> checkGuess());
+        textField.setOnKeyTyped(keyEvent -> checkGuess());
 
         showTipButton = new Button("Show Tip");
+        showTipButton.setMinWidth(80);
         setShowTipButton();
-
-        // textField, checkGuessButton and tipButton are in a HBox
-        enterCharHBox = new HBox(enterACharLabel, textField, checkGuessButton, showTipButton);
-        enterCharHBox.setSpacing(10);
 
         // Underline for each word in "solutionArray"
         outputLabel = new Label();
@@ -103,15 +93,20 @@ public class ClassicAskQuestionPane extends AskQuestionPane {
 
         // ScrollPane to scroll if the word is too long
         ScrollPane scrollPane = new ScrollPane(outputLabel);
-        scrollPane.setPrefHeight(50);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-        scrollPane.setPadding(new Insets(8));
+        scrollPane.setPrefHeight(35);
+        scrollPane.setPadding(new Insets(2));
+        scrollPane.setPrefWidth(Integer.MAX_VALUE);
+
+        // textField, checkGuessButton and tipButton are in a HBox
+        enterCharHBox = new HBox(enterACharLabel, textField, scrollPane);
+        enterCharHBox.setSpacing(8);
+        enterCharHBox.setAlignment(Pos.CENTER_LEFT);
 
         usedCharsLabel = new Label();
         usedCharsLabel.setId("white-label");
 
         // Main VBox
-        VBox mainVBox = new VBox(enterCharHBox, scrollPane, getCirclesPane(), usedCharsLabel);
+        VBox mainVBox = new VBox(enterCharHBox, showTipButton, getCirclesPane(), usedCharsLabel);
         mainVBox.setSpacing(20);
         mainVBox.setPadding(new Insets(20));
 

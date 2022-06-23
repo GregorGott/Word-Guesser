@@ -12,6 +12,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -34,7 +36,13 @@ public class GuesserGameController {
     @FXML
     private BorderPane borderPane;
     @FXML
-    private Label currentPlayerLabel;
+    private Label pointsPlayer1Label;
+    @FXML
+    private Label pointsPlayer2Label;
+    @FXML
+    private Label player1Label;
+    @FXML
+    private Label player2Label;
     @FXML
     private Label questionsCounterLabel;
     @FXML
@@ -42,7 +50,7 @@ public class GuesserGameController {
 
     private int currentPlayer = 1;
     private int currentRound = 1;
-    private int pointsPlayer1, pointsPlayer2, numberOfQuestions, maxMistakes, pointsToBeReached;
+    private int pointsPlayer1, pointsPlayer2, numberOfRounds, maxMistakes, pointsToBeReached;
     private boolean isSetQuestionTabActive;
     private char[] solutionArray;
     private File pathToGuessingFile;
@@ -70,7 +78,7 @@ public class GuesserGameController {
      * @since < 1.1.0
      */
     public void startGame(int numberOfQuestions, int maxMistakes, GameType gameType, GameMode gameMode) {
-        this.numberOfQuestions = numberOfQuestions;
+        this.numberOfRounds = numberOfQuestions;
         this.maxMistakes = maxMistakes;
         this.gameType = gameType;
         this.gameMode = gameMode;
@@ -139,7 +147,7 @@ public class GuesserGameController {
                         pointsPlayer2 = pointsPlayer2 + getPoints();
                     }
 
-                    if (numberOfQuestions < currentRound) {
+                    if (numberOfRounds < currentRound) {
                         // Show results if end is reached
                         showResultScene();
                     } else {
@@ -151,7 +159,7 @@ public class GuesserGameController {
             currentRound++;
 
             pointsPlayer1 = pointsPlayer1 + getPoints();
-            if (numberOfQuestions < currentRound) {
+            if (numberOfRounds < currentRound) {
                 // Show results if end is reached
                 showResultScene();
             } else {
@@ -197,8 +205,21 @@ public class GuesserGameController {
      * @since < 1.1.9
      */
     private void setTopBarUI() {
-        currentPlayerLabel.setText("Player " + currentPlayer + "'s turn");
-        questionsCounterLabel.setText("Round " + currentRound + " of " + numberOfQuestions);
+        questionsCounterLabel.setText(currentRound + " / " + numberOfRounds);
+        pointsPlayer1Label.setText(String.valueOf(pointsPlayer1));
+        pointsPlayer2Label.setText(String.valueOf(pointsPlayer2));
+
+        if (currentPlayer == 1) {
+            pointsPlayer1Label.setTextFill(Paint.valueOf("#cc3333"));
+            player1Label.setTextFill(Paint.valueOf("#cc3333"));
+            pointsPlayer2Label.setTextFill(Paint.valueOf("#000000"));
+            player2Label.setTextFill(Paint.valueOf("#000000"));
+        } else {
+            pointsPlayer1Label.setTextFill(Paint.valueOf("#000000"));
+            player1Label.setTextFill(Paint.valueOf("#000000"));
+            pointsPlayer2Label.setTextFill(Paint.valueOf("#cc3333"));
+            player2Label.setTextFill(Paint.valueOf("#cc3333"));
+        }
 
         setRoundProgressBar();
     }
@@ -209,7 +230,7 @@ public class GuesserGameController {
      * @since < 1.1.9
      */
     private void setRoundProgressBar() {
-        roundProgressBar.setProgress((double) currentRound / numberOfQuestions);
+        roundProgressBar.setProgress((double) currentRound / numberOfRounds);
     }
 
     /**
@@ -228,7 +249,7 @@ public class GuesserGameController {
             }
         });
 
-        borderPane.setCenter(setQuestionPane.getRoot());
+        borderPane.setCenter(new Pane(setQuestionPane.getRoot()));
     }
 
     /**
@@ -250,8 +271,8 @@ public class GuesserGameController {
     private void setNumberOfQuestions() {
         // If there are fewer lines than questions set number of questions to number of lines in file.
         int linesInFile = countLines(pathToGuessingFile, "##");
-        if (linesInFile < numberOfQuestions) {
-            numberOfQuestions = linesInFile;
+        if (linesInFile < numberOfRounds) {
+            numberOfRounds = linesInFile;
         }
     }
 

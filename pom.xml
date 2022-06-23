@@ -24,7 +24,7 @@
          https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/text/SimpleDateFormat.html
          -->
         <maven.build.timestamp.format>yy.ww.WWkkmm</maven.build.timestamp.format>
-        <app.version>${version}</app.version>
+        <app.version>${project.version}</app.version>
 
         <!-- This property is used to specify the modules included in the (custom) JVM image. -->
         <!-- Reminder: javafx.web (the embedded browser component) is not included in this project by default due
@@ -72,7 +72,7 @@
         <dependency>
             <groupId>com.gregorgott</groupId>
             <artifactId>mdialogwindows</artifactId>
-            <version>0.1.1</version>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 

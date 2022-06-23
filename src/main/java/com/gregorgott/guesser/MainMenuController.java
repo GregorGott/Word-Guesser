@@ -129,10 +129,10 @@ public class MainMenuController implements Initializable {
                 stage.setScene(scene);
             }
         } else {
+            stage.setScene(scene);
             guesserGameController.startGame(getNumberOfQuestionsSpinnerValue(), getMaxMistakesSpinnerValue(),
                     getGameType(), gameMode);
 
-            stage.setScene(scene);
         }
     }
 

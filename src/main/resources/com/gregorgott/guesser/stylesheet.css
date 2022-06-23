@@ -76,6 +76,10 @@
     -fx-background-color: #f6f6f6;
 }
 
+#top-bar .label {
+    -fx-text-fill: #000000;
+}
+
 #cancel-button {
     -fx-background-color: #ced4da;
 }
@@ -93,7 +97,7 @@
 
 #top-bar-progress-bar .track {
     -fx-background-radius: 0;
-    -fx-background-color: #f6f6f6;
+    -fx-background-color: transparent;
 }
 
 /* Scroll pane with rounded corners and an other scroll bar color */

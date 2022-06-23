@@ -1,6 +1,7 @@
 package com.gregorgott.guesser.panes;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -44,6 +45,7 @@ public class SetQuestionPane {
 
         HBox wordToGuessHBox = new HBox(label, wordToGuessTextField, characterCounter);
         wordToGuessHBox.setSpacing(20);
+        wordToGuessHBox.setAlignment(Pos.CENTER_LEFT);
         wordToGuessHBox.setPadding(new Insets(20));
 
         return wordToGuessHBox;

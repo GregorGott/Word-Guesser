@@ -39,17 +39,17 @@ public class MainMenuController implements Initializable {
     @FXML
     private Spinner<Integer> maxMistakesSpinner;
 
-    private GameMode gameMode;
+    private GameName gameName;
 
     /**
      * Sets the game mode and updates the <code>modeLabel</code>.
      *
-     * @param gameMode the game mode.
+     * @param gameName the game mode.
      */
-    public void setGameMode(GameMode gameMode) {
-        this.gameMode = gameMode;
+    public void setGameName(GameName gameName) {
+        this.gameName = gameName;
 
-        switch (gameMode) {
+        switch (gameName) {
             case CLASSIC -> modeLabel.setText("Classic");
             case CARDS -> modeLabel.setText("Cards");
         }
@@ -117,21 +117,20 @@ public class MainMenuController implements Initializable {
         GuesserGameController guesserGameController = loader.getController();
 
         if (getGameType() == GuesserGameController.GameType.SINGLEPLAYER) {
-            SinglePlayerFileSelector singlePlayerFileSelector = new SinglePlayerFileSelector();
-            File file = singlePlayerFileSelector.selectSingleplayerFile(stage.getScene().getWindow());
+            File file = new SinglePlayerFileSelector().selectSingleplayerFile(stage.getScene().getWindow());
 
             if (file != null) {
                 guesserGameController.setPathToGuessingFile(file);
 
                 guesserGameController.startGame(getNumberOfQuestionsSpinnerValue(), getMaxMistakesSpinnerValue(),
-                        getGameType(), gameMode);
+                        getGameType(), gameName);
 
                 stage.setScene(scene);
             }
         } else {
             stage.setScene(scene);
             guesserGameController.startGame(getNumberOfQuestionsSpinnerValue(), getMaxMistakesSpinnerValue(),
-                    getGameType(), gameMode);
+                    getGameType(), gameName);
 
         }
     }

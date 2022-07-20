@@ -1,6 +1,6 @@
 package com.gregorgott.guesser;
 
-public enum GameMode {
+public enum GameName {
     CARDS,
     CLASSIC
 }

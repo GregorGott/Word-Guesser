@@ -1,4 +1,4 @@
-package com.gregorgott.guesser.panes;
+package com.gregorgott.guesser.AskQuestionPanes;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -10,7 +10,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -20,43 +19,26 @@ import java.util.Random;
  * @version 1.1.2
  * @since 2022-06-14
  */
-public class CardsAskQuestionPane extends AskQuestionPane {
+public class CardsAskQuestionPane extends AskQuestionManager {
     private final Label outputLabel;
     private final ArrayList<Character> sortedArray;
     private final ArrayList<Button> buttons;
-    private final char[] solutionArray;
-    private final char[] outputArray;
-    private final int maxMistakes;
     private Node root;
     private boolean finished;
 
     /**
      * The constructor initializes needed variables and fills the solution array with underscores for each character.
      *
-     * @param solutionArray the solution as an array to check the players input.
      * @since 1.0.0
      */
-    public CardsAskQuestionPane(char[] solutionArray, int maxMistakes) {
-        super(maxMistakes);
-        this.solutionArray = solutionArray;
-        this.maxMistakes = maxMistakes;
+    public CardsAskQuestionPane() {
+        super();
         outputLabel = new Label();
 
-        outputArray = createOutputArray(solutionArray);
         sortedArray = new ArrayList<>();
         buttons = new ArrayList<>();
 
         finished = false;
-
-        setSortedArray();
-        setRoot();
-    }
-
-    /**
-     * @return The root Pane with all elements.
-     */
-    public Node getRoot() {
-        return root;
     }
 
     /**
@@ -68,6 +50,8 @@ public class CardsAskQuestionPane extends AskQuestionPane {
      */
     private void setRoot() {
         setOutputLabel();
+
+        setSortedArray();
 
         ScrollPane scrollPane = new ScrollPane(outputLabel);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
@@ -82,9 +66,10 @@ public class CardsAskQuestionPane extends AskQuestionPane {
         characterButtonsFlowPane.setAlignment(Pos.CENTER);
         characterButtonsFlowPane.getChildren().addAll(buttons);
 
-        VBox vBox = new VBox(scrollPane, characterButtonsFlowPane, getCirclesPane());
+        VBox vBox = new VBox(scrollPane, characterButtonsFlowPane);//, getCirclesPane());
         vBox.setSpacing(20);
         vBox.setPadding(new Insets(20));
+
         root = vBox;
     }
 
@@ -98,54 +83,14 @@ public class CardsAskQuestionPane extends AskQuestionPane {
             String s = String.valueOf(getRandomFromArray(sortedArray));
 
             Button button = new Button(s);
-            button.setOnAction(x -> checkButton(button, s.charAt(0)));
+            button.setOnAction(x -> {
+                if (check(s ,true)) {
+                    setOutputLabel();
+                    button.setDisable(true);
+                }
+            });
             sortedArray.remove(Character.valueOf(s.charAt(0)));
             buttons.add(button);
-        }
-    }
-
-    /**
-     * This method is called when a character button is pushed. It checks if the pushed character is the first character
-     * or the character before is already pushed.
-     *
-     * @param c the button text as a char.
-     * @since 2022-06-03
-     */
-    private void checkButton(Button button, char c) {
-        int firstPosition = 0;
-
-        // Get the first position
-        for (int i = 0; i < solutionArray.length; i++) {
-            if (solutionArray[i] == c) {
-                firstPosition = i;
-                break;
-            }
-        }
-
-        // If the char is the first one in the solutionArray
-        if (firstPosition == 0 || outputArray[firstPosition - 1] != '_') {
-            addPoints(1);
-            for (int i = 0; i < solutionArray.length; i++) {
-                if (solutionArray[i] == c) {
-                    outputArray[i] = solutionArray[i];
-                }
-            }
-
-            button.setDisable(true);
-        } else {
-            addMistake();
-        }
-
-        if (maxMistakes == getMistakes()) {
-            setPoints(0);
-            endRound();
-        } else {
-            setOutputLabel();
-
-            // Check if the solution is found
-            if (Arrays.equals(solutionArray, outputArray)) {
-                endRound();
-            }
         }
     }
 
@@ -155,7 +100,7 @@ public class CardsAskQuestionPane extends AskQuestionPane {
      * @since 2022-06-03
      */
     private void setSortedArray() {
-        for (char c : solutionArray) {
+        for (char c : getSolutionArray()) {
             if (!sortedArray.contains(c)) {
                 sortedArray.add(c);
             }
@@ -168,10 +113,7 @@ public class CardsAskQuestionPane extends AskQuestionPane {
      * @since 1.0.0
      */
     private void setOutputLabel() {
-        outputLabel.setText("");
-        for (char c : outputArray) {
-            outputLabel.setText(outputLabel.getText() + c + " ");
-        }
+        outputLabel.setText(getOutputArrayAsString());
     }
 
     /**
@@ -198,5 +140,14 @@ public class CardsAskQuestionPane extends AskQuestionPane {
      */
     public boolean isFinished() {
         return finished;
+    }
+
+    /**
+     * @return The root Pane with all elements.
+     */
+    @Override
+    public Node getNode() {
+        setRoot();
+        return root;
     }
 }

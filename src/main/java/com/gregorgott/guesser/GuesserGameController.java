@@ -1,8 +1,10 @@
 package com.gregorgott.guesser;
 
-import com.gregorgott.guesser.panes.CardsAskQuestionPane;
-import com.gregorgott.guesser.panes.ClassicAskQuestionPane;
-import com.gregorgott.guesser.panes.SetQuestionPane;
+import com.gregorgott.guesser.AskQuestionPanes.AskQuestionManager;
+import com.gregorgott.guesser.AskQuestionPanes.CardsAskQuestionPane;
+import com.gregorgott.guesser.AskQuestionPanes.ClassicAskQuestionPane;
+import com.gregorgott.guesser.SetQuestionPanes.SetQuestionManager;
+import com.gregorgott.guesser.SetQuestionPanes.SimpleSetQuestionPane;
 import com.gregorgott.mdialogwindows.MAlert;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,7 +12,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
@@ -55,10 +56,8 @@ public class GuesserGameController {
     private char[] solutionArray;
     private File pathToGuessingFile;
     private GameType gameType;
-    private SetQuestionPane setQuestionPane;
-    private ClassicAskQuestionPane classicAskQuestionPane;
-    private CardsAskQuestionPane cardsAskQuestionPane;
-    private GameMode gameMode;
+    private SetQuestionManager setQuestionManager;
+    private AskQuestionManager askQuestionManager;
 
     /**
      * Initialize array lists and FileManager.
@@ -77,11 +76,23 @@ public class GuesserGameController {
      * @param gameType          Single or Multiplayer mode.
      * @since < 1.1.0
      */
-    public void startGame(int numberOfQuestions, int maxMistakes, GameType gameType, GameMode gameMode) {
+    public void startGame(int numberOfQuestions, int maxMistakes, GameType gameType, GameName gameName) {
         this.numberOfRounds = numberOfQuestions;
         this.maxMistakes = maxMistakes;
         this.gameType = gameType;
-        this.gameMode = gameMode;
+
+        switch (gameName) {
+            case CLASSIC -> {
+                setQuestionManager = new SimpleSetQuestionPane();
+                askQuestionManager = new ClassicAskQuestionPane();
+            }
+            case CARDS -> {
+                setQuestionManager = new SimpleSetQuestionPane();
+                askQuestionManager = new CardsAskQuestionPane();
+            }
+            // TODO: Add new GameNames
+            default -> setQuestionManager = new SimpleSetQuestionPane();
+        }
 
         if (gameType == GameType.MULTIPLAYER) {
             setQuestion();
@@ -103,7 +114,7 @@ public class GuesserGameController {
         if (gameType == GameType.MULTIPLAYER) {
             if (isSetQuestionTabActive) {
                 // Get word from setQuestionPane
-                String s = setQuestionPane.getTextField().getText();
+                String s = setQuestionManager.getInput();
 
                 // Check if text field is not empty
                 if (!s.isEmpty()) {
@@ -136,15 +147,15 @@ public class GuesserGameController {
                     }
                 }
             } else {
-                if (checkIfFinished()) {
+                if (askQuestionManager.isFinished()) {
                     isSetQuestionTabActive = true;
 
                     currentRound++;
 
                     if (currentPlayer == 1) {
-                        pointsPlayer1 = pointsPlayer1 + getPoints();
+                        pointsPlayer1 = pointsPlayer1 + askQuestionManager.getPoints();
                     } else {
-                        pointsPlayer2 = pointsPlayer2 + getPoints();
+                        pointsPlayer2 = pointsPlayer2 + askQuestionManager.getPoints();
                     }
 
                     if (numberOfRounds < currentRound) {
@@ -158,7 +169,7 @@ public class GuesserGameController {
         } else {
             currentRound++;
 
-            pointsPlayer1 = pointsPlayer1 + getPoints();
+            pointsPlayer1 = pointsPlayer1 + askQuestionManager.getPoints();
             if (numberOfRounds < currentRound) {
                 // Show results if end is reached
                 showResultScene();
@@ -167,36 +178,6 @@ public class GuesserGameController {
                 loadRandomWordInArray();
             }
         }
-    }
-
-    /**
-     * Checks the games state dependent from the selected game mode.
-     *
-     * @return a boolean if the game is finished.
-     * @since < 1.1.9
-     */
-    private boolean checkIfFinished() {
-        if (gameMode == GameMode.CLASSIC) {
-            return classicAskQuestionPane.isFinished();
-        } else if (gameMode == GameMode.CARDS) {
-            return cardsAskQuestionPane.isFinished();
-        }
-        return false;
-    }
-
-    /**
-     * Get the players points dependent from the selected game mode.
-     *
-     * @return the points as int.
-     * @since < 1.1.9
-     */
-    private int getPoints() {
-        if (gameMode == GameMode.CLASSIC) {
-            return classicAskQuestionPane.getPoints();
-        } else if (gameMode == GameMode.CARDS) {
-            return cardsAskQuestionPane.getPoints();
-        }
-        return 0;
     }
 
     /**
@@ -241,15 +222,7 @@ public class GuesserGameController {
      */
     private void setQuestion() {
         setTopBarUI();
-
-        setQuestionPane = new SetQuestionPane();
-        setQuestionPane.getTextField().setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                nextButtonPushed();
-            }
-        });
-
-        borderPane.setCenter(new Pane(setQuestionPane.getRoot()));
+        borderPane.setCenter(new Pane(setQuestionManager.getNode()));
     }
 
     /**
@@ -407,13 +380,9 @@ public class GuesserGameController {
     private void askQuestion() {
         setTopBarUI();
 
-        if (gameMode == GameMode.CLASSIC) {
-            classicAskQuestionPane = new ClassicAskQuestionPane(solutionArray, maxMistakes);
-            borderPane.setCenter(classicAskQuestionPane.getRoot());
-        } else if (gameMode == GameMode.CARDS) {
-            cardsAskQuestionPane = new CardsAskQuestionPane(solutionArray, maxMistakes);
-            borderPane.setCenter(cardsAskQuestionPane.getRoot());
-        }
+        askQuestionManager.setSolutionArray(solutionArray);
+        askQuestionManager.setMaxMistakes(maxMistakes);
+        borderPane.setCenter(askQuestionManager.getNode());
     }
 
     /**

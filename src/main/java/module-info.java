@@ -7,6 +7,8 @@ module com.gregorgott.guesser {
 
     opens com.gregorgott.guesser to javafx.fxml;
     exports com.gregorgott.guesser;
-    exports com.gregorgott.guesser.panes;
-    opens com.gregorgott.guesser.panes to javafx.fxml;
+    exports com.gregorgott.guesser.AskQuestionPanes;
+    opens com.gregorgott.guesser.AskQuestionPanes to javafx.fxml;
+    exports com.gregorgott.guesser.SetQuestionPanes;
+    opens com.gregorgott.guesser.SetQuestionPanes to javafx.fxml;
 }

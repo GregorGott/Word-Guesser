@@ -20,7 +20,7 @@ import java.io.IOException;
  * @since 2022-06-16
  */
 public class ModeSelectorController {
-    private GameMode gameMode;
+    private GameName gameName;
 
     /**
      * Sets the game mode to <code>CLASSIC</code> and loads the main menu.
@@ -31,7 +31,7 @@ public class ModeSelectorController {
      */
     @FXML
     private void classicMode(ActionEvent event) throws IOException {
-        gameMode = GameMode.CLASSIC;
+        gameName = GameName.CLASSIC;
         loadMainMenu(event);
     }
 
@@ -44,7 +44,7 @@ public class ModeSelectorController {
      */
     @FXML
     private void cardsMode(ActionEvent event) throws IOException {
-        gameMode = GameMode.CARDS;
+        gameName = GameName.CARDS;
         loadMainMenu(event);
     }
 
@@ -61,7 +61,7 @@ public class ModeSelectorController {
         Scene scene = new Scene(fxmlLoader.load());
 
         MainMenuController mainMenuController = fxmlLoader.getController();
-        mainMenuController.setGameMode(gameMode);
+        mainMenuController.setGameName(gameName);
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);

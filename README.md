@@ -12,8 +12,8 @@
 
 <div style="text-align: center">
 
-[![](https://img.shields.io/badge/Download-Windows-blue?style=for-the-badge)](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0/Word-Guesser-win-x86_x64.exe)
-[![](https://img.shields.io/badge/Download-macOS-blue?style=for-the-badge)](https://github.com/GregorGott/Word-Guesser/releases/download/v1.0.0/Word-Guesser-mac-x86_x64.dmg)
+[![](https://img.shields.io/badge/Download-Windows-blue?style=for-the-badge)](https://github.com/GregorGott/Word-Guesser/releases/download/v1.1.0/Word-Guesser-win-x86_x64.exe)
+[![](https://img.shields.io/badge/Download-macOS-blue?style=for-the-badge)](https://github.com/GregorGott/Word-Guesser/releases/download/v1.1.0/Word-Guesser-mac-x86_x64.dmg)
 
 </div>
 

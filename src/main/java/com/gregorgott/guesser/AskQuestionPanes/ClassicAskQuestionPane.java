@@ -19,38 +19,37 @@ import java.util.Random;
  * This is the classic game mode where the player tries to guess a word by only knowing the length of the word.
  *
  * @author GregorGott
- * @version 1.2.1
- * @since 2022-06-14
+ * @version 1.2.2
+ * @since 2022-07-22
  */
 public class ClassicAskQuestionPane extends AskQuestionManager {
     private Node root;
     private HBox guessHBox;
     private TextField textField;
     private final Label outputLabel;
-    private boolean finished;
 
     /**
-     * Initialize variables, set points and mistakes to zero and set finished to false. Fill all non-whitespace characters
-     * with underscores.
+     * Initialize the <code>outputLabel</code> which later contains the underscores.
+     *
+     * @since 1.0.0
      */
     public ClassicAskQuestionPane() {
         super();
         outputLabel = new Label();
-
-        finished = false;
     }
 
     /**
-     * Show a text field which only accepts single characters, a button to check if the input is in the word and a
-     * button to show a tip. The output is shown in a scroll pane. Underneath is the mistakes counter and
-     * a list with all used characters.
+     * Sets the <code>root</code> Node to a <code>VBox</code> which contains a <code>ScrollPane</code> with the
+     * <code>outputLabel</code>, text field for input, enter and a tip button to show a hint by revealing one
+     * character.
      */
     private void setRoot() {
         setOutputLabel();
 
         ScrollPane scrollPane = new ScrollPane(outputLabel);
-        scrollPane.setPrefHeight(35);
-        scrollPane.setPadding(new Insets(2));
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        scrollPane.setPadding(new Insets(8));
+        scrollPane.setPrefHeight(50);
         scrollPane.setPrefWidth(Integer.MAX_VALUE);
 
         Label guessLabel = new Label("Guess:");
@@ -83,10 +82,19 @@ public class ClassicAskQuestionPane extends AskQuestionManager {
         root = vBox;
     }
 
+    /**
+     * Checks if the input is in the solution and updates the <code>outputLabel</code>.
+     *
+     * @param text the text to be checked.
+     */
     private void checkAndUpdate(String text) {
-        check(text.toUpperCase(), false);
+        check(text.toUpperCase(), false, false);
         setOutputLabel();
         textField.clear();
+
+        if (isFinished()) {
+            guessHBox.setDisable(true);
+        }
     }
 
     /**
@@ -113,19 +121,10 @@ public class ClassicAskQuestionPane extends AskQuestionManager {
 //        }
 //    }
 
-    /**
-     * Disable the input text field and show the solution if not guessed.
-     */
-    private void endRound() {
-        guessHBox.setDisable(true);
-        finished = true;
-
-        setOutputLabel();
-    }
-
 
     /**
-     * @return The root node with all UI elements.
+     * @return the root node with all UI elements.
+     * @since 1.2.2
      */
     @Override
     public Node getNode() {
@@ -134,15 +133,8 @@ public class ClassicAskQuestionPane extends AskQuestionManager {
     }
 
     /**
-     * @return A boolean if the round is ended.
-     */
-    public boolean isFinished() {
-        return finished;
-    }
-
-    /**
-     * If the player clicks on this button, get a random left underline and replace it with the matching character from
-     * the solutionArray.
+     * If the player clicks on the tip button, this method gets a random left underscore and replace it with the
+     * matching character from the solution.
      */
     private void showTip() {
         // Get index from every underscore in outputArray
@@ -159,8 +151,7 @@ public class ClassicAskQuestionPane extends AskQuestionManager {
         int random = new Random().nextInt(leftUnderlinesIndex.size());
         String s = String.valueOf(getSolutionArray()[leftUnderlinesIndex.get(random)]);
 
-        // Show the tip in output array by replacing every c in outputArray
-        check(s, false);
+        checkAndUpdate(s);
 
         setOutputLabel();
         addPoints(-1);

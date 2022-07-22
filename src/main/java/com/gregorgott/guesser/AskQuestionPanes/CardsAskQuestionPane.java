@@ -14,20 +14,26 @@ import java.util.Random;
 
 /**
  * The cards question mode is simpler than the classic mode, because each character is shown in a button.
+ * This class can be implemented over the <code>AskQuestionManager</code>:
+ * <pre>
+ *     private void myClass() {
+ *          AskQuestionManager askQuestionManager = new CardsAskQuestionPane();
+ *     }
+ * </pre>
  *
  * @author GregorGott
- * @version 1.1.2
- * @since 2022-06-14
+ * @version 1.1.3
+ * @since 2022-07-22
  */
 public class CardsAskQuestionPane extends AskQuestionManager {
     private final Label outputLabel;
     private final ArrayList<Character> sortedArray;
     private final ArrayList<Button> buttons;
     private Node root;
-    private boolean finished;
 
     /**
-     * The constructor initializes needed variables and fills the solution array with underscores for each character.
+     * Initializes the <code>outputLabel</code> label, <code>sortedArray</code> ArrayList and the <code>buttons</code>
+     * ArrayList.
      *
      * @since 1.0.0
      */
@@ -37,14 +43,11 @@ public class CardsAskQuestionPane extends AskQuestionManager {
 
         sortedArray = new ArrayList<>();
         buttons = new ArrayList<>();
-
-        finished = false;
     }
 
     /**
      * Sets the root pane with a scroll pane which includes the output array and a flow pane with the character
-     * buttons.
-     * All these elements are children of a v box.
+     * buttons. All these elements are children of a <code>VBox</code> which defines the <code>root</code> Node.
      *
      * @since 1.0.0
      */
@@ -66,7 +69,7 @@ public class CardsAskQuestionPane extends AskQuestionManager {
         characterButtonsFlowPane.setAlignment(Pos.CENTER);
         characterButtonsFlowPane.getChildren().addAll(buttons);
 
-        VBox vBox = new VBox(scrollPane, characterButtonsFlowPane);//, getCirclesPane());
+        VBox vBox = new VBox(scrollPane, characterButtonsFlowPane, getMistakeCirclesNode());
         vBox.setSpacing(20);
         vBox.setPadding(new Insets(20));
 
@@ -80,24 +83,43 @@ public class CardsAskQuestionPane extends AskQuestionManager {
      */
     private void addCharacterButtons() {
         while (sortedArray.size() > 0) {
+            // Loads a random string from the sortedArray
             String s = String.valueOf(getRandomFromArray(sortedArray));
 
+            // Creates a new button with the string and removes the random string from the sortedArray
             Button button = new Button(s);
-            button.setOnAction(x -> {
-                if (check(s ,true)) {
-                    setOutputLabel();
-                    button.setDisable(true);
-                }
-            });
+            button.setOnAction(x -> checkAndUpdate(button));
             sortedArray.remove(Character.valueOf(s.charAt(0)));
             buttons.add(button);
         }
     }
 
     /**
-     * Creates an array list, which only contains each character in the solution array once.
+     * Checks if the selected button is valid, means if the character before is already known it counts as a point.
+     * Afterwards, check if the game is finished and disable all buttons.
      *
-     * @since 2022-06-03
+     * @param b the pressed button.
+     * @since 1.1.3
+     */
+    private void checkAndUpdate(Button b) {
+        String s = b.getText();
+        if (check(s ,true, true)) {
+            setOutputLabel();
+            b.setDisable(true);
+        }
+
+        if (isFinished()) {
+            for (Button button : buttons) {
+                button.setDisable(true);
+            }
+            buttons.clear();
+        }
+    }
+
+    /**
+     * Creates an <code>ArrayList</code>, which only contains each character in the <code>solutionArray</code> once.
+     *
+     * @since 1.1.0
      */
     private void setSortedArray() {
         for (char c : getSolutionArray()) {
@@ -108,7 +130,7 @@ public class CardsAskQuestionPane extends AskQuestionManager {
     }
 
     /**
-     * Updates the <code>outputLabel</code> by copying the <code>outputArray</code>.
+     * Sets the <code>outputLabel</code> to the <code>outputArray</code> as string.
      *
      * @since 1.0.0
      */
@@ -124,22 +146,6 @@ public class CardsAskQuestionPane extends AskQuestionManager {
         int random = new Random().nextInt(array.size());
 
         return array.get(random);
-    }
-
-    private void endRound() {
-        finished = true;
-
-        for (Button button : buttons) {
-            button.setDisable(true);
-        }
-    }
-
-    /**
-     * @return a boolean if the round is finished
-     * @since 1.0.0
-     */
-    public boolean isFinished() {
-        return finished;
     }
 
     /**

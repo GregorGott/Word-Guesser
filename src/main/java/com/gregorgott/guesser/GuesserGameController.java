@@ -138,7 +138,8 @@ public class GuesserGameController {
                     } else {
                         MAlert mAlert = new MAlert(MAlert.MAlertType.INFORMATION, "Information", borderPane.getScene().getWindow());
                         mAlert.setHeadline("Try to enter another word.");
-                        mAlert.setContentText("The word \"" + s + "\" was already entered before.");
+                        mAlert.setContentText("The word \"" + s + "\" was already entered before. The game makes more" +
+                                "fun when you use another word!");
                         mAlert.setMAlertStyle(MAlert.MAlertStyle.DARK_ROUNDED);
                         mAlert.addButton("OK", x -> mAlert.closeAlert(), true);
 
@@ -157,6 +158,8 @@ public class GuesserGameController {
                     } else {
                         pointsPlayer2 = pointsPlayer2 + askQuestionManager.getPoints();
                     }
+
+                    askQuestionManager.reset();
 
                     if (numberOfRounds < currentRound) {
                         // Show results if end is reached

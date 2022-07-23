@@ -52,7 +52,7 @@
 
 /* Main border pane background */
 #background-ui {
-    -fx-background-color: #2d2d2d;
+    -fx-background-color: linear-gradient(from 50% 50% to 100% 100%, #2d2d2d, #484848);
 }
 
 /* Toggle Buttons in main menu */
@@ -73,10 +73,14 @@
 
 /* Top bar */
 #top-bar {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+}
+
+#player-bar {
     -fx-background-color: #f6f6f6;
 }
 
-#top-bar .label {
+#player-bar .label {
     -fx-text-fill: #000000;
 }
 

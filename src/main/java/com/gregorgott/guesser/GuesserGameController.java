@@ -194,15 +194,17 @@ public class GuesserGameController {
         pointsPlayer2Label.setText(String.valueOf(pointsPlayer2));
 
         if (currentPlayer == 1) {
-            pointsPlayer1Label.setTextFill(Paint.valueOf("#cc3333"));
-            player1Label.setTextFill(Paint.valueOf("#cc3333"));
+            // Player 1 label red, player 2 label black
+            pointsPlayer1Label.setTextFill(Paint.valueOf("#ff8080"));
+            player1Label.setTextFill(Paint.valueOf("#ff8080"));
             pointsPlayer2Label.setTextFill(Paint.valueOf("#000000"));
             player2Label.setTextFill(Paint.valueOf("#000000"));
         } else {
+            // Player 1 label black, player 2 label red
             pointsPlayer1Label.setTextFill(Paint.valueOf("#000000"));
             player1Label.setTextFill(Paint.valueOf("#000000"));
-            pointsPlayer2Label.setTextFill(Paint.valueOf("#cc3333"));
-            player2Label.setTextFill(Paint.valueOf("#cc3333"));
+            pointsPlayer2Label.setTextFill(Paint.valueOf("#ff8080"));
+            player2Label.setTextFill(Paint.valueOf("#ff8080"));
         }
 
         setRoundProgressBar();

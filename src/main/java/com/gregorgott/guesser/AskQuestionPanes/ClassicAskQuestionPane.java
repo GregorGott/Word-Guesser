@@ -29,11 +29,11 @@ import java.util.Random;
  * @since 2022-07-23
  */
 public class ClassicAskQuestionPane extends AskQuestionManager {
+    private final Label outputLabel;
     private Node root;
     private HBox guessHBox;
     private TextField textField;
     private Label usedCharactersLabel;
-    private final Label outputLabel;
 
     /**
      * Initialize the <code>outputLabel</code> which later contains the underscores.
@@ -83,6 +83,7 @@ public class ClassicAskQuestionPane extends AskQuestionManager {
         guessHBox.setAlignment(Pos.CENTER_LEFT);
 
         usedCharactersLabel = new Label();
+        usedCharactersLabel.setWrapText(true);
         usedCharactersLabel.setId("white-label");
 
         VBox vBox = new VBox(scrollPane, guessHBox, getMistakeCirclesNode(), usedCharactersLabel);

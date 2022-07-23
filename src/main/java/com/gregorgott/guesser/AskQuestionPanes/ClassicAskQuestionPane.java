@@ -1,3 +1,8 @@
+/*
+ * This software is licensed under the GNU GENERAL PUBLIC LICENSE Version 3 from 29 June 2007.
+ * This software comes with absolutely no warranty! Please read the LICENSE file.
+ */
+
 package com.gregorgott.guesser.AskQuestionPanes;
 
 import javafx.geometry.Insets;
@@ -13,19 +18,21 @@ import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 /**
  * This is the classic game mode where the player tries to guess a word by only knowing the length of the word.
  *
  * @author GregorGott
- * @version 1.2.2
- * @since 2022-07-22
+ * @version 1.2.3
+ * @since 2022-07-23
  */
 public class ClassicAskQuestionPane extends AskQuestionManager {
     private Node root;
     private HBox guessHBox;
     private TextField textField;
+    private Label usedCharactersLabel;
     private final Label outputLabel;
 
     /**
@@ -75,7 +82,10 @@ public class ClassicAskQuestionPane extends AskQuestionManager {
         guessHBox.setSpacing(10);
         guessHBox.setAlignment(Pos.CENTER_LEFT);
 
-        VBox vBox = new VBox(scrollPane, guessHBox, getMistakeCirclesNode());
+        usedCharactersLabel = new Label();
+        usedCharactersLabel.setId("white-label");
+
+        VBox vBox = new VBox(scrollPane, guessHBox, getMistakeCirclesNode(), usedCharactersLabel);
         vBox.setSpacing(20);
         vBox.setPadding(new Insets(20));
 
@@ -83,17 +93,21 @@ public class ClassicAskQuestionPane extends AskQuestionManager {
     }
 
     /**
-     * Checks if the input is in the solution and updates the <code>outputLabel</code>.
+     * If the input is not empty it checks if the input is in the solution and updates the <code>outputLabel</code>.
      *
      * @param text the text to be checked.
+     * @since 1.2.3
      */
     private void checkAndUpdate(String text) {
-        check(text.toUpperCase(), false, false);
-        setOutputLabel();
-        textField.clear();
+        if (!Objects.equals(text, "")) {
+            check(text.toUpperCase(), false, false);
+            setOutputLabel();
+            setUsedCharactersNode();
+            textField.clear();
 
-        if (isFinished()) {
-            guessHBox.setDisable(true);
+            if (isFinished()) {
+                guessHBox.setDisable(true);
+            }
         }
     }
 
@@ -104,23 +118,18 @@ public class ClassicAskQuestionPane extends AskQuestionManager {
         outputLabel.setText(getOutputArrayAsString());
     }
 
-
-//    /**
-//     * A list of all used characters is shown at the bottom of the Scene. This method is called adding a new character
-//     * to it.
-//     *
-//     * @param character The character to be added.
-//     */
-//    private void updateUsedCharsLabel(char character) {
-//        getUsedCharsList().add(character);
-//
-//        if (getUsedCharsList().size() == 1) {
-//            usedCharsLabel.setText("Used characters: " + getUsedCharsList().get(0));
-//        } else {
-//            usedCharsLabel.setText(usedCharsLabel.getText() + ", " + super.getUsedCharsList().get(getUsedCharsList().size() - 1));
-//        }
-//    }
-
+    /**
+     * Sets the <code>usedCharactersLabel</code> to the used strings with the <code>getUsedStrings</code> method.
+     *
+     * @since 1.2.3
+     */
+    private void setUsedCharactersNode() {
+        if (getUsedStrings().size() == 1) {
+            usedCharactersLabel.setText("Your last guesses: " + getUsedStrings().get(0));
+        } else {
+            usedCharactersLabel.setText(usedCharactersLabel.getText() + ", " + getUsedStrings().get(getUsedStrings().size() - 1));
+        }
+    }
 
     /**
      * @return the root node with all UI elements.

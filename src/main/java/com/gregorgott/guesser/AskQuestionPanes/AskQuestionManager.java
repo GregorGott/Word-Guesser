@@ -1,3 +1,8 @@
+/*
+ * This software is licensed under the GNU GENERAL PUBLIC LICENSE Version 3 from 29 June 2007.
+ * This software comes with absolutely no warranty! Please read the LICENSE file.
+ */
+
 package com.gregorgott.guesser.AskQuestionPanes;
 
 import javafx.geometry.Pos;
@@ -5,14 +10,33 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+
 import javafx.scene.shape.Circle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * The <code>AskQuestionManger</code> is the main class of all question panes. This class controls the check process,
  * points, mistakes and the mistake circles node.
+ * This class can be defined with the subclasses <code>ClassicAskQuestionPane</code> or
+ * <code>CardsAskQuestionPane</code>:
+ * <pre>
+ *     private void myClass() {
+ *         AskQuestionManager aqm = new ClassicAskQuestionPane();
+ *         // set the solution
+ *         askQuestionManager.setSolutionArray(solutionArray);
+ *         // set the mistakes
+ *         askQuestionManager.setMaxMistakes(maxMistakes);
+ *         // get points
+ *         int points = aqm.getPoints();
+ *         // check finished status
+ *         boolean finished = aqm.isFinished();
+ *         // reset points, mistakes, used characters and finished status
+ *         aqm.reset();
+ *     }
+ * </pre>
  *
  * @author GregorGott
  * @version 1.0.1
@@ -197,6 +221,13 @@ public abstract class AskQuestionManager {
     }
 
     /**
+     * @return the <code>usedStrings</code> ArrayList to display all used characters.
+     */
+    public ArrayList<String> getUsedStrings() {
+        return usedStrings;
+    }
+
+    /**
      * Checks if input string is in the solution array and adds the input to the <code>outputArray</code>
      * when it's true.
      *
@@ -206,65 +237,67 @@ public abstract class AskQuestionManager {
     public boolean check(String input, boolean onlyAddWhenInFrontCharacterIsKnown, boolean acceptUsedInputs) {
         boolean checkCorrect = false;
 
-        if (acceptUsedInputs || !usedStrings.contains(input)) {
-            usedStrings.add(input);
+        if (!Objects.equals(input, "")) {
+            if (acceptUsedInputs || !usedStrings.contains(input)) {
+                usedStrings.add(input);
 
-            int inputLength = input.length();
-            char[] inputAsArray = new char[inputLength];
-            ArrayList<Integer> insertIndexes = new ArrayList<>();
+                int inputLength = input.length();
+                char[] inputAsArray = new char[inputLength];
+                ArrayList<Integer> insertIndexes = new ArrayList<>();
 
-            for (int i = 0; i < inputLength; i++) {
-                inputAsArray[i] = input.charAt(i);
-            }
+                for (int i = 0; i < inputLength; i++) {
+                    inputAsArray[i] = input.charAt(i);
+                }
 
-            for (int i = 0; i < solutionArray.length; i++) {
-                ArrayList<Integer> tempInsertIndexes = new ArrayList<>();
+                for (int i = 0; i < solutionArray.length; i++) {
+                    ArrayList<Integer> tempInsertIndexes = new ArrayList<>();
 
-                for (int y = 0; y < inputLength; y++) {
-                    if (i + y < solutionArray.length) {
-                        if (inputAsArray[y] == solutionArray[i + y]) {
-                            tempInsertIndexes.add(i + y);
-                        } else {
-                            break;
+                    for (int y = 0; y < inputLength; y++) {
+                        if (i + y < solutionArray.length) {
+                            if (inputAsArray[y] == solutionArray[i + y]) {
+                                tempInsertIndexes.add(i + y);
+                            } else {
+                                break;
+                            }
                         }
                     }
-                }
 
-                if (tempInsertIndexes.size() == inputLength) {
-                    insertIndexes.addAll(tempInsertIndexes);
-                }
-            }
-
-            ArrayList<Character> characters = new ArrayList<>();
-
-            if (onlyAddWhenInFrontCharacterIsKnown) {
-                if (insertIndexes.get(0) == 0 || outputArray[insertIndexes.get(0) - 1] != '_') {
-                    for (int i : insertIndexes) {
-                        outputArray[i] = solutionArray[i];
-                        characters.add(solutionArray[i]);
+                    if (tempInsertIndexes.size() == inputLength) {
+                        insertIndexes.addAll(tempInsertIndexes);
                     }
-
-                    addPoints(calculatePoints(characters));
-                    checkCorrect = true;
-                } else {
-                    addMistake();
                 }
-            } else {
-                if (insertIndexes.size() == 0) {
-                    addMistake();
-                } else {
-                    for (int i : insertIndexes) {
-                        outputArray[i] = solutionArray[i];
-                        characters.add(solutionArray[i]);
+
+                ArrayList<Character> characters = new ArrayList<>();
+
+                if (onlyAddWhenInFrontCharacterIsKnown) {
+                    if (insertIndexes.get(0) == 0 || outputArray[insertIndexes.get(0) - 1] != '_') {
+                        for (int i : insertIndexes) {
+                            outputArray[i] = solutionArray[i];
+                            characters.add(solutionArray[i]);
+                        }
+
+                        addPoints(calculatePoints(characters));
+                        checkCorrect = true;
+                    } else {
+                        addMistake();
                     }
+                } else {
+                    if (insertIndexes.size() == 0) {
+                        addMistake();
+                    } else {
+                        for (int i : insertIndexes) {
+                            outputArray[i] = solutionArray[i];
+                            characters.add(solutionArray[i]);
+                        }
 
-                    addPoints(calculatePoints(characters));
-                    checkCorrect = true;
+                        addPoints(calculatePoints(characters));
+                        checkCorrect = true;
+                    }
                 }
-            }
 
-            if (Arrays.equals(solutionArray, outputArray)) {
-                finished = true;
+                if (Arrays.equals(solutionArray, outputArray)) {
+                    finished = true;
+                }
             }
         }
 
